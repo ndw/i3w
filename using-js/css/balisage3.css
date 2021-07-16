@@ -1,0 +1,524 @@
+<!--/*--><css><![CDATA[/**/
+/* This header, and its matching footer, allow XSLT 1.0 in the browser
+   to load this file as a document (necessary for at least some
+   versions of XSLT forms). It's harmless in other CSS processors. */
+
+/* Revisions
+ * 
+ * 2021-05-26 : NDW : make rules all lower-case so that they match in XHTML.
+ *                    added magic headers for XSLT Forms.
+ * 2020-05-15 : BTU : add rule at bottom of div.bio
+ * 2020-01-22 : BTU : add styling for div.text div.text 
+ * 2018-01-30 : BTU : center footer per Jessica request
+ * 
+ * 2010-02-11 : MSM : restyle logos on main page (add TD.logo styles)
+ */
+
+/* 
+Color palette
+  
+Light background  #e1ebf8
+ * big text #868686
+ * small text #686868
+   
+ 
+Dark Background #336699
+ * big text #b9b9b9
+ * small text #e2e2e2
+  * 
+Highlight Color #842D4B
+
+*/
+
+:root {
+  --light-bg-color: #e1ebf8;
+  --light-big-text: #868686;
+  --light-sm-text:  #686868;
+
+  --dark-bg-color: #336699;
+  --dark-big-text: #b9b9b9;
+/*  --dark-sm-text:  #e2e2e2;*/
+  --dark-sm-text:  white;
+
+  --highlight-color: #842D4B;
+ 
+}
+
+
+
+h2 {  font-family: Arial, Helvetica, sans-serif; font-weight: bold; font-size: 1.125em;
+      margin-top: 0.375em; margin-right: 0em; margin-bottom: 0em; margin-left: 0em}
+
+H2.header  {  font-family: Arial, Helvetica, sans-serif; font-weight: bold; font-size: 1.125em;
+      margin-top: 0em; margin-right: 0em; margin-bottom: 0em; margin-left: 0em}
+
+.location { font-size:80%}
+
+H2.event-title  {  font-family: Arial, Helvetica, sans-serif; font-weight: bold; font-size: 1.125em;
+      margin-top: 0.125em; margin-right: 0em; margin-bottom: 0em; margin-left: 0em}
+
+
+h3 {  font-family: Arial, Helvetica, sans-serif; font-weight: bold; font-size: 
+      0.875em; margin-top: 0em; margin-right: 0em; margin-bottom: 0em; 
+      margin-left: 0em}
+
+th {white-space: nowrap }
+
+
+p.featured { 
+     font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 1.0em;  
+     background-color: var(--dark-bg-color); 
+     color: var(--dark-sm-text);
+       }
+
+
+p.menubutton {margin-right: 0.063em;  margin-left:  0.188em; margin-top: 0.063em; margin-bottom: 0.063em}
+ 
+ div.menubutton { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 1.0em;  background-color: var(--dark-bg-color);   border: solid #486E91;
+    border-radius: 1em;  box-shadow:  0.5em 0.5em 0.3em #405160; 
+     margin-top: 0.125em;
+     }
+
+ 
+h2.menubutton { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 1.0em;  
+   color: black;  margin-top:  1.250em; }
+
+p { font-family: Verdana, Arial, Helvetica, sans-serif; /*font-size: 1.0em*/}
+
+p.blurb { font-family: Verdana, Arial, Helvetica, sans-serif; 
+          font-size: 1.0em; 
+          padding-left: 0.625em; 
+          padding-right: 0.250em;
+          margin-bottom: 0em; 
+           }
+
+
+span.speaker { font-weight: bold; font-size: 1.0em }
+
+span.break { background-color: #336699;
+    color: white
+}
+
+
+span.emph { font-weight: bold; font-size: 1.0em; color: #842D4B }
+
+
+span.highlight { color: var(--highlight-color); }
+
+
+ul {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 1.0em}
+
+li {  font-family: Verdana, Arial, Helvetica, sans-serif;/* font-size: 1.0em*/}
+
+dt {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 1.0em;
+      margin-top: 0.375em; }
+dd {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 1.0em;
+     }
+
+
+td {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 1.0em}
+
+
+h4 {  text-decoration: none; font-family: Arial, Helvetica, sans-serif; 
+      font-size: 0.875em; font-weight: bold}
+
+
+/*a {  color: #486E91; text-decoration: underline}*/
+a {  color: var(--dark-bg-color); text-decoration: underline}
+
+
+a:hover {  color: #6D7F91; text-decoration: underline}
+
+
+body {  background-color: #6699CC ; 
+
+         margin-top: 0em; margin-right: 0.125em; 
+         margin-bottom: 0em; margin-left: 0.125em;
+         overflow: auto;
+         font-size: 1em;
+
+}
+
+
+.presenter {  background-color: #F9F0D5}
+
+a.menu {  font-family: Arial, Helvetica, sans-serif; font-size: 1.0em; 
+          color: #CCBD99; text-decoration: none; font-weight: bold; display: 
+          block; width:  10.625em; border: 0.063em solid; border-color: #405160;}
+
+a.menu:hover {  font-family: Arial, Helvetica, sans-serif; font-size: 1.0em; 
+          color: #CCBD99; text-decoration: none; font-weight: bold; 
+          display: block; width:  10.625em; background-color:#E5E5E5; 
+          border: 0.063em solid; border-color: #202830;}
+
+
+a.menu2 {  font-family: Arial, Helvetica, sans-serif; font-size: 1.0em; 
+           color: #CCBD99; text-decoration: none; font-weight: bold; 
+           display: block; width:  10.625em; border: 0.063em solid; 
+           border-color: #FFFFFF;}
+
+
+a.menu2:hover {  font-family: Arial, Helvetica, sans-serif; font-size: 1.0em; 
+           color: #000000; text-decoration: none; font-weight: bold; 
+           display: block; width:  10.625em; background-color:#DFE4F7; 
+           border: 0.063em solid; border-color: #666666;}
+
+
+a.menu3 {  font-family: Arial, Helvetica, sans-serif; font-size: 1.0em; 
+           color: #666666; text-decoration: none; font-weight: normal; 
+           display: block; width:  10.625em; text-align: left}
+
+
+a.menu3:hover {  font-family: Arial, Helvetica, sans-serif; font-size: 1.0em; 
+                 color: #000000; text-decoration: none; font-weight: normal; 
+                 background-color:#FCF2EF;}
+
+
+a.btmnav {  font-family: Arial, Helvetica, sans-serif; font-size: 1.0em; 
+            color: #666666; text-decoration: none; font-weight: normal}
+
+a.btmnav:hover {  font-family: Arial, Helvetica, sans-serif; font-size: 1.0em; 
+                  color: #000000; text-decoration: none; font-weight: normal}
+                  
+
+a.abstract:hover {  font-family: sans-serif; font-size: 1.0em; 
+           color: var(--dark-bg-color); text-decoration: underline; font-weight: bold; }
+ 
+/*a.abstract {  font-family: sans-serif; font-size: 1.0em; 
+           color: black; text-decoration: underline; font-weight: bold; } */
+
+a.abstract {  font-family: sans-serif; font-size: 1.0em; 
+           color: black; text-decoration: none; font-weight: bold; }
+
+
+table {  border-style: none; border-top-width: 0.063em; border-right-width: 0.063em; 
+         border-bottom-width: 0.063em; border-left-width: 0.063em}
+
+.brdrclr {  border: 0.063em solid; border-color: #F5F5F5}
+
+.brdrclrdrk {  border: 0.063em solid; border-color: #999999}
+
+.mnbrdrclr { border: 0.063em #F5F5F5 solid; border-color: #F5F5F5 ; height: auto}
+
+
+
+
+td.break { font-family: Verdana, Arial, Helvetica, sans-serif; 
+             font-size: 1.0em;
+    text-align: center;
+    background-color: var(--dark-bg-color);
+    color: white
+}
+
+
+td.polemic { font-family: Verdana, Arial, Helvetica, sans-serif; 
+             font-size: 1.0em;
+    text-align: center;
+    background-color: white;
+    color: #A00000
+}
+
+
+
+
+
+td.upbutton { font-family: Verdana, Arial, Helvetica, sans-serif; 
+             font-size: 1.0em;
+    text-align: center;
+    background-color: white;
+    color: var(--dark-bg-color)
+}
+
+a.uplink {
+    color: var(--dark-sm-text);
+    font-size: 120%;
+    font-family: sans-serif;
+    text-decoration: none
+}
+
+
+
+a.biolink {
+    font-size: 100%;
+    color: var(--dark-bg-color);
+
+    text-decoration: none
+}
+
+
+a.proclink {
+    font-size: 120%;
+    color: white;
+    font-family: italic;
+    text-decoration: none
+}
+
+
+td.downbutton {font-family: Verdana, Arial, Helvetica, sans-serif; 
+             font-size: 1.0em;
+    text-align: center;
+    background-color: var(--dark-bg-color);
+    color:white
+}
+
+td.outbutton {font-family: Verdana, Arial, Helvetica, sans-serif; 
+             font-size: 1.0em;
+    text-align: center;
+    background-color: grey;
+    color:black
+}
+
+/* Logos:  logowhite for white background (full sponsors), logos for dark-blue. */
+td.logowhite {font-family: Verdana, Arial, Helvetica, sans-serif; 
+             font-size: 1.0em;
+    text-align: center;
+    background-color: white;
+    color: black;
+}
+td.logowhite img { 
+    color: white;   
+    border: 0.125em solid;
+    padding: 0.063em;
+}
+
+td.logos {font-family: Verdana, Arial, Helvetica, sans-serif; 
+             font-size: 1.0em;
+    text-align: center;
+    background-color: #2E5C8A;
+    color: white;
+}
+td.logos img { 
+    color: #2E5C8A;   
+    border: 0.125em solid;
+    padding: 0.063em;
+}
+
+
+a.uplink:hover {
+    color: white;
+}
+
+a.downlink  {
+    color: var(--dark-sm-text);
+    font-family: sans-serif;
+    text-decoration: none
+}
+
+a.downlink2  {
+    font-size: 85%;
+    font-family: serif;
+    color: white;
+    text-decoration: none
+}
+
+a.outlink  {
+    color: #99CCFF;
+    font-family: sans-serif;
+    text-decoration: none
+}
+
+
+
+a.downlink:hover  {
+    color: #CC7D66;
+}
+
+a.downlink2:hover  {
+    color: #CC7D66;
+}
+
+a:hover  {
+    background: none transparent scroll repeat 0% 0%;
+    color:  #CC7D66
+}
+
+hr.desc {
+    color: var(--dark-bg-color);
+   /* background-color: #336699*/
+}
+
+
+.popup
+{
+COLOR:  #336699;
+CURSOR: help;
+TEXT-DECORATION: none
+}
+
+
+
+/* Structure styles */
+
+
+body {
+    font-family: Arial, Helvetica, sans-serif; 
+ /*   font-size: 1.0em;*/
+   font-size: 1em;
+    color: var(--light-sm-text) ;
+/*    background: var(--light-bg-color)*/
+      background: white;
+
+}
+
+div.wrapper { 
+ margin: 0 auto
+
+}
+
+div.header {
+   width: 100%;  
+   float: right;
+   color: #FFFFFF;
+   padding-top: 0.625em; 
+   height: 6.250em;
+/* margin: 0.625em  0em 0.313em 0em; */
+   border-right: 1.875em solid #BBD9EE;
+   background: #BBD9EE
+}
+
+
+
+div.nav { 
+   color: var(--dark-sm-text);
+/*   border-right: 0.125em solid #BBD9EE; */
+   border-left: 0.125em solid #BBD9EE; 
+   background: #BBD9EE;
+/*  margin:  0em 0.125em 0.125em 0em;  */
+   padding: 0.313em;   
+   width: 15%;
+   float: left
+}
+
+
+div.text div.text { 
+   width: 95%;
+ /*   float: right;*/
+   overflow:auto;
+   color: var(--light-sm-text);
+   border-left: 0.300em solid white;
+}
+
+
+div.text { 
+   background: white;
+/*   width: 80%;*/
+/*   float: right;*/
+   overflow:auto;
+   color: var(--light-sm-text);
+   border-right: 1.875em solid white;
+   border-left: 0.625em solid white;
+   font-family: serif;
+}
+
+div.bio { 
+   border-bottom: 0.125em solid var(--highlight-color);
+}
+
+
+div.featured { 
+   background: var(--dark-bg-color);
+/*   margin:  0em 0.313em 0.313em 0.625em;*/
+/*   width: 75%;
+   float: right;*/
+   color: var(--dark-sm-text);
+   padding-right: 0.625em;
+/*   border-right: 1.875em solid var(--light-bg-color);*/
+/*   border-left: 0.625em solid white;*/
+     border: 0.125em solid var(--highlight-color);
+   font-family: serif;
+}
+ 
+
+
+
+
+div.footer { 
+     /* width: 100%; */
+     clear: both;
+     color: #FFFFFF;
+     border: 0.063em solid #ccc;
+     background: #336699;
+     margin:  0em  0em 0.625em 0em;
+     padding: 0.625em;
+     text-align: center;
+}
+
+/*special treatment for sponsorship section*/
+div.sponsorship h3 {padding-bottom:0in; 
+margin-bottom:0in;
+ 
+}
+
+div.sponsorship ul {padding-top:0in; 
+margin-top:0in;
+ 
+}
+
+div.ProgramDay {  text-align: center;}
+ 
+
+div.ProgramEvent {  text-align: left;
+                    padding-top: 0.3em;
+                    font-size:1.0em;
+                    padding-bottom: 1.7em;
+                    border-bottom:  .2em solid #842D4B;
+}
+
+
+h2.EventTitle
+{ background-color: #336699; 
+  color:white
+}
+
+span.SpeakerName
+{ font-style: italic
+}
+
+span.timestart::after {
+  content: " - ";
+}
+
+
+
+
+div.hospitality {  text-align: left;                  
+                    padding-top: 0.3em;
+                    border-top-style: solid;
+                    border-top-width: 0.125em;
+                    font-size:1.0em;
+                    background-color: #BBD9EE;
+                    padding-bottom: 1.7em;
+}
+
+
+p.bio { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 1.0em; 
+      padding-top: 0.625em}
+
+
+.imgHolder {
+    display: inline-block;
+    text-align:center;
+   margin-bottom: 1.626em;
+}
+
+.imgHolder .caption {
+   font-size:1.313em;
+
+}
+
+
+.toast {color: black; 
+      border:0.063em solid black;
+           padding-bottom: 0.625em ;
+}
+/*.toast:hover { color: black;  max-height: 12.500em; overflow-y: scroll;  }
+*/
+.toast-text {color: black; margin-left:  1.250em;
+        font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 1.0em; 
+      max-height: 6.250em; overflow-y: scroll;
+       padding-top:0in; 
+}
+.toast-text:hover { color: black;  max-height: 15.625em; overflow-y: scroll;  } 
+.sgmler {font-weight:bold;  }
+
+/*]]>*/<!--/*--></css><!--*/-->

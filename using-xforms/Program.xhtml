@@ -1,0 +1,1816 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?xml-stylesheet href="./xsltforms-1.5.5/xsltforms.xsl" type="text/xsl"?> 
+<!-- <?xml-stylesheet href="./xsltforms-1.3/xsltforms/xsltforms.xsl" type="text/xsl"?> -->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      
+      xmlns:xf="http://www.w3.org/2002/xforms" 
+      xmlns:ev="http://www.w3.org/2001/xml-events" 
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+      xmlns:xhtml="http://www.w3.org/1999/xhtml" 
+      xmlns:bmt="http://localhost/~cmsmcq/2012/11/idams-annotator" 
+      xsd:dummy="Help the poor user of Mozilla evade the Mozilla namespace curse" 
+      xhtml:dummy="Mozilla namespace curse strikes again"
+      
+      xml:lang="en"
+      lang="en">
+  <head>
+    <link rel="stylesheet" href="css/balisage3.css" type="text/css"/>
+    <link rel="stylesheet" href="css/jstyle.css" type="text/css"/>
+    <title>Balisage 2020 Program</title>
+    <meta name="date" content="2021-04-19" />
+    <meta name="author" content="Mulberry Technologies, Inc." />
+    <meta name="title" content="Balisage 2020 Program"/>
+    <meta charset="utf-8" /> 
+    <link rel="icon" type="image/png" href="img/BalisageB.png" />
+
+    <!--* Additions to the basic stylesheet, to make it unnecessary to
+        * inject new class attributes on the td elements.  It's
+        * possible but it's awkward in XForms and (as seen here)
+        * unnecessary.
+        *-->
+    <style type="text/css">
+      #schedlink { display: block; }
+      #schedule { display: block; }
+      #schedule table { width: 100%; }
+      #schedule table td:nth-child(2) { width: 25%; }
+      #schedule table td:nth-child(4),
+      #schedule table td:nth-child(6) { background-color: #FFFFE3; }
+      #schedule table td.ilb:nth-child(4),
+      #schedule table td.ilb:nth-child(6) { background-color: unset; }
+
+      #schedule table td { padding: 0; }
+      #schedule table td div { padding: 0.5em; }
+      #schedule table td div.lb { border-left: 1px solid black; }
+    </style>
+
+    <!--* XForms styling and ad hoc rules
+        *-->
+    <style type="text/css">
+      @namespace xf "http://www.w3.org/2002/xforms";
+
+      xforms-label {
+          display: inline-block; 
+          padding: 0 0.5em;
+      }
+
+      p.debug xforms-label {
+          display: inline-block;
+          width: 12em;
+          text-align: right;
+          padding-right: 1em;
+      }
+
+      xf|output.trace xf|label {
+        color: brown;
+      }
+
+      /* Some hacks. */
+      #schedule div.none { padding: 4em 0; }
+      #schedule time { display: none; }      
+      span.affil:before { content: " "; }
+      span.timestart:before { content: " "; }
+
+      #schedule table div.lb {
+          padding: 2em 0.5em;
+          vertical-align: middle;
+          font-style: italic;
+          background-color: lightblue !important;
+      }
+
+    </style>
+
+    
+
+    <xf:model id="m1">
+      <xf:instance id="program" src="./Program.xhtml"/>
+
+      <!--* The timezones instance is not currently used; it's left here
+          * as a reminder that it would be nicer this way.
+          *-->
+      <xf:instance id="timezones" xmlns="">
+        <timezonelist>
+          <timezone offset="-12:00">AoE  Baker Island           (UTC-12:00)</timezone>
+          <timezone offset="-11:00">SST  American Samoa         (UTC-11:00)</timezone>
+          <timezone offset="-10:00">AKDT Fairbanks, AK, USA     (UTC-10:00)</timezone>
+          <timezone offset="-07:00">PDT  San Francisco, CA, USA (UTC-07:00)</timezone>
+          <timezone offset="-06:00">MDT  Denver, CO, USA        (UTC-06:00)</timezone>
+          <timezone offset="-05:00">CDT  Chicago, IL, USA       (UTC-05:00)</timezone>
+          <timezone offset="-04:00">EDT  Rockville, MD, USA     (UTC-04:00)</timezone>
+          <timezone offset="-03:00">BRT  Fortaleza, BRA     (UTC-03:00)</timezone>
+          <timezone offset="+00:00">Coordinated Universal Time   (UTC+00:00)</timezone>
+          <timezone offset="+01:00">BST  Edinburgh, GBR     (UTC+01:00)</timezone>
+          <timezone offset="+02:00">CEST Prague, CZE        (UTC+02:00)</timezone>
+          <timezone offset="+03:00">MSK  Moscow, RUS        (UTC+03:00)</timezone>
+          <timezone offset="+05:30">IST  Chennai, IND       (UTC+05:30)</timezone>
+          <timezone offset="+08:00">CST  Beijing, CHN       (UTC+08:00)</timezone>
+          <timezone offset="+09:00">JST  Tokyo, JPN         (UTC+09:00)</timezone>
+          <timezone offset="+10:00">AEST Sydney, AUS        (UTC+10:00)</timezone>
+          <timezone offset="+12:00">NZST Aukland, NZL       (UTC+12:00)</timezone>
+        </timezonelist>
+      </xf:instance>
+
+      <!-- The 'ui' instance tracks information related to the user
+           interface. -->
+      <xf:instance id="ui" xmlns="">
+        <!-- The @h24 attribute on the root element keeps track of
+             whether we are displaying using the 24-hour clock (true)
+             or the 12-hour clock (false). -->
+        <!-- The @debugging attribute is used to control the display
+             of debugging messages and information in the form.
+             -->             
+        <ui-info clock24="false" debugging="true">
+          
+          <!-- The tz element records what time zone the user
+               selected.
+               It has h, m, sign, secs, and dur attributes
+               to hold various derived bits of information:
+               number of hours and minutes in the timezone offset,
+               equivalent number of seconds, and a dayTimeDuration
+               (unneeded now, but originally intended for use
+               in a call to the XPath2 adjust-dateTime-to-timezone()
+               function).
+               -->             
+          <tz h="" m="" sign="-" secs="" dur="">-04:00</tz>
+
+          <!-- The slot-times element holds information about
+               the starting time for each time slot.  Again, it
+               has attributes to hold various bits of information,
+               some of which are calculated dynamically.  The
+               character data content is the time as it appears in
+               the schedule table.  The pre-populated attributes are:
+               . id (to match the ID of the time cell in the table)
+               . default (remembers the original string value,
+                 in case we ever need it.  We don't.)
+               . datetime (copied from the 'time' elements in the table)
+               . user-datetime (timestamp for the date and time in
+                 the user-selected timezone; initially set to EDT)
+               . user-time (hh:mm field from user-datetime, solely in 
+                 order to avoid having to write 'substring(..., 12, 5)'
+                 again and again)
+               . uh24 (hour field from user time, in 24 hour clock) 
+               . uh12 (hour field from user time, in 12 hour clock) 
+               . wrapped (has the date wrapped?  are we past midnight?)
+          -->
+          <slot-times>
+            <slot id="r10"
+                  datetime="2020-07-27T10:00:00-04:00"
+                  user-datetime="2020-07-27T10:00:00-04:00"
+                  user-time="" uh24="" uh12="" wrapped=""
+                  default="10:00">10:00</slot>
+            <slot id="r1030"
+                  datetime="2020-07-27T10:30:00-04:00"
+                  user-datetime="2020-07-27T10:30:00-04:00"
+                  user-time="" uh24="" uh12="" wrapped=""
+                  default="10:30">10:30</slot>
+            <slot id="r1050"
+                  datetime="2020-07-27T10:50:00-04:00"
+                  user-datetime="2020-07-27T10:50:00-04:00"
+                  user-time="" uh24="" uh12="" wrapped=""
+                  default="10:50">10:50</slot>
+            <slot id="r11"
+                  datetime="2020-07-27T11:00:00-04:00"
+                  user-datetime="2020-07-27T11:00:00-04:00"
+                  user-time="" uh24="" uh12="" wrapped=""
+                  default="11:00">11:00</slot>
+            <slot id="r1130"
+                  datetime="2020-07-27T11:30:00-04:00"
+                  user-datetime="2020-07-27T11:30:00-04:00"
+                  user-time="" uh24="" uh12="" wrapped=""
+                  default="11:30">11:30</slot>
+            <slot id="r1150"
+                  datetime="2020-07-27T11:50:00-04:00"
+                  user-datetime="2020-07-27T11:50:00-04:00"
+                  user-time="" uh24="" uh12="" wrapped=""
+                  default="11:50">11:50</slot>
+            <slot id="r12"
+                  datetime="2020-07-27T12:00:00-04:00"
+                  user-datetime="2020-07-27T12:00:00-04:00"
+                  user-time="" uh24="" uh12="" wrapped=""
+                  default="12:00">12:00</slot>
+            <slot id="r1230"
+                  datetime="2020-07-27T12:30:00-04:00"
+                  user-datetime="2020-07-27T12:30:00-04:00"
+                  user-time="" uh24="" uh12="" wrapped=""
+                  default="12:30">12:30</slot>
+            <slot id="r1250"
+                  datetime="2020-07-27T12:50:00-04:00"
+                  user-datetime="2020-07-27T12:50:00-04:00"
+                  user-time="" uh24="" uh12="" wrapped=""
+                  default="12:50">12:50</slot>
+            <slot id="r14"
+                  datetime="2020-07-27T14:00:00-04:00"
+                  user-datetime="2020-07-27T14:00:00-04:00"
+                  user-time="" uh24="" uh12="" wrapped=""
+                  default="14:00">14:00</slot>
+            <slot id="r1430"
+                  datetime="2020-07-27T14:30:00-04:00"
+                  user-datetime="2020-07-27T14:30:00-04:00"
+                  user-time="" uh24="" uh12="" wrapped=""
+                  default="14:30">14:30</slot>
+            <slot id="r1450"
+                  datetime="2020-07-27T14:50:00-04:00"
+                  user-datetime="2020-07-27T14:50:00-04:00"
+                  user-time="" uh24="" uh12="" wrapped=""
+                  default="14:50">14:50</slot>
+            <slot id="r15"
+                  datetime="2020-07-27T15:00:00-04:00"
+                  user-datetime="2020-07-27T15:00:00-04:00"
+                  user-time="" uh24="" uh12="" wrapped=""
+                  default="15:00">15:00</slot>
+            <slot id="r1530"
+                  datetime="2020-07-27T15:30:00-04:00"
+                  user-datetime="2020-07-27T15:30:00-04:00"
+                  user-time="" uh24="" uh12="" wrapped=""
+                  default="15:30">15:30</slot>
+            <slot id="r1550"
+                  datetime="2020-07-27T15:50:00-04:00"
+                  user-datetime="2020-07-27T15:50:00-04:00"
+                  user-time="" uh24="" uh12="" wrapped=""
+                  default="15:50">15:50</slot>
+            <slot id="r16"
+                  datetime="2020-07-27T16:00:00-04:00"
+                  user-datetime="2020-07-27T16:00:00-04:00"
+                  user-time="" uh24="" uh12="" wrapped=""
+                  default="16:00">16:00</slot>
+            <slot id="r1630"
+                  datetime="2020-07-27T16:30:00-04:00"
+                  user-datetime="2020-07-27T16:30:00-04:00"
+                  user-time="" uh24="" uh12="" wrapped=""
+                  default="16:30">16:30</slot>
+            <slot id="r1650"
+                  datetime="2020-07-27T16:50:00-04:00"
+                  user-datetime="2020-07-27T16:50:00-04:00"
+                  user-time="" uh24="" uh12="" wrapped=""
+                  default="16:50">16:50</slot>
+            <slot id="r17"
+                  datetime="2020-07-27T17:00:00-04:00"
+                  user-datetime="2020-07-27T17:00:00-04:00"
+                  user-time="" uh24="" uh12="" wrapped=""
+                  default="17:00">17:00</slot>
+          </slot-times>
+
+          <!-- The schedlink element exists only in order
+               to be injected into the page if XForms is
+               running.
+          -->
+          <schedlink>
+            &#x261E; Interactive <a href="#schedule">schedule at a glance</a>.
+          </schedlink>
+        </ui-info>
+        
+      </xf:instance>
+      
+      <!--* We use a series of xf:bind elements to specify
+          * various properities of elements and attributes:
+          * sometimes their time, sometimes their values,
+          * often both.
+          *-->
+      <xf:bind nodeset="instance('ui')/@clock24" type="xsd:boolean" />
+      <!--     calculate="if(tz/@sign = '-',
+                          'true',
+                          'false')"/> -->
+      <xf:bind nodeset="instance('ui')/@debugging" type="xsd:boolean" />
+
+      <xf:bind nodeset="instance('ui')/tz/@h" type="xsd:integer"
+               calculate="string(substring(.., 2, 2))"/>
+      <xf:bind nodeset="instance('ui')/tz/@m" type="xsd:integer"
+               calculate="string(substring(.., 5, 2))"/>
+      <xf:bind nodeset="instance('ui')/tz/@sign"
+               calculate="substring(.., 1, 1)"/>
+      <xf:bind nodeset="instance('ui')/tz/@secs"
+               calculate="if(../@sign = '-',
+                          0 - (((../@h * 60) + ../@m) * 60), 
+                          0 + (((../@h * 60) + ../@m) * 60))"/>
+      <xf:bind nodeset="instance('ui')/tz/@dur"
+               type="xsd:dayTimeDuration"
+               calculate="concat(
+                          if(../@sign = '-', '-', ''),
+                          'P',
+                          ../@h,
+                          'H',
+                          ../@m,
+                          'M'
+                          )"/>
+      <xf:bind nodeset="instance('ui')/slot-times/slot/@datetime"
+               type="xsd:dateTime"/>
+      <!-- The next bind element would work, I think, if XSLTForms
+           supported this form of call to adjust-dateTime-to-timezone.
+           At the moment, it doesn't. -->
+      <!--
+      <xf:bind nodeset="instance('ui')/slot-times/slot/@user-datetime"
+               type="xsd:dateTime"
+               calculate="adjust-dateTime-to-timezone(../@datetime, instance('ui')/tz/@dur)"
+               />
+      -->      
+      <xf:bind nodeset="instance('ui')/slot-times/slot/@user-datetime"
+               type="xsd:dateTime"
+               calculate="seconds-to-dateTime(
+                          seconds-from-dateTime(../@datetime)
+                          +
+                          instance('ui')/tz/@secs
+                          )"
+               />
+
+      <xf:bind nodeset="instance('ui')/slot-times/slot/@user-time"
+               type="xsd:string"
+               calculate="substring(../@user-datetime, 12, 5)" />
+      <xf:bind nodeset="instance('ui')/slot-times/slot/@uh24"
+               type="xsd:string"
+               calculate="substring(../@user-time, 1, 2)" />      
+      <xf:bind nodeset="instance('ui')/slot-times/slot/@uh12"
+               type="xsd:string"
+               calculate="((../@uh24 + 11) mod 12) + 1" />     
+      <xf:bind nodeset="instance('ui')/slot-times/slot/@wrapped"
+               type="xsd:boolean"
+               calculate="substring(../@user-datetime, 9, 2)
+                          > substring(../@datetime, 9, 2)" />
+
+      <xf:bind nodeset="instance('ui')/slot-times/slot"
+               type="xsd:string"
+               calculate="if(@user-time = '00:00',
+                          'midnight',
+                          
+                          concat(
+                          if(@user-time = '12:00',
+                          if(instance('ui')/@clock24 = 0 or instance('ui')/@clock24 = 'false',
+                          'noon',
+                          'midday'),
+                          
+                          if(instance('ui')/@clock24 = 0 or instance('ui')/@clock24 = 'false',
+                          concat(@uh12,
+                          ':', substring(@user-time, 4, 2),
+                          if(@uh24 > 11, 'pm', 'am')
+                          ),
+                          
+                          substring(./@user-datetime, 12, 5)
+                          )),
+                          
+                          if(@wrapped = 'true' or @wrapped = 1,
+                          ' &lt;br />(the next day)',
+                          '')
+                          ))
+
+                         " />      
+
+      <!--* N.B. testing on
+          instance('ui')/@clock24 = 0 or instance('ui')/@clock24 = 'false'
+          works, while testing on
+          instance('ui')[@clock24 = 0 or @clock24 = 'false']
+          did not work.  Not quite sure why.
+          *-->
+      
+      <!-- losing ... -->
+      <!--
+      <xf:bind nodeset="instance('ui')/slot-times/slot"
+               type="xsd:string"
+               calculate="format-dateTime(../@user-datetime, 
+                          '[h]:[m][P]' 
+                          )"
+               />
+      -->
+      <!-- works, but it's too simple -->
+      <!-- <xf:bind nodeset="instance('ui')/slot-times/slot"
+               type="xsd:string"
+               calculate="substring(./@user-datetime, 12, 5)" /> -->
+
+      
+      <xf:action ev:event="bmt:set-12h-clock">
+        <xf:message if="instance('ui')/@debugging = 'true'"
+                    level="modal"
+                    >Clock should change to 12h.</xf:message>     
+        <xf:setvalue ref="instance('ui')/@clock24"
+                     value="'false'" /> 
+        <xf:message if="instance('ui')/@debugging = 'true'"
+                    level="modal"
+                    >Check it out!  The 24h clock switch should have changed!</xf:message>      
+      </xf:action>
+      
+      <xf:action ev:event="bmt:set-24h-clock">
+        <xf:message if="instance('ui')/@debugging = 'true'"
+                    level="modal"
+                    >Clock should change to 24h.</xf:message>
+        <xf:setvalue ref="instance('ui')/@clock24"
+                     value="'true'" />
+        <xf:message if="instance('ui')/@debugging = 'true'"
+                    level="modal"
+                    >Did the 24h clock switch?</xf:message>
+      </xf:action>
+    </xf:model>
+    
+  </head>
+
+  <body>
+
+    <!-- Begin Wrapper -->
+    <div class="wrapper">
+      
+      <!-- Begin Header -->
+      <div class="header" style="height: 200px;" role="banner">
+        <span>    </span>
+        <img align="left"
+             src="img/Balisage-logotype-2020-web.png"
+             height="150px"
+             style="float:right; border:10px solid #BBD9EE"
+             alt="Balisage logo"
+             title="Balisage logo"/>
+      </div>
+      <!-- End Header -->
+
+      <!-- Begin Navigation Column -->
+      <div class="nav" role="navigation">
+
+        <div class="menubutton">
+          <p class="menubutton">
+            <b><a class="uplink"
+                  href="https://www.balisage.net/index.html"
+                  title="Balisage">Balisage</a></b>
+          </p>
+        </div>
+
+        <div class="menubutton">
+          <p class="menubutton">
+            <a class="downlink"
+               href="https://www.balisage.net/pre-conf-Tech-Checks.html"
+               title="pre-cnference
+                      Events">pre-conference Tech-Testing and Social Hours</a>
+          </p>
+        </div>
+
+        <div class="menubutton">
+          <h2>Program Contents</h2>
+
+          <div class="menubutton">
+            <p class="menubutton"><a class="downlink"
+                                     href="#Monday"
+                                     title="Monday Events">Monday Events</a></p>
+          </div>
+          <div class="menubutton">
+            <p class="menubutton"><a class="downlink"
+                                     href="#Tuesday"
+                                     title="Tuesday Events">Tuesday Events</a></p>
+          </div>
+          <div class="menubutton">
+            <p class="menubutton"><a class="downlink"
+                                     href="#Wednesday"
+                                     title="Wednesday Events">Wednesday Events</a></p>
+          </div>
+          <div class="menubutton">
+            <p class="menubutton"><a class="downlink"
+                                     href="#Thursday"
+                                     title="Thursday Events">Thursday Events</a></p>
+          </div>
+          <div class="menubutton">
+            <p class="menubutton"><a class="downlink"
+                                     href="#Friday"
+                                     title="Friday Events">Friday Events</a></p>
+          </div>
+        </div>
+
+        <br />
+        <br />
+        
+        <div class="menubutton">
+          <p class="menubutton">
+            <b><a class="downlink"
+                  href="https://www.balisage.net/registration.html"
+                  title="Conference Registration Information">Registration</a></b>
+          </p>
+        </div>
+
+        <h2 class="menubutton">About Balisage</h2>
+
+        <div class="menubutton"
+             style="border: 0.250em solid var(--highlight-color);">
+          <p class="menubutton">
+            <a class="downlink"
+               href="https://www.balisage.net/conduct.html"
+               title="Code of Conduct">Code of Conduct</a>
+          </p>
+        </div>
+        <div class="menubutton">
+          <p class="menubutton">
+            <b><a class="downlink"
+                  href="https://www.balisage.net/review.html"
+                  title="Peer Review at Balisage">Peer Review at Balisage</a></b>
+          </p>
+        </div>
+        <div class="menubutton">
+          <p class="menubutton">
+            <b><a class="downlink"
+                  href="https://www.balisage.net/MarkupAnnounce.html"
+                  title="Opt-in List for Conference Announcements"
+                  >Opt-in Announcement List</a></b>
+          </p>
+        </div>
+        <div class="menubutton">
+          <p class="menubutton">
+            <b><a class="downlink"
+                  href="https://twitter.com/balisage"
+                  title="Follow Balisage on Twitter"
+                  target="_blank">Twitter</a></b>
+          </p>
+        </div>
+
+        <h2 class="menubutton">For Authors/Speakers</h2>
+
+        <div class="menubutton">
+          <p class="menubutton">
+            <b><a class="downlink"
+                  href="https://www.balisage.net/authorinstructions.html"
+                  >Instructions for Authors</a></b>
+          </p>
+        </div>
+        <div class="menubutton">
+          <p class="menubutton">
+            <b><a  class="downlink"
+                   href="https://www.balisage.net/tagset.html"
+                   >Tag Set and Submission Guidelines</a></b>
+          </p>
+        </div>
+
+        <h2 class="menubutton"><b>Proceedings</b></h2>
+        
+        <div class="menubutton">
+          <p class="menubutton">
+            <b><a class="downlink"
+                  href="https://www.balisage.net/Proceedings/index.html"
+                  target="blank"
+                  >Balisage Series on Markup Technologies </a></b>
+          </p>
+        </div>
+
+      </div>
+      <!-- END Navigation Column -->
+
+      <!-- Begin Text -->
+      <div class="text" role="main">
+
+
+        <!--
+            <div class="ProgramEvent" id="T10:00" >
+            <span class="EventDateTime">Tuesday 10:00 am - 10:50 am</span>
+            <h2 class="EventTitle">xxxx</h2>
+            <h2 class="Speakers">
+            <a class="biolink" href="Bios.html#xxxx"><span class="SpeakerName">xxxx</span></a>,
+            <span class="SpeakerAff">xxxx</span>
+            </h2>
+            <p class="blurb">xxxx</p>
+            </div>
+        -->
+    
+        <p id="schedlink">
+          <xf:output mediatype="text/html" ref="instance('ui')/schedlink"/>
+        </p>
+        <div class="Program-Day" id="Monday">
+          <h1 style="background-color: #336699; color:white"
+              >Monday, July 27, 2020</h1>
+
+          <div class="ProgramEvent" id="M10" >
+            <span class="EventDateTime"><span class="Day">Monday</span>
+            <span class="timestart">10:00</span>
+            <span class="timeend">10:30 EDT</span></span> (+ Q&amp;A 10:30 - 10:50)
+
+            <h2 class="EventTitle">Welcome to Balisage 2020</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#Usdin"><span class="SpeakerName">B. Tommie Usdin</span></a>
+              <span class="affil">Mulberry Technologies</span>
+            </h2>
+            <p class="blurb">Balisage 2020 is both totally new and comfortably familiar.
+            Balisage regulars will recognize many of this year’s presenters and
+            welcome some new points of view on familiar topics. Logistically,
+            technologically, we are on a new path. As markup designers, theorists,
+            and practitioners, we are used to tiptoeing near the edge from time to
+            time. I was saddened when I had to admit that Balisage-as-usual could
+            not happen in 2020. I was delighted when it became clear that because
+            we were now virtual many old friends will be able to re-join us this
+            year, and hope that this new format will let us welcome some newcomers
+            to the Balisage community. </p>
+          </div>
+          
+          <div class="ProgramEvent" id="M11" >
+            <span class="EventDateTime"><span class="Day">Monday</span>
+            <span class="timestart">11:00</span>
+            <span class="timeend">11:30 EDT</span></span> (+ Q&amp;A  11:30 - 11:50)
+
+            <h2 class="EventTitle">High-Quality Microsoft Word documents from XML: The Wordinator</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#xxxx"><span class="SpeakerName">Eliot Kimber</span></a>
+              <span class="affil">Contrext, LLC</span>
+            </h2>
+            <p class="blurb">Many products make XML from Microsoft <em>Word</em>, but
+            consider the reverse: making Word versions of your XML documents, thus
+            using MS Word as an document composition engine. The
+            <em>Wordinator</em> enables automatic creation of high-quality
+            <em>Word</em> documents from XML source. It uses an extension of
+            the Word2DITA project&rsquo;s SimpleWP (Simple Word Processing markup
+            language) as the input to an Apache POI-based Java application that
+            generates <em>Word</em> documents. XSLT generates the SimpleWP
+            XML, managing the mapping of source XML elements to Word constructs
+            and styles. I consider, in particular, the separation of concerns
+            between the XSLT that generates the SimpleWP XML and the Java code
+            that generates the <em>Word</em> documents.</p>
+          </div>
+          
+          <div class="ProgramEvent" id="M12" >
+            <span class="EventDateTime"><span class="Day">Monday</span>
+            <span class="timestart">12:00</span>
+            <span class="timeend">12:30 EDT</span></span>  (+ Q&amp;A 12:30 - 12:50)
+
+            <h2 class="EventTitle">XSLT 3.0 on ordinary prose</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#xxxx"><span class="SpeakerName">Norman Tovey-Walsh</span></a>
+              <span class="affil"></span>
+            </h2>
+            <p class="blurb">You work with text and documents for a living, and XSLT 3.0 comes
+            out. You hear it&rsquo;s great and really want to try it, so you read
+            about some features (streaming, maps, arrays, higher order functions)
+            and when you look at some applications, you first think
+            &ldquo;that&rsquo;s for data not text&rdquo;. But maybe 3.0 is for you
+            too, really. Using DocBook as a prototypical text-application, I will
+            demonstrate why XSLT 3.0 solutions are just better and easier than
+            anything that&rsquo;s been possible before. (Examples to include: CALS
+            table processing, image sizing support, callouts, and structuring code
+            for easy extensibility.)</p>
+          </div>
+
+          <div class="ProgramEvent" id="M13" >
+            <span class="EventDateTime"><span class="Day">Monday</span>
+            <span class="timestart">1:00</span>
+            <span class="timeend">1:50 EDT</span></span>
+
+            <h2 class="EventTitle">Small Group Conversation</h2>
+
+            <p class="blurb">During the mid-day break today is a good
+            time to meet some new people and/or chat with some people
+            who are outside your usual orbit. Everyone who is in this
+            "room" 5 minutes after the start of the mid-day break
+            today will be invited to a breakout room. Groups will be
+            small and randomly assigned. Note: this is an opportunity,
+            not an obligation. Participate if the idea appeals to you;
+            or take a break from your screen if that seems better.</p>
+          </div>
+
+          <div class="ProgramEvent" id="M14" >
+            <span class="EventDateTime"><span class="Day">Monday</span>
+            <span class="timestart">14:00</span>
+            <span class="timeend">14:30 EDT</span></span>  (+ Q&amp;A 14:30 - 14:50)
+            <h2 class="EventTitle">Toward a function Library for statistical plotting with XSLT and SVG</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#Birnbaum"><span class="SpeakerName">David J. Birnbaum</span></a>
+              <span class="affil">Department of Slavic Languages and Literatures, University of Pittsburgh</span>
+            </h2>
+            <p class="blurb">Visualizing quantitative information is not always about economics and finance. Research in computational textual humanities often uses descriptive statistics and graphic visualization to communicate quantitative information about <em>textual objects</em>. There is no standardized function library in XSLT or XQuery comparable to the ones available in JavaScript, Python, and many statistical packages. So here is the beginning of such a library. I describe my assumptions and design principles then illustrate a few functions. (Statistical terms will be explained, at least in brief!)</p>
+          </div>
+
+          <div class="ProgramEvent" id="M15" >
+            <span class="EventDateTime"><span class="Day">Monday</span>
+            <span class="timestart">15:00</span>
+            <span class="timeend">15:30 EDT</span></span>  (+ Q&amp;A 15:30 - 15:50)
+            <h2 class="EventTitle">A new \u: Extending XPath  regular expressions for Unicode</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#Kalvesmaki"><span class="SpeakerName">Joel Kalvesmaki</span></a>
+              <span class="affil"></span>
+            </h2>
+            <p class="blurb">XPath regular expressions are richly equipped to handle Unicode, from specific code points (e.g., &#9; for a tab) to blocks (e.g., \p{IsArrows} for all arrows U+2190...21FF) to entire classes (e.g., \p{L}+ for one or more letters, from any alphabet). But why stop there? What if you want all variations on the letter b, or any character that has a tilde? For that, you need a new \u!</p>
+          </div>
+          
+          <div class="ProgramEvent" id="M16" >
+            <span class="EventDateTime"><span class="Day">Monday</span>
+            <span class="timestart">16:00</span>
+            <span class="timeend">16:30 EDT</span></span>  (+ Q&amp;A 16:30 - 16:50)
+            <h2 class="EventTitle">Introducing the Networker: Knowledge Graphs Unmediated <a href="https://www.balisage.net/EncorePresentations-call.html" class="uplink">(Encore Presentation)</a></h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#xxxx"><span class="SpeakerName">Michel Biezunski</span></a>
+              <span class="affil">Infoloom Inc.</span>
+            </h2>
+            <p class="blurb">The Networker Platform supports creation of knowledge graphs without requiring users to know anything about them. The underlying model is based on the concepts of topic maps, and the design makes  front and back ends independent so that they can be optimized for the differing needs of content creators and content manipulators/managers. Although the underlying process may use XML documents, the extraction process is not the subject
+            of this presentation (it's just normal XML processing, so that's not what this is about.)</p>
+          </div>
+
+        </div>
+
+        <div class="Program-Day" id="Tuesday">
+          <h1 style="background-color: #336699; color:white"
+              >Tuesday, July 28, 2020</h1>
+
+          <div class="ProgramEvent" id="T10" >
+            <span class="EventDateTime"><span class="Day">Tuesday</span>
+            <span class="timestart">10:00</span>
+            <span class="timeend">10:30 EDT</span></span>  (+ Q&amp;A 10:30 - 10:50)
+            <h2 class="EventTitle">Four basic building principles (patterns) for XML schemas</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#xxxx"><span class="SpeakerName">Anne Brüggemann-Klein</span></a>
+              <span class="affil">Technical University of Munich (TUM)</span>
+            </h2>
+            <p class="blurb">Practitioners have long identified four distinct patterns for
+            construction of XSD schemas, known by the picturesque names
+            &#x201C;Salami Slice&#x201D;, &#x201C;Venetian Blind&#x201D;,
+            &#x201C;Russian Doll&#x201D;, and &#x201C;Garden of Eden&#x201D;, and
+            based on two binary choices: are all the element declarations global?
+            or (apart from the intended document root) local? Are all the type
+            definitions global? Or (apart from the built-in types) local? Informal
+            discussions often focus on the effect of pattern choice for schema
+            re-use, encapsulation, coupling, and cohesion. But a more formal
+            approach is needed to determine whether choice of pattern affects the
+            languages we can define with the schemas we can write. Do all four
+            patterns have the same expressive power? Or are some capable of
+            defining things not expressible in the others? </p>
+          </div>
+          
+          <div class="ProgramEvent" id="T11" >
+            <span class="EventDateTime"><span class="Day">Tuesday</span>
+            <span class="timestart">11:00</span>
+            <span class="timeend">11:30 EDT</span></span>  (+ Q&amp;A 11:30 - 11:50)
+            <h2 class="EventTitle">Disabled by default</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#xxxx"><span class="SpeakerName">Bethan Tovey-Walsh</span></a>
+            </h2>
+            <p class="blurb">Accessibility is not a single, straightforward concept. For a
+            particular user, the accessibility of any resource is determined by a
+            web of factors, first by the nature and severity of the disability
+            (cognitive, physical, or mental), then influenced by poverty, tech
+            access, language, and many other factors. Designing content to take
+            account of accessibility on this wide scale is a daunting task. Markup
+            is well placed to address accessibility, because markup is optimized
+            to encourage choice. It allows us to say what things are, and choose
+            later (<em>or, better, allow the user to choose</em>) what that
+            means for how content is displayed, printed, spoken, or otherwise
+            manifested in the output. It also allows us to say how things relate
+            to each other, so that we can easily offer choices of the same content
+            in different formats. Concrete examples of what this means in some
+            common markup outputs will highlight things we could be doing in our
+            own practice to encourage more accessible content creation from
+            markup.</p>
+          </div>
+          
+          <div class="ProgramEvent" id="T12" >
+            <span class="EventDateTime"><span class="Day">Tuesday</span>
+            <span class="timestart">12:00</span>
+            <span class="timeend">12:30 EDT</span></span>  (+ Q&amp;A 12:30 - 12:50)
+            <h2 class="EventTitle">Balisage website accessibility demonstration</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#Quin"><span class="SpeakerName">Liam Quin</span></a>
+              <span class="affil">Delightful Computing</span>
+            </h2>
+            <p class="blurb">Making your website more accessible does not need to be a huge,
+            production-altering migration. Even if your site is old and crufty,
+            and you cannot completely kill that 1980&rsquo;s web design, there are
+            minor changes and accessibility-friendly tweeks that can make a major
+            accessibility difference. On a page-by-page, feature-by-feature basis,
+            we will take a look at part of the previous Balisage Proceedings
+            website, then look at the new, improved website for the same
+            page/feature/function, and discuss how they differ, why the new site
+            is improved, and how we got there (including some of the dead-ends and
+            trade-offs made along the way).</p>
+          </div>
+
+          <div class="ProgramEvent" id="T14" >
+            <span class="EventDateTime"><span class="Day">Tuesday</span>
+            <span class="timestart">14:00</span>
+            <span class="timeend">14:30 EDT</span></span>  (+ Q&amp;A 14:30 - 14:50)
+            <h2 class="EventTitle">Text encoding and processing as a university writing intensive course</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#Beshero-Bondar"><span class="SpeakerName">Elisa E. Beshero-Bondar</span></a>
+              <span class="affil">Penn State Erie, the Behrend College</span>
+            </h2>
+            <p class="blurb">Why should writing and coding be seen as opposing activities? Both
+            depend foundationally on analytical processes, and learning to code is
+            akin to learning a foreign language. Whether students of coding or
+            literature are applying an existing system such as TEI or developing
+            their own tools, they must think intensively about their corpus of
+            data, and that analysis should be reflected back into their own
+            writing, as well as their understanding of literature. Tagging poetry,
+            for example, requires decisions about different kinds of information
+            like names, dates, people, and places, as well as patterns such as
+            images, motifs, and rhyme. For the students engaged in the process,
+            not only is writing intensive in the moment of application, but it
+            intensifies over time with learning new ways of doing things and
+            building on the model of previous projects.</p>
+          </div>
+
+          <div class="ProgramEvent" id="T15" >
+            <span class="EventDateTime"><span class="Day">Tuesday</span>
+            <span class="timestart">15:00</span>
+            <span class="timeend">15:30 EDT</span></span>  (+ Q&amp;A 15:30 - 15:50)
+            <h2 class="EventTitle">Saxon-JS meets XSpec Unit Testing: Building high quality into your web app</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#Galtman"><span class="SpeakerName">Amanda Galtman</span></a>
+              <span class="affil">MathWorks</span>
+            </h2>
+            <p class="blurb">With Saxon-JS, you can create web applications that run XSLT code
+            in a web browser. With unit testing, you can develop and maintain high
+            quality software. And the XSpec tool provides unit testing for XSLT
+            transforms. What could be a better match! Well, yes, there are some
+            challenges: XSpec running with Saxon-EE cannot access the web browser,
+            the DOM, or the JavaScript processor that influences your web
+            application. Nor does XSpec natively understand the interactive XSLT
+            features of Saxon-JS. We found two ways of bridging these gaps: we can
+            mock up the parts of the Saxon-JS operation that XSpec cannot natively
+            access, or we can run XSpec tests directly in the browser using
+            Saxon-JS. Each approach has pros and cons; we discuss how we chose
+            between them in a specific project involving user documentation for a
+            software API. </p>
+          </div>
+
+          <div class="ProgramEvent" id="T16" >
+            <span class="EventDateTime"><span class="Day">Tuesday</span>
+            <span class="timestart">16:00</span>
+            <span class="timeend">16:30 EDT</span></span>  (+ Q&amp;A 16:30 - 16:50)
+            <h2 class="EventTitle">An XML infrastructure for spell checking with custom dictionaries</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#Sperberg-McQueen"><span class="SpeakerName">C. M. Sperberg-McQueen</span></a>
+              <span class="affil">Black Mesa Technologies LLC</span>
+            </h2>
+            <p class="blurb">Spell checking has been available in desktop tools for a long time,
+            but dealing with checking in XML documents presents problems that are
+            less likely to be found in conventional text editors, beginning with
+            the presence of markup interleaved with the text to be checked. Many
+            XML sources present additional problems because they are
+            transcriptions of documents with multiple or archaic languages.
+            Nonetheless, with an appropriate theory of language, it is possible to
+            build a simple tool, perhaps with an XForm interface, for interactive
+            checking of XML documents, even outside the scope of other XML
+            processing.</p>
+          </div>
+        </div>
+        
+        <div class="Program-Day" id="Wednesday">
+          <h1 style="background-color: #336699; color:white"
+              >Wednesday, July 29, 2020</h1>
+
+          <div class="ProgramEvent" id="W10" >
+            <span class="EventDateTime"><span class="Day">Wednesday</span>
+            <span class="timestart">10:00</span>
+            <span class="timeend">10:30 EDT</span></span>  (+ Q&amp;A 10:30 - 10:50)
+            <h2 class="EventTitle">Cooking up something new: An XML and XSLT experiment with recipe data</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#Flynn"><span class="SpeakerName">Peter Flynn</span></a>
+
+            </h2>
+            <p class="blurb">Everyone who cooks knows the recipe for a recipe: title, list of
+            ingredients, method of preparation. While the pattern may be common
+            knowledge, published recipes are often full of errors. Could XML help
+            the cook or the cookbook writer? Armed with analysis (and a resulting
+            schema), a creator of recipes could avoid numerous common errors and
+            publish consistent recipes. What is needed, then, is tools that
+            don&rsquo;t require the creator to learn XML. Both the analysis and
+            suggestions for tools are available for those who knead them.</p>
+          </div>
+          
+          <div class="ProgramEvent" id="W11" >
+            <span class="EventDateTime"><span class="Day">Wednesday</span>
+            <span class="timestart">11:00</span>
+            <span class="timeend">11:30 EDT</span></span>  (+ Q&amp;A 11:30 - 11:50)
+            <h2 class="EventTitle">Experiences from declarative markup to improve the accessibility of HTML</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#xxxx"><span class="SpeakerName">Vincenzo Rubano</span></a> &amp;
+              <a class="biolink" href="Bios.html#xxxx"><span class="SpeakerName">Fabio Vitali</span></a>
+              <span class="affil">Department of Computer Science and Engineering, University of Bologna</span>
+            </h2>
+            <p class="blurb">Producing accessible content for the Web is largely (if we go by
+            the focus of most existing recommendations) a matter of adding
+            reasonably simple markup with a clear declarative meaning to
+            documents. How then can it be that producing really accessible content
+            happens so rarely? One reason is that normally-abled designers have
+            serious difficulty perceiving the difference between correct and
+            incorrect assistive markup, and existing tools do little to reduce
+            this handicap. We believe that better results can be achieved by using
+            a framework of accessible web components capable of enforcing best
+            practices, automated tools for checking accessibility, and a new
+            approach to manual tools to let developers and content creators
+            examine visually the accessibility markup so that they can make sense
+            of their impact on people with disabilities. </p>
+          </div>
+
+          <div class="ProgramEvent" id="W12" >
+            <span class="EventDateTime"><span class="Day">Wednesday</span>
+            <span class="timestart">12:00</span>
+            <span class="timeend">12:30 EDT</span></span>  (+ Q&amp;A 12:30 - 12:50)
+            <h2 class="EventTitle">Creating class attributes with XSLT <a href="https://www.balisage.net/latebreaking.html" class="uplink">(LB)</a></h2>
+
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#xxxx"><span class="SpeakerName">Gerrit Imsieke</span></a>
+              <span class="affil">le-tex</span>
+            </h2>
+            <p class="blurb">When going from one XML application, such
+            as JATS, to another, perhaps HTML, the stylesheet author
+            may not be able to follow any simple pattern of
+            translation. Attributes that may be useful in the target
+            may not be present in the source, or what is an attribute
+            in the target may be an element in the source. That which
+            is represented as a class attribute in the source might
+            become a style attribute or even a wrapper element in the
+            target. What conventions should the writer employ to
+            ensure consistency, especially when the stylesheet may be
+            combined with others, particularly in a layered
+            application? This presentation looks at the implications
+            of stylesheets not only for JATS but also for TEI and
+            DocBook.</p>
+          </div>
+          
+          <div class="ProgramEvent" id="W14" >
+            <span class="EventDateTime"><span class="Day">Wednesday</span>
+            <span class="timestart">14:00</span>
+            <span class="timeend">14:30 EDT</span></span>  (+ Q&amp;A 14:30 - 14:50)
+            <h2 class="EventTitle">Accessibility metadata statements</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#xxxx"><span class="SpeakerName">Madeleine Rothberg</span></a>
+              <span class="affil">The National Center for Accessible Media at WGBH</span>
+            </h2>
+            <p class="blurb">Accessibility metadata statements let publishers describe the
+            accessibility features of their publications and make conformance
+            claims. Metadata properties listed in Schema.org enable accessibility
+            statements on a Web page that describes a publication. They also allow
+            statements to be embedded in a packaged publication (such as an EPUB).
+            Accessibility statements can describe, for example: what kinds of
+            media are used; which accessibility features are included (image
+            descriptions, math markup, video captions, etc.) and more. Hazards
+            (flashing images that could cause seizures) can be noted or the
+            absence of hazards confirmed. EPUB has some additional metadata terms
+            important to publications, including conformance statements with
+            credentials (as defined in &#x201C;EPUB Accessibility 1.0&#x201D;
+            [https://www.w3.org/Submission/epub-a11y/]. I will examine both basic
+            and complex accessibility metadata statements and offer resources for
+            learning how to implement them.</p>
+          </div>
+          
+          <div class="ProgramEvent" id="W15" >
+            <span class="EventDateTime"><span class="Day">Wednesday</span>
+            <span class="timestart">15:00</span>
+            <span class="timeend">15:30 EDT</span></span>  (+ Q&amp;A 15:30 - 15:50)
+            <h2 class="EventTitle">A Document-based view of the Risk Management
+            Framework</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#xxxx"><span class="SpeakerName">Joshua Lubell</span></a>
+              <span class="affil">NIST</span>
+            </h2>
+            <p class="blurb">Cybersecurity professionals know the Risk
+            Management Framework as a rigorous yet flexible process
+            for managing security risk. But the RMF lacks a document
+            focus, even though much of the process requires authoring,
+            reviewing, revising, and accessing plans and reports. It
+            is possible to build such a focus by looking more closely
+            at these documents, starting with the System Security Plan
+            and the roles of key participants responsible for it. Such
+            a document- and role-centric view of the RMF process can
+            lead the way toward more efficient and less error-prone
+            security assurance.</p>
+          </div>
+
+          <div class="ProgramEvent" id="W16" >
+            <span class="EventDateTime"><span class="Day">Wednesday</span>
+            <span class="timestart">16:00</span>
+            <span class="timeend">16:30 EDT</span></span>  (+ Q&amp;A 16:30 - 16:50)
+            <h2 class="EventTitle">Converting typesetting codes to structured XML</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#xxxx"><span class="SpeakerName">Patrick Andries</span></a>
+              <span class="affil">Xcential Corporation</span>
+            </h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#xxxx"><span class="SpeakerName">Lauren Wood</span></a>
+              <span class="affil">Xcential Corporation and Textuality Services</span>
+            </h2>
+            <p class="blurb">Before XML, the United States Government Publishing Office (GPO)
+            created complex typography using non-hierarchical, line-based
+            typesetting systems characterized by &#x201C;locator&#x201D; files
+            which contain lines of typesetting instructions. Our mission is to
+            convert years of locator files that describe US government bills,
+            laws, and statues (etc.) into structural XML, valid to the United
+            States Legislative Markup (USLM) XML Schema. This was and is
+            complicated, as locator files, in addition to being completely
+            presentation-focused, use stylistic differences to communicate
+            semantic significance. Our iterative analysis grew the mapping
+            specification in stages. The conversion is in two parts. First Java
+            converts the locator files into hierarchical XML (the JAVA lexical,
+            syntactical, decomposition, and generational phases are the focus of
+            this paper). Then XSLT improves the resulting XML. Quality control and
+            testing required additional programming and the creation and
+            maintenance of a large set of reference samples.</p>
+          </div>
+        </div>
+
+        <div class="Program-Day" id="Thursday">
+          <h1 style="background-color: #336699; color:white"
+              >Thursday, July 30, 2020</h1>
+
+          <div class="ProgramEvent" id="H10" >
+            <span class="EventDateTime"><span class="Day">Thursday</span>
+            <span class="timestart">10:00</span>
+            <span class="timeend">10:30 EDT</span></span>  (+ Q&amp;A 10:30 - 10:50)
+            <h2 class="EventTitle">Marking up microrevisions with major implications: non-linear text in TAG</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#Bleeker"><span class="SpeakerName">Elli Bleeker</span></a>,
+              <a class="biolink" href="Bios.html#Buitendijk"><span class="SpeakerName">Bram Buitendijk</span></a>, &amp;
+              <a class="biolink" href="Bios.html#Dekker"><span class="SpeakerName">Ronald Haentjens Dekker</span></a>
+              <span class="affil">Research and Development Group, Royal Dutch Academy of Arts and Sciences</span>
+            </h2>
+            <p class="blurb">Micro-level textual variation is an important fact of life for
+            textual critics; we discuss how it can be expressed idiomatically in
+            markup and how the markup can be used by digital collations tools to
+            achieve a more refined analysis of the textual variation than is
+            possible when the collation tool ignores the markup. Using Virginia
+            Woolf&rsquo;s manuscript drafts of <em>To the Lighthouse</em>
+            (1927) as a case study, we show that the deletions, insertions, and
+            rewritings which express the author&rsquo;s struggle with her
+            materials constitute non-linear, discontinuous, and often
+            multi-hierarchical information structures which are easily represented
+            in the &#x201C;Text As Graph&#x201D; (TAG) hypergraph data structure,
+            readily expressed using the markup of TAGML, and usefully exploited by
+            the TAG-aware collation tool Hypercollate. Micro-level revisions do
+            not need to be a special case handled with ad-hoc extensions to our
+            markup infrastructure: we can have an infrastructure that handles them
+            naturally and allows us to use them comfortably to improve our
+            understanding of authors, and their works, and their textual
+            revisions. </p>
+          </div>
+          
+          <div class="ProgramEvent" id="H11" >
+            <span class="EventDateTime"><span class="Day">Thursday</span>
+            <span class="timestart">11:00</span>
+            <span class="timeend">11:30 EDT</span></span>  (+ Q&amp;A 11:30 - 11:50)
+            <h2 class="EventTitle">How Suite it is: Declarative XForms Submission Testing <a href="https://www.balisage.net/latebreaking.html" class="uplink">(LB)</a></h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#Pemberton"><span class="SpeakerName">Steven Pemberton</span></a>
+              <span class="affil">CWI</span>
+            </h2>
+            <p class="blurb">The original test suite for XForms 1.1
+            required considerable manual intervention to run.  As a
+            part of the XForms 2.0 effort, a new test suite is being
+            designed and built that tests features by introspection,
+            without user intervention, so that the XForm itself can
+            report if it has passed or not. This talk will give an
+            overview of how the test suite works and in particular
+            discuss the issues involved with submission to the server,
+            how to deal with aspects of the HTTP protocol that were
+            designed before XML and XForms were created, and how you
+            go about introspecting something that has left the client
+            before you can cast your eyes on it.</p>
+          </div>
+          
+          <div class="ProgramEvent" id="H12" >
+            <span class="EventDateTime"><span class="Day">Thursday</span>
+            <span class="timestart">12:00</span>
+            <span class="timeend">12:30 EDT</span></span>  (+ Q&amp;A 12:30 - 12:50)
+            <h2 class="EventTitle">Document similarity: Transcription, edit distances, vocabulary overlap, and the metaphysics of documents</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#Huitfeldt"><span class="SpeakerName">Claus Huitfeldt</span></a>
+              <span class="affil">University of Bergen</span>
+            </h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#Sperberg-McQueen"><span class="SpeakerName">C. M. Sperberg-McQueen</span></a>
+              <span class="affil">Black Mesa Technologies LLC</span>
+            </h2>
+            <p class="blurb">There are many contexts in which the similarity of documents is a
+            critical point of concern. In textual criticism, for example,
+            understanding the faithfulness of a transcription to the exact text of
+            a particular document is key. Or, in a more mundane example, a user
+            may wish to understand the similarities of doc.docx, doc_final.docx,
+            doc_final_v2.docx, and doc.html! There are many measures of the
+            &ldquo;distance&rdquo; between sets of documents, but a woeful absence
+            of such measures that consider the richer structure of marked-up
+            documents. Could we do better?</p>
+          </div>
+
+          <div class="ProgramEvent" id="H1250" >
+            <span class="EventDateTime"><span class="Day">Thursday</span>
+            <span class="timestart">12:50</span>
+            <span class="timeend">14:00 EDT</span></span>
+            <h2 class="EventTitle">Balisage Bard</h2>
+            <h2 class="Speakers">
+              <span class="SpeakerName">Lynne Price</span>
+              <span class="affil">Gamemaster</span>
+            </h2>
+
+            <p class="blurb">
+            Once again, Balisage Bard gives you the opportunity to
+            exercise your literary creativity with original poems,
+            short stories, jokes, songs, and other
+            masterpieces. Subject matter must be related to Balisage
+            (markup, papers presented this or previous years, virtual
+            conferences, and so forth). Read your effort or play it on
+            video during the game session. Translations of works in
+            languages other than English are not required but will be
+            appreciated. There is a two-minute time limit per
+            presentation. Sign up by entering your name in the Bard
+            chat room. Presentation sequence at that gamemaster's
+            discretion. One submission per person/team unless there is
+            time for more at the end. And listen closely. Vote for
+            your favorite three works after the last presentation. Who
+            will be the 2020 Balisage Poet Laureate?</p>
+          </div>
+
+          <div class="ProgramEvent" id="H14" >
+            <span class="EventDateTime"><span class="Day">Thursday</span>
+            <span class="timestart">14:00</span>
+            <span class="timeend">14:30 EDT</span></span>  (+ Q&amp;A 14:30 - 14:50)
+            <h2 class="EventTitle">What is a diagram, really?</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#xxxx"><span class="SpeakerName">Steven DeRose</span></a>
+              <span class="affil">Docugami</span>
+            </h2>
+            <p class="blurb">One rationale sometimes offered for the use of XML to represent
+            text documents is that text documents consist <em>by nature</em>
+            of ordered hierarchies of content objects (OHCO). But XML is used with
+            success for much more than text documents: math, music, vector
+            graphics, and more. When XML is used for diagrams, does it fit their
+            inner nature? What <em>is</em> the inner nature of a diagram?
+            Could it be that it consists of objects whose type is determined by
+            their content? Could it be that those objects can have a hierarchical
+            organization? Could it be that even in a two-dimensional space they
+            are ordered? Could diagrams be…ordered hierarchies of content objects?
+            </p>
+          </div>
+          
+          <div class="ProgramEvent" id="H15" >
+            <span class="EventDateTime"><span class="Day">Thursday</span>
+            <span class="timestart">15:00</span>
+            <span class="timeend">15:30 EDT</span></span>  (+ Q&amp;A 15:30 - 15:50)
+            <h2 class="EventTitle">Syntax-From-Doc: A case study of powering IDE code completion From XML
+            documentation</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#Porter"><span class="SpeakerName">C. Edward Porter</span></a>
+              <span class="affil">SAS</span>
+            </h2>
+            <p class="blurb">Syntax highlighting is a profoundly useful feature for developers.
+            To make it work, you must produce a concise and accurate description
+            of the syntax of your language. For a rich language with a long,
+            organic history, this can be a significant challenge. SAS engaged in a
+            multi-year project using multiple markup languages to produce a
+            scalable, automated solution: building the syntax descriptions
+            directly from the language documentation. </p>
+          </div>
+
+          <div class="ProgramEvent" id="H16" >
+            <span class="EventDateTime"><span class="Day">Thursday</span>
+            <span class="timestart">16:00</span>
+            <span class="timeend">16:30 EDT</span></span>  (+ Q&amp;A 16:30 - 16:50)
+            <h2 class="EventTitle">Systems security assurance as (micro) publishing: declarative markup for systems description and assessment</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#Piez"><span class="SpeakerName">Wendell Piez</span></a>
+              <span class="affil"></span>
+            </h2>
+            <p class="blurb">Declarative markup (not just XML but also its predecessors and near
+            neighbors) has succeeded in many kinds of information management
+            tasks. Most especially, it has proven to be broadly applicable in
+            technical publishing. The needs of the Open Security Controls
+            Assessment Language (OSCAL) do not appear, on the surface at least, to
+            be similar to publishing. And yet, below the surface we find striking
+            similarity. Declarative markup, perhaps, can get the job done by doing
+            the job.</p>
+          </div>
+        </div>
+        
+        <div class="Program-Day" id="Friday">
+          <h1 style="background-color: #336699; color:white"
+              >Friday, July 31, 2020</h1>
+
+          <div class="ProgramEvent" id="F11" >
+            <span class="EventDateTime"><span class="Day">Friday</span>
+            <span class="timestart">11:00</span>
+            <span class="timeend">11:30 EDT</span></span>  (+ Q&amp;A 11:30 - 11:50)
+            <h2 class="EventTitle">XML for art: A case study</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#Holstege"><span class="SpeakerName">Mary Holstege</span></a>
+            </h2>
+            <p class="blurb">Art, it has been argued, lives where there is complexity: between
+            the boundaries of pure order and pure chaos. Generative art applies
+            judicious amounts of randomness to the pure order of algorithmic
+            logic to produce candidate works of art, which the artist selects from.
+            The XML stack forms a palette for these works. Algorithms can be expressed
+            in XSLT and XQuery, randomness can be introduced through simple and
+            higher-order functions, and SVG can be the canvas. Along the way,
+            common problems of annotation, knowledge management, and searching
+            arise. Surprisingly, perhaps, so does issue of the separation of
+            form and content.</p>
+          </div>
+          
+          <div class="ProgramEvent" id="F12" >
+            <span class="EventDateTime"><span class="Day">Friday</span>
+            <span class="timestart">12:00</span>
+            <span class="timeend">12:30 EDT</span></span>  (+ Q&amp;A 12:30 - 12:50)
+            <h2 class="EventTitle">Pipelined XSLT transformations</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#Nordstrom"><span class="SpeakerName">Ari Nordström</span></a>
+              <span class="affil"></span>
+            </h2>
+            <p class="blurb">Sure, you can do almost anything in a monster, monolithic XSLT
+            program. But you can make life much easier for yourself, and produce
+            code that&rsquo;s easier to maintain as well, if you break your
+            process into steps and bind them together with XProc. Pipelining not
+            only speeds and simplifies coding, it also aids debugging, testing,
+            and even documentation. Even if you&rsquo;re an experienced XSLT
+            coder, it&rsquo;s worth considering.</p>
+          </div>
+
+          <div class="ProgramEvent" id="F14" >
+            <span class="EventDateTime"><span class="Day">Friday</span>
+            <span class="timestart">14:00</span>
+            <span class="timeend">14:30 EDT</span></span>  (+ Q&amp;A 14:30 - 14:50)
+            <h2 class="EventTitle">Asynchronous XSLT <a href="https://www.balisage.net/latebreaking.html" class="uplink">(LB)</a></h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#Kay"><span class="SpeakerName">Michael Kay</span></a>
+              <span class="affil">Saxonica </span>
+            </h2>
+
+            <p class="blurb">Javascript, with its dependence on
+            asynchronous interactions, would seem to be intrinsically
+            in conflict with XSLT and its expectations, like reading
+            in whole documents. Saxon-JS 1.0 attempted to work around
+            this conflict with a specialized scheduling instruction
+            added to XSLT. Saxon-JS 2.0 attempts to deal with
+            asynchrony on both the server and the client and has gone
+            further than 1.0. But the work on 2.0 development has
+            given the developers a good opportunity to come up with
+            ideas for a more ambitious solution in the future.</p>
+          </div>
+
+          <div class="ProgramEvent" id="F15" >
+            <span class="EventDateTime"><span class="Day">Friday</span>
+            <span class="timestart">15:00</span>
+            <span class="timeend">15:30 EDT</span></span>
+            <h2 class="EventTitle">Fault tolerance, error tolerance, diversity tolerance</h2>
+            <h2 class="Speakers">
+              <a class="biolink" href="Bios.html#Sperberg-McQueen"><span class="SpeakerName">C. M. Sperberg-McQueen</span></a>
+              <span class="affil">Black Mesa Technologies LLC</span>
+            </h2>
+            <p class="blurb">How to react when things are not as we expect them to be.</p>
+          </div>
+
+        </div>
+
+
+        <!-- END Text -->
+
+
+        
+      </div>
+      <!-- END Wrapper -->
+    </div>
+    
+    <div id="schedule">
+
+      <xf:group ref=".[instance('ui')/@debugging = 'true']">
+        <p class="debug">Tracing: </p>
+        <p class="debug">
+          <xf:output value="instance('ui')/tz" class="trace">
+            <xf:label>Timezone: </xf:label>
+          </xf:output>
+          <br/>
+          <xf:output value="instance('ui')/tz/@h" class="trace">
+            <xf:label>Hours: </xf:label>
+          </xf:output>
+          <br/>
+          <xf:output value="instance('ui')/tz/@m" class="trace">
+            <xf:label>Minutes: </xf:label>
+          </xf:output>
+          <br/>
+          <xf:output value="instance('ui')/tz/@sign" class="trace">
+            <xf:label>Sign: </xf:label>
+          </xf:output>
+          <br/>
+          <xf:output value="instance('ui')/tz/@dur" class="trace">
+            <xf:label>Duration (dur): </xf:label>
+          </xf:output>
+          <br/>
+          <xf:output value="instance('ui')/tz/@secs" class="trace">
+            <xf:label>Seconds: </xf:label>
+          </xf:output>
+          <br/>
+          <xf:output ref="instance('ui')/@clock24" class="trace">
+            <xf:label>24-hour clock: </xf:label>
+          </xf:output>
+          <br/>
+          <xf:trigger>
+            <xf:label>Set 24h clock</xf:label>
+            <xf:message ev:event="DOMActivate"
+                        if="1 = 0"
+                        level="modal"
+                        >Hi, mom.  The domactivate event fired.</xf:message>
+            <xf:setvalue ev:event="DOMActivate"
+                         ref="instance('ui')/@clock24"
+                         value="'true'"/>
+          </xf:trigger>
+          <br/>
+          <xf:trigger>
+            <xf:label>Set 12h clock</xf:label>
+            <xf:setvalue ev:event="DOMActivate"
+                         ref="instance('ui')/@clock24"
+                         value="'false'"/>
+          </xf:trigger>
+          <br/>
+          <xf:trigger>
+            <xf:label>Reset 24h clock</xf:label>
+            <xf:dispatch ev:event="DOMActivate"
+                         targetid="m1" name="bmt:new-timezone"/>
+          </xf:trigger>
+        </p>
+      </xf:group>
+    
+      <p class="controls">
+        <xf:select1 id="timezone-selector" ref="instance('ui')/tz">
+          <xf:label>Timezone: </xf:label>
+          <!--
+          <xf:itemset nodeset="instance('timezones')/timezone">
+            <xf:label ref="."/>
+            <xf:value ref="@offset"/>
+          </xf:itemset>
+          -->
+          <xf:item>
+            <xf:label>AoE  Baker Island (UTC-12:00)</xf:label>
+            <xf:value>-12:00</xf:value>
+            <xf:dispatch ev:event="xforms-select"
+                         targetid="m1" name="bmt:set-12h-clock"/>           
+          </xf:item>
+          <xf:item>
+            <xf:label>SST  American Samoa (UTC-11:00)</xf:label>
+            <xf:value>-11:00</xf:value>
+            <xf:dispatch ev:event="xforms-select"
+                         targetid="m1" name="bmt:set-12h-clock"/>
+          </xf:item>
+          <xf:item>
+            <xf:label>AKDT Fairbanks, AK, USA     (UTC-10:00)</xf:label>
+            <xf:value>-10:00</xf:value>
+            <xf:dispatch ev:event="xforms-select"
+                         targetid="m1" name="bmt:set-12h-clock"/>
+          </xf:item>
+          <xf:item>
+            <xf:label>PDT  San Francisco, CA, USA (UTC-07:00)</xf:label>
+            <xf:value>-07:00</xf:value>
+            <xf:dispatch ev:event="xforms-select"
+                         targetid="m1" name="bmt:set-12h-clock"/>
+          </xf:item>
+          <xf:item>
+            <xf:label>MDT  Denver, CO, USA        (UTC-06:00)</xf:label>
+            <xf:value>-06:00</xf:value>
+            <xf:dispatch ev:event="xforms-select"
+                         targetid="m1" name="bmt:set-12h-clock"/>
+          </xf:item>
+          <xf:item>
+            <xf:label>CDT  Chicago, IL, USA       (UTC-05:00)</xf:label>
+            <xf:value>-05:00</xf:value>
+            <xf:dispatch ev:event="xforms-select" targetid="m1" name="bmt:set-12h-clock"/>
+          </xf:item>
+          <xf:item>
+            <xf:label>EDT  Rockville, MD, USA     (UTC-04:00)</xf:label>
+            <xf:value>-04:00</xf:value>
+            <xf:dispatch ev:event="xforms-select" targetid="m1" name="bmt:set-12h-clock"/>
+          </xf:item>
+          <xf:item>
+            <xf:label>BRT  Fortaleza, BRA     (UTC-03:00)</xf:label>
+            <xf:value>-03:00</xf:value>
+            <xf:dispatch ev:event="xforms-select" targetid="m1" name="bmt:set-24h-clock"/>
+          </xf:item>
+          <xf:item>
+            <xf:label>Coordinated Universal Time   (UTC+00:00)</xf:label>
+            <xf:value>+00:00</xf:value>
+            <xf:dispatch ev:event="xforms-select" targetid="m1" name="bmt:set-24h-clock"/>
+          </xf:item>
+          <xf:item>
+            <xf:label>BST  Edinburgh, GBR     (UTC+01:00)</xf:label>
+            <xf:value>+01:00</xf:value>
+            <xf:dispatch ev:event="xforms-select" targetid="m1" name="bmt:set-24h-clock"/>
+          </xf:item>
+          <xf:item>
+            <xf:label>CEST Prague, CZE        (UTC+02:00)</xf:label>
+            <xf:value>+02:00</xf:value>
+            <xf:dispatch ev:event="xforms-select" targetid="m1" name="bmt:set-24h-clock"/>
+          </xf:item>
+          <xf:item>
+            <xf:label>MSK  Moscow, RUS        (UTC+03:00)</xf:label>
+            <xf:value>+03:00</xf:value>
+            <xf:dispatch ev:event="xforms-select" targetid="m1" name="bmt:set-24h-clock"/>
+          </xf:item>
+          <xf:item>
+            <xf:label>IST  Chennai, IND       (UTC+05:30)</xf:label>
+            <xf:value>+05:30</xf:value>
+            <xf:dispatch ev:event="xforms-select" targetid="m1" name="bmt:set-24h-clock"/>
+          </xf:item>
+          <xf:item>
+            <xf:label>CST  Beijing, CHN       (UTC+08:00)</xf:label>
+            <xf:value>+08:00</xf:value>
+            <xf:dispatch ev:event="xforms-select" targetid="m1" name="bmt:set-24h-clock"/>
+          </xf:item>
+          <xf:item>
+            <xf:label>JST  Tokyo, JPN         (UTC+09:00)</xf:label>
+            <xf:value>+09:00</xf:value>
+            <xf:dispatch ev:event="xforms-select" targetid="m1" name="bmt:set-24h-clock"/>
+          </xf:item>
+          <xf:item>
+            <xf:label>AEST Sydney, AUS        (UTC+10:00)</xf:label>
+            <xf:value>+10:00</xf:value>
+            <xf:dispatch ev:event="xforms-select" targetid="m1" name="bmt:set-12h-clock"/>
+          </xf:item>
+          <xf:item>
+            <xf:label>NZST Auckland, NZL       (UTC+12:00)</xf:label>
+            <xf:value>+12:00</xf:value>
+            <xf:dispatch ev:event="xforms-select" targetid="m1" name="bmt:set-12h-clock"/>
+          </xf:item>
+
+	  
+        </xf:select1>
+        
+        <xf:input ref="instance('ui')/@clock24">
+          <xf:label>24-hour clock: </xf:label>
+        </xf:input>
+        
+        <xf:input ref="instance('ui')/@debugging">
+          <xf:label>Debugging: </xf:label>
+        </xf:input>
+      </p>
+
+      <table>
+        <caption>Interactive schedule-at-a-glance</caption>
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Description</th>
+            <th id="mon" class="day" scope="col">Monday</th>
+            <th id="tue" class="day" scope="col">Tuesday</th>
+            <th id="wed" class="day" scope="col">Wednesday</th>
+            <th id="thu" class="day" scope="col">Thursday</th>
+            <th id="fri" class="day" scope="col">Friday</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <th id="r10" class="time" scope="row">
+              <time datetime="2020-07-27T10:00:00-04:00">10:00</time>
+              <xf:output
+                  mediatype="text/html"
+                  value="instance('ui')/slot-times/slot[@id='r10']"/>
+            </th>
+            <td>presentation</td>
+            <td rowspan="2" data-slot="Monday/10:00">
+              <xf:group
+                  ref="instance('program')//xhtml:div[@class='ProgramEvent']
+                       [xhtml:span[@class='EventDateTime']
+                       [xhtml:span[@class='Day' and string() = 'Monday']]
+                       [xhtml:span[@class='timestart' and string() = '10:00']]
+                       ]
+                       ">
+                <xf:output value="xhtml:h2[@class='EventTitle']"/>
+                <span> &#x2014; </span>
+                <xf:repeat
+                    nodeset="xhtml:h2[@class='Speakers']/xhtml:a">
+                  <xf:output mediatype="text/html"
+                             value="serialize(.)"/>
+                </xf:repeat>
+              </xf:group>
+            </td>
+            <td rowspan="2" data-slot="Tuesday/10:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Tuesday/10:00')"/>
+            </td>
+            <td rowspan="2" data-slot="Wednesday/10:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Wednesday/10:00')"/>
+            </td>
+            <td rowspan="2" data-slot="Thursday/10:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Thursday/10:00')"/>
+            </td>
+            <td rowspan="2" data-slot="Friday/10:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Friday/10:00')"/>
+            </td>
+            
+          </tr>
+          
+          <tr class="short">
+            <td id="r1030" class="time" scope="row">
+              <time datetime="2020-07-27T10:30:00-04:00">10:30</time>
+              <xf:output mediatype="text/html"
+                         value="instance('ui')/slot-times/slot[@id='r1030']"/>
+            </td>
+            <td>Q&amp;A</td>
+          </tr>
+
+          <tr>
+            <th id="r1050" class="time" scope="row">
+              <time datetime="2020-07-27T10:50:00-04:00">10:50</time>
+              <xf:output mediatype="text/html"
+                         value="instance('ui')/slot-times/slot[@id='r1050']"/>
+            </th>
+            <td class="ilb" colspan="2">technology break</td>
+            <td class="ilb"></td>
+            <td class="ilb"></td>
+            <td class="ilb"></td>
+            <td class="ilb"></td>
+          </tr>
+
+          <tr>
+            <th id="r11" class="time" scope="row">
+              <time datetime="2020-07-27T11:00:00-04:00">11:00</time>
+              <xf:output mediatype="text/html"
+                         value="instance('ui')/slot-times/slot[@id='r11']"/>
+            </th>
+            <td>presentation</td>
+            <td rowspan="2" data-slot="Monday/11:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Monday/10:00')"/>
+            </td>
+            <td rowspan="2" data-slot="Tuesday/11:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Tuesday/10:00')"/>
+            </td>
+            <td rowspan="2" data-slot="Wednesday/11:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Wednesday/10:00')"/>
+            </td>
+            <td rowspan="2" data-slot="Thursday/11:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Thursday/10:00')"/>
+            </td>
+            <td rowspan="2" data-slot="Friday/11:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Friday/11:00')"/>
+            </td>
+          </tr>
+
+          <tr class="short">
+            <td id="r1130" class="time" scope="row">
+              <time datetime="2020-07-27T11:30:00-04:00">11:30</time>
+              <xf:output mediatype="text/html"
+                         value="instance('ui')/slot-times/slot[@id='r1130']"/>
+            </td>
+            <td>Q&amp;A</td>
+          </tr>
+
+          <tr>
+            <th id="r1150" class="time" scope="row">
+              <time datetime="2020-07-27T11:50:00-04:00">11:50</time>
+              <xf:output mediatype="text/html"
+                         value="instance('ui')/slot-times/slot[@id='r1150']"/>
+            </th>
+            <td class="ilb" colspan="2">technology break</td>
+            <td class="ilb"></td>
+            <td class="ilb"></td>
+            <td class="ilb"></td>
+            <td class="ilb"></td>
+          </tr>
+
+          <tr>
+            <th id="r12" class="time" scope="row">
+              <time datetime="2020-07-27T12:00:00-04:00">12:00</time>
+              <xf:output mediatype="text/html"
+                         value="instance('ui')/slot-times/slot[@id='r12']"/>
+            </th>
+            <td>presentation</td>
+            <td rowspan="2" data-slot="Monday/12:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Monday/12:00')"/>
+            </td>
+
+            <td rowspan="2" data-slot="Tuesday/12:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 
+                                'single-item.xsl', false, 
+                                'slot', 'Tuesday/12:00')"/>
+            </td>
+            <td rowspan="2" data-slot="Wednesday/12:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Wednesday/12:00' )"/>
+            </td>
+            <td rowspan="2" data-slot="Thursday/12:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Thursday/12:00' )"/>
+            </td>
+            <td rowspan="2" data-slot="Friday/12:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Friday/12:00' )"/>
+            </td>
+          </tr>
+
+          <tr class="short">
+            <td id="r1230" class="time">
+              <time datetime="2020-07-27T12:30:00-04:00">12:30</time>
+              <xf:output mediatype="text/html"
+                         value="instance('ui')/slot-times/slot[@id='r1230']"/>
+            </td>
+            <td>Q&amp;A</td>
+          </tr>
+
+          <tr>
+            <th id="r1250" class="time" scope="row">
+              <time datetime="2020-07-27T12:50:00-04:00">12:50</time>
+              <xf:output mediatype="text/html"
+                         value="instance('ui')/slot-times/slot[@id='r1250']"/>
+            </th>
+            <td class="ilb" colspan="1">mid-day break</td>
+            <td rowspan="1" data-slot="Monday/1:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Monday/1:00' )"/>
+            </td>
+            <td class="ilb"></td>
+            <td class="ilb"></td>
+            <td rowspan="1" data-slot="Thursday/12:50">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Thursday/12:50' )"/>
+            </td>
+            
+            <td class="ilb"></td>
+          </tr>
+
+          <tr>
+            <th id="r14" class="time" scope="row">
+              <time datetime="2020-07-27T14:00:00-04:00">14:00</time>
+              <xf:output mediatype="text/html"
+                         value="instance('ui')/slot-times/slot[@id='r14']"/>
+            </th>
+            <td>presentation</td>
+            <td rowspan="2" data-slot="Monday/14:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Monday/14:00' )"/>
+            </td>
+            <td rowspan="2" data-slot="Tuesday/14:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Tuesday/14:00' )"/>
+            </td>
+            <td rowspan="2" data-slot="Wednesday/14:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Wednesday/14:00' )"/>
+            </td>
+            <td rowspan="2" data-slot="Thursday/14:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Thursday/14:00' )"/>
+            </td>
+            <td rowspan="2" data-slot="Friday/14:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Friday/14:00' )"/>
+            </td>
+          </tr>
+
+          <tr class="short">
+            <td id="r1430" class="time">
+              <time datetime="2020-07-27T14:30:00-04:00">14:30</time>
+              <xf:output mediatype="text/html"
+                         value="instance('ui')/slot-times/slot[@id='r1430']"/>
+            </td>
+            <td>Q&amp;A</td>
+          </tr>
+
+          <tr>
+            <th id="r1450" class="time" scope="row">
+              <time datetime="2020-07-27T14:50:00-04:00">14:50</time>
+              <xf:output mediatype="text/html"
+                         value="instance('ui')/slot-times/slot[@id='r1450']"/>
+            </th>
+            <td class="ilb" colspan="2">technology break</td>
+            <td class="ilb"></td>
+            <td class="ilb"></td>
+            <td class="ilb"></td>
+            <td class="ilb"></td>
+          </tr>
+
+          <tr>
+            <th id="r15" class="time" scope="row">
+              <time datetime="2020-07-27T15:00:00-04:00">15:00</time>
+              <xf:output mediatype="text/html"
+                         value="instance('ui')/slot-times/slot[@id='r15']"/>
+            </th>
+            <td>presentation</td>
+            <td rowspan="2" data-slot="Monday/15:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Monday/15:00' )"/>
+            </td>
+            <td rowspan="2" data-slot="Tuesday/15:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Tuesday/15:00' )"/>
+            </td>
+            <td rowspan="2" data-slot="Wednesday/15:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Wednesday/15:00' )"/>
+            </td>
+            <td rowspan="2" data-slot="Thursday/15:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Thursday/15:00' )"/>
+            </td>
+            <td rowspan="2" data-slot="Friday/15:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Friday/15:00' )"/>
+            <br /></td>
+          </tr>
+
+          <tr class="short">
+            <td id="r1530" class="time">
+              <time datetime="2020-07-27T15:30:00-04:00">15:30</time>
+              <xf:output mediatype="text/html"
+                         value="instance('ui')/slot-times/slot[@id='r1530']"/>
+            </td>
+            <td>Q&amp;A</td>
+          </tr>
+
+          <tr>
+            <th id="r1550" class="time" scope="row">
+              <time datetime="2020-07-27T15:50:00-04:00">15:50</time>
+              <xf:output mediatype="text/html"
+                         value="instance('ui')/slot-times/slot[@id='r1550']"/>
+            </th>
+            <td class="ilb" colspan="2">technology break</td>
+            <td class="ilb"></td>
+            <td class="ilb"></td>
+            <td class="ilb"></td>
+            <td class="ilb"></td>
+          </tr>
+
+          <tr>
+            <th id="r16" class="time" scope="row">
+              <time datetime="2020-07-27T16:00:00-04:00">16:00</time>
+              <xf:output mediatype="text/html"
+                         value="instance('ui')/slot-times/slot[@id='r16']"/>
+            </th>
+            <td>presentation</td>
+            <td rowspan="2" data-slot="Monday/16:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Monday/16:00' )"/>
+            </td>
+            <td rowspan="2" data-slot="Tuesday/16:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Tuesday/16:00' )"/>
+            </td>
+            <td rowspan="2" data-slot="Wednesday/16:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Wednesday/16:00' )"/>
+            </td>
+            <td rowspan="2" data-slot="Thursday/16:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Thursday/16:00' )"/>
+            </td>
+            <td rowspan="2" data-slot="Friday/16:00">
+              <xf:output mediatype="text/html"
+                         value="transform(instance('program'), 'single-item.xsl', false,
+                                'slot', 'Friday/16:00' )"/>
+            </td>
+          </tr>
+
+          <tr class="short">
+            <td id="r1630" class="time">
+              <time datetime="2020-07-27T16:30:00-04:00">16:30</time>
+              <xf:output mediatype="text/html"
+                         value="instance('ui')/slot-times/slot[@id='r1630']"/>
+            </td>
+            <td>Q&amp;A</td>
+          </tr>
+
+          <tr>
+            <th id="r1650" class="time" scope="row">
+              <time datetime="2020-07-27T16:50:00-04:00">16:50</time>
+              <xf:output mediatype="text/html"
+                         value="instance('ui')/slot-times/slot[@id='r1650']"/>
+            </th>
+            <td class="ilb" colspan="2">daily closing comments</td>
+            <td class="ilb"></td>
+            <td class="ilb"></td>
+            <td class="ilb"></td>
+            <td class="ilb"></td>
+          </tr>
+
+          <tr>
+            <th id="r17" class="time" scope="row">
+              <time datetime="2020-07-27T17:00:00-04:00">17:00</time>
+              <xf:output value="instance('ui')/slot-times/slot[@id='r17']"/>
+            </th>
+            <td class="ilb" colspan="2">adjourn for the day</td>
+            <td class="ilb"></td>
+            <td class="ilb"></td>
+            <td class="ilb"></td>
+            <td class="ilb"></td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+  </body>
+</html>

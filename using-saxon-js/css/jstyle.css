@@ -1,0 +1,96 @@
+<!--/*--><css><![CDATA[/**/
+/* This header, and its matching footer, allow XSLT 1.0 in the browser
+   to load this file as a document (necessary for at least some
+   versions of XSLT forms). It's harmless in other CSS processors. */
+
+#schedlink {
+    display: none;
+    padding-top: 0;
+    padding-bottom: 0.25em;
+    text-align: right;
+}
+
+#schedule {
+    width: calc(100% - 4em);
+    border-top: 1em solid #842D4B;
+    margin-top: 2em;
+    margin-left: 2em;
+    padding-top: 1em;
+    margin-bottom: 2em;
+    display: none;
+}
+
+#schedule .controls {
+    text-align: center;
+}
+
+#schedule table {
+    table-layout: fixed;
+    border-spacing: 0;
+    border-collapse: collapse;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#schedule table th,
+#schedule table td {
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    vertical-align: top;
+    padding: 0.5em;
+}
+
+#schedule table td.ilb {
+    border-right: none;
+}
+
+#schedule table th.day {
+    width: 15%;
+}
+
+#schedule table tr td:nth-child(4),
+#schedule table tr td:nth-child(6) {
+    background-color: #FFFFE3;
+}
+
+#schedule table td.lb {
+    vertical-align: middle;
+    font-style: italic;
+    background-color: lightblue !important;
+    border-left: 1px solid black;
+}
+
+#schedule table tr.short {
+    height: 2em;
+}
+
+#schedule table .time {
+    width: 1in;
+    text-align: right;
+}
+
+#schedule table .col2 {
+    width: 25%;
+}
+
+#schedule table .none {
+    font-style: italic;
+    vertical-align: middle;
+    background: repeating-linear-gradient(
+        135deg,
+        transparent,
+        transparent 10px,
+        #dfdfdf 10px,
+        #dfdfdf 20px
+    );
+}
+
+#schedule table .col4,
+#schedule table .col6 {
+    background-color: #FFFFE3;
+}
+
+/*]]>*/<!--/*--></css><!--*/-->
