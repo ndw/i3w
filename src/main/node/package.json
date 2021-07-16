@@ -1,0 +1,15 @@
+{
+  "name": "Using-saxon-js-I3W",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Interactive schedule for Balisage rendered with Saxon-JS",
+  "author": "Norman Walsh",
+  "engines": {
+    "node": "15.x"
+  },
+  "scripts": {},
+  "dependencies": {
+    "saxon-js": "^2.1.0",
+    "xslt3": "^2.1.0"
+  }
+}

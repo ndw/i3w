@@ -1,0 +1,1822 @@
+<?xml-stylesheet href="Balisage-1-3-xsl/balisage-proceedings-html.xsl" type="text/xsl" ?>
+<!--* I've got the Balisage-1-3-xsl directory symlinked. *-->
+<article xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         version="5.2">
+<title>Interactivity Three Ways</title>
+<info>
+  <abstract>
+    <para>This paper describes three different technologies that can
+    be used to add interactivity to a document presented on the web:
+    “plain old JavaScript”, Saxon-JS, and XForms. A specific feature
+    is implemented in each system so that the differences between
+    similar implementations across these three platforms can be observed.</para>
+  </abstract>
+  <author>
+    <personname>
+      <firstname>Norman</firstname>
+      <surname>Walsh</surname>
+    </personname>
+    <affiliation>
+      <orgname>Saxonica</orgname>
+    </affiliation>
+  </author>
+  <author>
+    <personname>
+      <firstname>C. M.</firstname>
+      <surname>Sperberg-McQueen</surname>
+    </personname>
+    <affiliation>
+      <orgname>Black Mesa Technologies</orgname>
+    </affiliation>
+  </author>
+  <keywordset role="author">
+    <keyword>XForms</keyword>
+    <keyword>JavaScript</keyword>
+    <keyword>Saxon-JS</keyword>
+  </keywordset>
+  <pubdate>2021-07-16</pubdate>
+</info>
+
+<section xml:id="introduction">
+<title>Introduction</title>
+
+<para>One of the most obvious differences between documents physically
+printed on pages of paper and documents displayed on electronic
+devices is that the latter can be interactive in ways that the former
+cannot.
+More than 50 years ago, this is what convinced Ted Nelson and
+others that when used well computers would dramatically change
+our relation with text.
+What kinds of interactivity are possible, and to what extent
+interactivity adds value to a document, are challenging questions that
+require careful analysis.</para>
+
+<para>Deciding that some specific interactive feature would add value
+immediately raises a new challenge: how is that feature going to be realized?
+</para>
+
+<para>In this paper, we look at three different technologies that can
+be used to add interactivity to a document presented on the web:
+“plain old JavaScript”, Saxon-JS, and XForms. We examine a specific
+feature and compare the differences between similar implementations across
+these three platforms.</para>
+
+<section xml:id="background">
+<title>Background</title>
+
+<para>When a conference is an in-person event at a particular location,
+there’s relatively little ambiguity in the schedule. If the clock on
+the wall at breakfast reads 9:45am and the first talk is scheduled for
+10:00am, you have fifteen minutes.</para>
+
+<para>The schedule for a virtual conference with attendees in many
+different time zones is another matter. In principle, you can publish
+the schedule in a single time zone and everyone can add or subtract
+the necessary offset to get “local time”. If the first talk is
+scheduled for 10:00am, in Rockville, and the clock on the wall at
+breakfast reads 9:45am, you have fifteen minutes &#x2014; if you are
+in Rockville, or anywhere else on Eastern Daylight Time. If the clock
+is on Mountain Time because it and you are located in Denver, you’ve
+missed that talk!</para>
+
+<para>Ask anyone who has participated regularly in activities
+organized simultaneously across several time zones and they will tell
+you stories about when they got it wrong or their colleagues
+did.</para>
+
+<para>It’s just easier if you can see the times in your time
+zone.</para>
+
+<para>For Balisage 2020, Norm attempted to make the Balisage schedule
+interactive such that a user could pick a timezone and the “schedule
+at a glance” table would be updated so that it displayed the times of
+the talks translated into that timezone.</para>
+
+<para>The challenge at that time was to see if this could be done
+using entirely native JavaScript APIs (no third party libraries
+allowed), in a relatively straightforward way, that would work on many
+modern browsers.</para>
+
+<para>It turned out that a couple of decades into the twenty-first
+century, this was a quite practical task. The complete solution was
+achieved in just under 200 lines of code. (Lines of code is arguably a
+poor metric generally, but this gives a sense of the magnitude. You
+could just about squeeze the whole thing onto the front and back of a
+single sheet of paper and it would still be legible.)
+</para>
+
+<para>This year, the challenge is to achieve the same results using
+Saxon-JS and XForms. Then we’ll examine how those solutions compare.
+</para>
+</section>
+
+<section xml:id="constraints">
+<title>Constraints</title>
+
+<para>The first and most significant constraint is that adding the
+interactive schedule must not change the editorial process for
+producing the schedule page in any <emphasis>significant</emphasis>
+way. This is a perfectly fair and reasonable constraint. There is an
+existing process and retraining everyone who updates that page is
+beyond the scope of this project.</para>
+
+<para>Luckily, as we’ll see in the next section, the Balisage
+organizers understand the value of markup and the page is already
+structured for reuse. And we aren’t forbidden from making any
+changes to the markup on the page, only those that would significantly interfere
+with the editorial process.</para>
+
+<para>There are two additional constraints that stem from our requirement
+not to change the editorial process:</para>
+
+<orderedlist>
+<listitem>
+<para>The rendering has to be done in the browser. The data source is
+markup in an otherwise static HTML page. Storing the schedule in a
+database and rendering it from a server would open up new and
+different avenues of approach, but we aren’t considering those here.</para>
+</listitem>
+<listitem>
+<para>The table itself is authored by hand. The talks have semantic
+markup that we can use, but there are other things in the schedule
+with no corresponding description: the markup of the “Description”
+column, the schedule entry for Balisage Bard, closing comments, etc.</para>
+<para>If we were starting from scratch, it might be practical to define
+declarative markup for the whole schedule and generate the table directly
+from that markup, but <!-- that approach is not open to us. --> we are
+not starting from scratch.
+</para>
+</listitem>
+</orderedlist>
+
+<para>The freedom we’ve given ourselves to make “insignificant”
+changes to the page allows us to configure the schedule-at-a-glance
+table so that it will be easier to process. These changes only have to
+be done once and have no impact on the other editorial changes to the
+table.</para>
+
+<para>First, we can add some markup to each cell in the “time” column
+to identify the time of the talk in a machine-readable way:</para>
+
+<programlisting language="xml"><![CDATA[<time datetime="2020-07-27T14:00:00-04:00">14:00</time>]]></programlisting>
+
+<para>The <code>datetime</code> attribute contains an ISO 8601 value for
+time. This value includes a timezone and represents the moment to display, but we
+can assume they’ll all be in the timezone of Rockville, MD.
+(The content of the <code>time</code> element is the displayed value, which will
+change as a function of the selected local timezone.)</para>
+
+<para>Additionally, we can add a <code>data-slot</code> attribute to
+each table cell where a talk occurs. The presence of that attribute
+identifies that a talk should be injected into this cell and the value
+of the attribute identifies the talk.</para>
+
+<para>Markup for the table cell for the talk on Monday at 10:00am is
+</para>
+<programlisting language="xml"><![CDATA[<td row-span="2" data-slot="Monday/10:00"></td>]]></programlisting>
+<para>
+The <code>data-slot</code> attribute identifies the talk by day and
+time, not by its XML identifier, to protect the schedule-at-a-glance
+against errors if the schedule changes at the last minute.
+</para>
+
+</section>
+
+<section xml:id="requirements">
+<title>Requirements</title>
+
+<para>For the purposes of this paper, the requirements below have
+been identified.</para>
+
+<orderedlist>
+<listitem>
+<para>Each talk is to be summarized with its title and author (including a link to
+their bio, if it’s available). The abstract should appear as a popup or “tool tip”.
+The title and author are separated by an em-dash (—). If multiple authors are
+present, they are separated by commas.
+</para>
+</listitem>
+<listitem>
+<para>If the talk identified by the <code>data-slot</code> attribute has no authors,
+the class “<code>lb</code>” must be added to the class attribute for its cell.
+(This identifies “late breaking” slots which are colored differently by the CSS.)
+</para>
+</listitem>
+<listitem>
+<para>If there is no talk corresponding to the <code>data-slot</code> value,
+the class “<code>none</code>” must be added to the class attribute for its cell.
+Additionally, the contents of the cell must be “No talk scheduled.”
+</para>
+</listitem>
+<listitem>
+<para>The table has two controls, a <code>select</code> with options for the
+timezone and a checkbox for selecting am/pm or 24 hour time display.
+The times in the first column of the table must be adjusted according to these
+values. The <code>value</code> of each select <code>option</code> is the
+timezone offset expressed as +/-HH:MM.
+</para>
+<para>The select has the id “<code>tz</code>”, the checkbox has the id
+“<code>clock24</code>”.<!--* clok24 or clock24? *--></para>
+</listitem>
+<listitem>
+<para>When the timezone is changed, all of the times must be adjusted for the
+newly selected timezone. If the checkbox is changed, all of the times must be
+adjusted for the corresponding am/pm or 24 hour time display.
+</para>
+</listitem>
+<listitem>
+<para>When the timezone is changed, the value of the “clock24” updates
+automatically. It is unselected for timezones that have a negative
+offset and selected for all others. This corresponds roughly to “use
+am/pm time in the Americas and 24 hour time everywhere else.” In practice,
+that’s a locale setting with more nuance, but this simplification probably
+satisfies most of the likely audience.
+</para>
+</listitem>
+<listitem>
+<para>If the schedule includes 12:00 in local time, it is displayed as either
+“midday” or “noon” depending on the time display: midday if the 24 hour display
+is used, noon otherwise.
+</para>
+</listitem>
+<listitem>
+<para>If the schedule includes 00:00 in local time, it is displayed as “midnight”.
+</para>
+</listitem>
+<listitem>
+<para>If midnight occurs within the schedule, “<code>&lt;br> (the next day)</code>”
+must be added to the displayed times that occur after midnight.
+</para>
+</listitem>
+<listitem>
+<para>If the table is successfully constructed, the content of the <code>p</code>
+element on the page that has the id “<code>schedlink</code>” must be changed to:
+</para>
+<programlisting language="xml"><![CDATA[<a href='#schedule'>Interactive schedule-at-a-glance</a>]]></programlisting>
+</listitem>
+</orderedlist>
+</section>
+
+<section xml:id="markup">
+<title>Markup</title>
+
+<para>Historically, the schedule page was the “single source of truth”
+used to generate both web pages and a printed conference program. Consequently,
+the existing editorial process already adds sufficient markup to correctly
+identify the salient details about each talk: when it occurs, the title,
+authors, and so forth. You can easily explore this markup with “view source”
+on the schedule page.</para>
+
+<para>In brief: there’s a <code>div</code> for each day. Each event has
+its own <code>div</code> within the day. The date and time, title, speakers,
+and abstract are encoded within that div. By way of example,
+<xref linkend="figmarkup"/> shows how a talk scheduled for Monday at
+10:00am would be tagged.</para>
+
+<figure xml:id="figmarkup">
+<title>Scheduled event markup example</title>
+<programlisting language="xml"><![CDATA[<div class="Program-Day" id="Monday">
+  <h1>Monday, August 2, 2021</h1>
+  <div class="ProgramEvent" id="M10">
+    <span class="EventDateTime">
+      <span class="Day">Monday</span>
+      <span class="timestart">10:00</span>
+      <span class="timeend">10:30 EDT</span></span>
+      (+ Q&amp;A 10:30 - 10:50)
+      <h2 class="EventTitle">The Title of the Talk</h2>
+      <h2 class="Speakers">
+          <a class="biolink" href="Bios.html#xxx">
+            <span class="SpeakerName">J. Doe</span></a>,
+            <span class="affil">Some affiliation</span>
+      </h2>
+      <p class="blurb">A short abstract of the talk.</p>
+  </div>
+  …]]></programlisting>
+</figure>
+
+</section>
+
+<section xml:id="browsers">
+<title>Observations about browser architecture</title>
+
+<para>All three of the solutions discussed here ultimately run in the
+browser, using the architecture and features exposed there. XForms
+takes a robustly declarative position, freeing the user from many of
+the details, but the XForms <emphasis>implementation</emphasis> is
+still operating within the browser architecture.</para>
+
+<para>The programming language environment supported by the browser is
+JavaScript. (There are XSLT 1.0 implementations as well in some
+browsers, but XSLT 1.0 stylesheets by themselves, as supported by
+browsers, aren’t sufficient to write interactive applications.)
+JavaScript is an interesting language. A full exploration of the
+features of JavaScript is well beyond our scope here. For our
+purposes, <emphasis>in this paper</emphasis>, it’s sufficient to think
+of JavaScript as a procedural programming language with a syntax in
+the style of C and Java. It is much more than “just” a procedural
+programming language, but we don’t need its advanced features
+(objects, prototypes, promises, etc.) for this simple application.
+</para>
+
+<para>Browser implementations of JavaScript provide complete and
+robust access to the HTML documents rendered by the browser. They do
+not, natively, provide especially robust access to XML documents or
+XML document APIs. Most JavaScript applications use JSON to store
+data, not XML. The easiest data structures to create, query, and
+update in the browser using JavaScript are JSON objects and arrays.</para>
+
+<para>There are rich JavaScript APIs for accessing information about
+the state of the browser, the web page being displayed, and the state
+of individual controls on the web page. You can easily, for example,
+ask if a checkbox is or is not checked. You can easily change its
+state as well. There are also APIs for querying and updating the
+values of class attributes, CSS properties, etc.</para>
+
+<para>JavaScript is single threaded: if your
+browser is doing one thing in JavaScript, it can’t simultaneously be
+doing something else. In addition, the scheduler, the part of the
+browser that decides what bit of JavaScript to run, isn’t preemptive.
+If you write JavaScript code that “busy waits” for something to
+finish, you’re not just blocking your thread, you’re blocking
+<emphasis>all</emphasis> the threads. If you’ve ever seen the browser
+dialog box that says “this page isn’t responding, do you want to kill
+it or continue waiting?”, you’ve seen what happens if a thread busy
+waits for too long.</para>
+
+<para>In order to avoid this, JavaScript programmers have to use
+“callback functions”. Imagine that your JavaScript code is going to
+run a query to find something on the page, a particular
+<code>div</code>, for example, and then process it. A naive
+implementation would ask the browser to run the query, wait for it to
+return the result, and then process it.</para>
+
+<programlisting language="javascript"><![CDATA[// This looks a little bit like JavaScript,
+// but it's just pseudo-code
+
+let myDiv = document.find("div.ProgramEvent");
+processMyDiv(myDiv);]]></programlisting>
+
+<para>There are lots of other
+JavaScript functions waiting in the wings to run (even if you didn’t
+write them, chunks of the browser itself are waiting for their turn to
+run). Waiting for something to finish is bad practice.
+It’s your responsibility to give up control and let someone else
+have a turn!</para>
+
+<para>What you do instead of waiting, and what many JavaScript APIs force you to do,
+is tell the engine what function to “call back” when the query results are ready.</para>
+
+<programlisting language="javascript"><![CDATA[// More pseudo-code
+document.find("div.ProgramEvent", processMyDiv);]]></programlisting>
+
+<para>Execution of your script stops at the point where you call
+<code>document.find</code>. Someone else gets their turn, and when the
+results are ready, your <code>processMyDiv</code> function will be called.
+This mostly works just fine, even if it’s a little confusing at first.</para>
+
+<para>Thing is, this is <emphasis>so</emphasis> common, that it would
+be tedious if you had to write a separate, named function (like
+<code>processMyDiv</code>) for every callback you used. JavaScript
+lets you just inline the function. Again, this may look a little
+confusing, but you get used to it.</para>
+
+<programlisting language="javascript"><![CDATA[// One final bit of pseudo-code
+document.find("div.ProgramEvent", function() {
+  // just write the code that processes the
+  // div right here.
+});]]></programlisting>
+
+<para>Another area where callback functions come into play is in
+handling events. From the perspective of your application, the browser
+is “out there” displaying HTML elements, scrolling the page, reacting
+to mouse clicks, and doing all the things that the browser does. These
+are all represented in the browser as events that occur: a button was
+clicked, the page scrolled, a web request finished, etc. There are
+lots and lots of kinds of events, we won’t try to enumerate them all
+here.
+</para>
+
+<para>If your application wants to participate, it needs to tell the browser
+what events it cares about. It does that by registering a special kind of callback
+function, an event listener:</para>
+
+<programlisting language="javascript"><![CDATA[a_button.addEventListener('change', function(event) {
+  // do something in response to the event
+});]]></programlisting>
+
+<para>When the “this item changed” event occurs on the page element
+identified by “<code>a_button</code>”, the “listening” callback
+function will be run.
+</para>
+
+<para>There’s lots more that could be said about JavaScript, including new features
+that are syntactically nicer than all those callback functions, but that’s enough
+of the conceptual framework for now.</para>
+</section>
+</section>
+
+<section xml:id="pojs">
+<title>Plain old JavaScript</title>
+<para role="glance">At a glance: satisfies all the requirements, +6K download.</para>
+<!-- 6K for the JS alone, not counting Program.html -->
+
+<para>Two browser APIs form the heart of the plain old JavaScript
+solution: query selectors and “inner HTML”. Query selectors come in
+two forms: <code>querySelector</code> and <code>querySelectorAll</code>.
+Each takes a CSS selector as an expression and returns matching
+nodes. When called from the <code>document</code> object, the selector
+applies to the whole document. When called from some other node, such as one
+returned by an earlier query, the selector applies to the
+descendants of that node. Where <code>querySelector</code> returns
+the first match, <code>querySelectorAll</code> returns all the matches.</para>
+
+<para>For example,</para>
+
+<programlisting language="javascript">document.querySelectorAll("div.ProgramEvent")</programlisting>
+
+<para>returns all of the <code>div</code> elements with the <code>ProgramEvent</code> class.
+If you look back at the markup example in <xref linkend="figmarkup"/>, you’ll see that
+that is the wrapper for each scheduled talk. You can process those elements
+with a JavaScript <code>forEach</code> and our friend, the callback function:</para>
+
+<programlisting language="javascript"><![CDATA[
+document.querySelectorAll("div.ProgramEvent")
+        .forEach(function(item) {
+                   // ProgramEvent processing goes here
+                 })]]></programlisting>
+
+<para>You can nest these API calls and callbacks arbitrarily.
+To finish our little detour into the mechanics of the query
+selector APIs, here’s an example that will process each event and write the
+day of the week to the console:</para>
+
+<programlisting language="javascript"><![CDATA[
+document.querySelectorAll("div.ProgramEvent")
+        .forEach(function(item) {
+                   console.log(item.querySelector("span.Day"))
+                 })]]></programlisting>
+
+<para>The only difference is that
+<code>querySelector("span.Day")</code> is rooted at the
+<code>item</code> we’re currently processing to get the first
+<code>span</code> element with the <code>Day</code> class. That’s the
+day of the week for this event.
+</para>
+
+<para>If you run that code in the browser console, you’ll get all of the day spans:</para>
+
+<programlisting language="xml"><![CDATA[<span class="Day">Monday</span>
+<span class="Day">Monday</span>
+…
+<span class="Day">Monday</span>
+<span class="Day">Tuesday</span>
+…]]></programlisting>
+
+<para>The other API that plays a central role is “<code>innerHTML</code>”. The
+inner HTML of an element is its HTML content, as a string. You can read from
+<code>innerHTML</code> to get the content, but you can also <emphasis>write</emphasis>
+to it to change the content.</para>
+
+<para>In other words,</para>
+
+<programlisting language="javascript"><![CDATA[document.querySelector("table caption").innerHTML]]></programlisting>
+
+<para>returns “Interactive schedule-at-a-glance” (if you’re on the
+schedule page). But</para>
+
+<programlisting language="javascript"><![CDATA[document.querySelector("table caption").innerHTML =
+   "<span>Hello <i>everyone</i>!</span>"]]></programlisting>
+
+<para>Will change the caption to “Hello <emphasis>everyone</emphasis>!”.
+If you’ve got your browser handy,
+try it and see!</para>
+
+<para>Armed with these JavaScript APIs, the task isn’t too difficult.</para>
+
+<para>JavaScript is neither especially declarative nor necessarily functional.
+The cheap-and-cheerful approach here is to make a few passes over the document
+with <code>querySelectorAll</code>, <code>querySelector</code> and <code>innerHTML</code>
+to build a summary data structure.
+</para>
+<para>For each talk, we construct a little JSON object containing the relevant details.
+For example:
+</para>
+<programlisting language="json">const talk = {
+  "day": "Monday",
+  "dtstart": "12:00",
+  "dtend": "12:30 EDT",
+  "title": "XSLT 3.0 on ordinary prose",
+  "blurb": "You work with text and documents for a living,…",
+  "authors": ["Norman Tovey-Walsh"]
+};</programlisting>
+
+<para>And we insert those into a global object, <code>talks</code> with the
+value that will be in the <code>data-slot</code> attribute as the key:</para>
+<programlisting language="javascript">const key = talk["day"] + "/" + talk["dtstart"];
+talks[key] = talk;</programlisting>
+
+<para>Next, we use <code>querySelector</code> to find the table and nested
+<code>querySelectorAll</code> calls to process each row and cell.
+</para>
+
+<para>If the cell has a <code>data-slot</code> attribute, we populate it by
+writing to <code>innerHTML</code>, otherwise we just copy its contents.
+There’s a little bit of fiddling with the class attribute, but the browser
+has simple APIs for that sort of thing.</para>
+
+<para>We have to do two more things: we have to adjust the times to the local
+time zone and we have to arrange for the browser to run the adjustment whenever
+the user changes the timezone, or the 24 hour clock checkbox.</para>
+
+<para>The actual adjustment is straightforward. If we know what the offset is between
+the time in Rockville and the time zone to display, we simply add that offset (possibly
+negative) to the time, do a few small cosmetic adjustments (12 or 24 hour clock, etc.)
+and display the result:</para>
+
+<programlisting language="javascript"><![CDATA[function adjustTime(item) {
+  let timez = item.getAttribute("datetime");
+  // We assume timez is in ISO 8601 format
+  let hours = timez.substring(11,13);
+  let minutes = timez.substring(14, 16);
+
+  hours = parseInt(hours) + OFSHOURS;
+  minutes = parseInt(minutes) + OFSMINUTES;
+
+  while (minutes >= 60) {
+    hours += 1;
+    minutes -= 60;
+  }
+
+  let plusday = "";
+  if (hours >= 24) {
+    plusday = "<br />(the next day)";
+    hours -= 24;
+  }
+
+  let ampm = 'am';
+  if (!CLOCK24 && hours >= 12) {
+    if (hours > 12) {
+      hours -= 12;
+    }
+    ampm = 'pm';
+  }
+
+  if (CLOCK24) {
+    hours = hours.toString().padStart(2, "0");
+  } else {
+    hours = hours.toString().padStart(2, " ");
+  }
+
+  minutes = minutes.toString().padStart(2, "0");
+
+  let timel = hours + ":" + minutes;
+  if (!CLOCK24) {
+    timel = timel + ampm;
+  }
+
+  if (hours == 0 && minutes == 0) {
+    timel = "midnight";
+    plusday = "";
+  }
+
+  if (hours == 12 && minutes == 0) {
+    if (CLOCK24) {
+      timel = "midday";
+    } else {
+      timel = "noon";
+    }
+    plusday = "";
+  }
+
+  item.innerHTML = timel + plusday;
+}]]></programlisting>
+
+<para>The key ingredients in that function are the <code>OFSHOURS</code>,
+<code>OFSMINUTES</code>, and <code>CLOCK24</code>. Those values come from the user’s
+selections. We listen for when the timezone is changed:</para>
+
+<programlisting language="javascript"><![CDATA[let timezone = document.querySelector("#tz");
+timezone.addEventListener('change', function() {
+  adjustOffset(this);
+}, false);]]></programlisting>
+
+<para>The <code>adjustOffset</code> function is passed the select
+control. The selected option is identified by the <code>selecedIndex</code>
+property on that control. That gives us access to the selected timezone.
+</para>
+
+<para>From there, we compute the offsets and the default value of the
+24 hour clock, then we run <code>adjustTime</code> on each time value:</para>
+
+<programlisting language="javascript"><![CDATA[function adjustOffset(item) {
+  let tz = item.options[item.selectedIndex].value;
+  let pos = tz.indexOf(":");
+  let hours = tz.substring(0, pos);
+  let minutes = tz.substring(pos+1);
+  OFSHOURS = parseInt(hours) + ROCKVILLE_OFFSET;
+  OFSMINUTES = parseInt(minutes);
+
+  if (OFSHOURS > 0) {
+    document.querySelector("#clock24").checked = true;
+    CLOCK24 = true;
+  } else {
+    document.querySelector("#clock24").checked = false;
+    CLOCK24 = false;
+  }
+
+  document.querySelectorAll("time").forEach(adjustTime);
+}]]></programlisting>
+
+<para>A similar listener function adjusts the <code>CLOCK24</code> value
+when the checkbox changes and recomputes the times.
+</para>
+
+</section>
+
+<section xml:id="saxon-js">
+<title>Saxon-JS</title>
+<para role="glance">At a glance: satisfies all the requirements, 6K stylesheet (42K compiled),
+plus Saxon-JS (3M) download.</para>
+
+<para>If you are familiar with XSLT, you will probably recognize a
+common design pattern in this task. What we want to perform is an
+“almost identity transformation” on the table, adjusting the content
+of just those cells that have a <code>data-slot</code> attribute.
+Having an XSLT processor in the browser lets us leverage those common
+design patterns directly.</para>
+
+<para>It’s easy to match the cells that have a <code>data-slot</code>
+attribute. Finding the corresponding <code>ProgramEvent</code> object can
+be accomplished directly with a key:</para>
+
+<programlisting language="xml"><![CDATA[<xsl:key name="slot" match="div[@class='ProgramEvent']"
+         use="span[@class='EventDateTime']/span[@class='Day']
+              || '/'
+              || span[@class='EventDateTime']/span[@class='timestart']"/>]]></programlisting>
+
+<para>So the heart of our table transformation is just this simple template:</para>
+
+<programlisting language="xml"><![CDATA[<xsl:template match="td[@data-slot]">
+  <xsl:variable name="event" select="key('slot', @data-slot)"/>
+
+  <xsl:choose>
+    <xsl:when test="$event">
+      <!-- copy the event details into the table -->
+    </xsl:when>
+    <xsl:otherwise>
+      <!-- mark this cell as "No talk scheduled" -->
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>]]></programlisting>
+
+<para>Like JavaScript, Saxon-JS has APIs for interacting with the
+browser. Idiomatically, they’re exposed as XSLT extension functions
+and extension elements, but they’re very similar to JavaScript. This
+shouldn’t be a surprise as Saxon-JS <emphasis>is</emphasis> JavaScript
+running in the browser using the underlying JavaScript APIs on your
+stylesheet’s behalf.</para>
+
+<para>Let’s step back and look at how those APIs work.</para>
+
+<para>At the top of our web page, we need to load Saxon-JS and a small JavaScript hook
+to start the ball rolling. (In practice, the hook function can be inserted directly in the
+HTML page with a <code>script</code> element, but Norm has chosen to keep it outside to
+satisfy his aesthetic sensibilities.)</para>
+
+<programlisting language="xml"><![CDATA[<script type="text/javascript" src="js/SaxonJS2.rt.js"></script>
+<script type="text/javascript" src="js/start.js"></script>]]></programlisting>
+
+<para>The startup script is just a function assigned to the browsers
+“onload” event so that it runs automatically when the page is
+loaded:</para>
+
+<programlisting language="javascript"><![CDATA[function render_schedule() {
+  let options = { stylesheetLocation: "xslt/schedule.sef.json" };
+  SaxonJS.transform(options, "async");
+}
+
+window.onload = render_schedule;]]></programlisting>
+
+<!--* MSM adds final line after looking in vain for the assignment
+    * to onload.
+    *-->
+
+<para>Saxon-JS evaluates a compiled form of XSLT stored in a “SEF”
+file, most often in a JSON document. XSLT stylesheets can be compiled
+with Saxon-EE or with Saxon-JS running on Node. That step just becomes
+part of your build process, analogous to minifying CSS or JavaScript
+for web delivery.</para>
+
+<!--* MSM admits to not really knowing what Node is. *-->
+
+<para>The Saxon-JS APIs that form the heart of the solution are
+<code>ixsl:page()</code> and <code>xsl:result-document</code>.</para>
+
+<para>Execution of the stylesheet will begin in the initial template.
+The HTML page isn’t the global context item because the HTML data
+model and the XPath Data Model are not exactly the same. Instead, the
+<code>ixsl:page()</code> function is used to access the HTML page.
+This function returns an object which “shims up” the HTML page for XDM
+access.</para>
+
+<para>With the <code>ixsl:page()</code> document in hand, you have the full power
+of XPath and XSLT to query and transform it. But where does the output go?
+Enter <code>xsl:result-document</code>. The content of <code>xsl:result-document</code>
+is output to the location identified by the <code>href</code> attribute.
+In Saxon-JS, this concept has been extended such that if the
+<code>href</code> attribute begins with a “#” sign, the output goes into
+the browser page in the element with the corresponding ID. This instruction:</para>
+
+<programlisting language="xml"><![CDATA[<xsl:result-document href="#main">
+  <div>New content</div>
+</xsl:result-document>]]></programlisting>
+
+<para>adds the “new content” <code>div</code> to the end of the
+element with the id “<code>main</code>” in the document. There’s an
+extension attribute as well, <code>method</code>. This instruction:</para>
+
+<programlisting language="xml"><![CDATA[<xsl:result-document href="#caption" method="ixsl:replace-content">
+  <span>Hello <i>everyone</i>!</span>
+</xsl:result-document>]]></programlisting>
+
+<para>Will change the content of the element with the id “<code>caption</code>”
+to “Hello <emphasis>everyone</emphasis>!”.</para>
+
+<para>(Keen observers may have noticed that the table <code>caption</code> on the schedule
+at a glance page doesn’t <emphasis>have</emphasis> an ID. That’s ok. We can use
+<code>xsl:result-document</code> to update any element on the page. If it doesn’t
+have an ID, we can arrange for that element to be the context node and use
+<code>href="?."</code> to change it.)</para>
+
+<para>Saxon-JS manages event listeners with special modes. These templates fire when
+a user changes the timezone or clicks on the 24 hour clock checkbox:</para>
+
+<programlisting language="xml"><![CDATA[<xsl:template mode="ixsl:onchange" match="select[@id='tz']">
+  <xsl:apply-templates select="ixsl:page()" mode="update-times">
+    <xsl:with-param name="changetz" select="true()"/>
+  </xsl:apply-templates>
+</xsl:template>
+
+<xsl:template mode="ixsl:onclick" match="input[@id='clock24']">
+  <xsl:apply-templates select="ixsl:page()" mode="update-times"/>
+</xsl:template>]]></programlisting>
+
+<para>That code is mostly straight-forward XSLT:</para>
+
+<programlisting language="xml"><![CDATA[<xsl:template match="/" mode="update-times">
+  <xsl:param name="changetz" select="false()"/>
+
+  <xsl:variable name="zone"
+                select="ixsl:get(//select[@id='tz'], 'value')"/>
+
+  <xsl:variable name="hours"
+                select="xs:integer(substring-before($zone, ':'))"/>
+  <xsl:variable name="minutes"
+                select="xs:integer(substring-after($zone, ':'))"/>
+
+  <xsl:variable name="iso8601"
+                select="(if ($hours lt 0) then '-' else '')
+                        || 'PT' || abs($hours)
+                        || 'H' || $minutes || 'M'"/>
+
+  <xsl:if test="$changetz">
+    <ixsl:set-property name="checked"
+                       select="$hours ge 0"
+                       object="//input[@id='clock24']"/>
+  </xsl:if>
+
+  <xsl:variable name="ampm"
+                select="not(ixsl:get(//input[@id='clock24'], 'checked'))"/>
+
+  <xsl:variable name="format"
+                select="if ($ampm)
+                        then '[h1]:[m01][P]'
+                        else '[H01]:[m01]'"/>
+
+  <xsl:variable name="tz" select="xs:dayTimeDuration($iso8601)"/>
+  <xsl:for-each select="//div[@id='schedule']//time">
+    <xsl:variable name="conftime"
+                  select="xs:dateTime(@datetime)"/>
+    <xsl:variable name="dt"
+                  select="adjust-dateTime-to-timezone($conftime, $tz)"/>
+    <xsl:result-document href="?." method="ixsl:replace-content">
+      <xsl:choose>
+        <xsl:when test="hours-from-dateTime($dt) = 0
+                        and minutes-from-dateTime($dt) = 0">
+          <xsl:text>midnight</xsl:text>
+        </xsl:when>
+        <xsl:when test="hours-from-dateTime($dt) = 12
+                        and minutes-from-dateTime($dt) = 0">
+          <xsl:sequence select="if ($ampm) then 'noon' else 'midday'"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:sequence select="format-dateTime($dt, $format)"/>
+          <xsl:if test="day-from-dateTime($conftime) != day-from-dateTime($dt)">
+            <br/>
+            <xsl:text> (the next day)</xsl:text>
+          </xsl:if>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:result-document>
+  </xsl:for-each>
+</xsl:template>]]></programlisting>
+
+<para>It’s certainly nice to have access to the XPath datetime
+functions! Also noteworthy are a couple of calls to
+<code>ixsl:get</code>, another extension function. This one gives you
+access to JavaScript properties. And <code>?.</code> as the
+<code>href</code> value for <code>xsl:result-document</code> when you
+want to write to the current context node, whether it has an id or
+not.</para>
+</section>
+
+<section xml:id="xforms">
+<title>XForms</title>
+
+<para role="glance">At a glance: XForms resists some aspects of the task as
+specified, but satisfies all the requirements, mostly in pure standard
+XForms with some implementation-specified extensions, 800K download
+for the XSLTForms implementation of XForms (partly XSLT, partly
+Javascript).<!-- not counting Program.xhtml itself -->
+</para>
+
+<para>XForms is designed as a declarative language for making forms in
+web pages.  It is XML-based: it uses XPath to identify elements and
+specify values, and when it submits data to a server, it does so in
+XML. If there is not too much mixed content, XForms can be thought of
+as a general tool for making special-purpose XML editors.
+Interactivity in existing documents is not its main goal, but its
+declarative mechanisms for user interaction make it a useful tool for
+such tasks.  From an XForms point of view, the core tasks imposed by
+the constraints outlined above are, first, to maintain information
+about the schedule and modify it in response to user actions, and,
+second, to display the current form of that information to the
+user.</para>
+
+<para>Since the usual XForms mechanisms for displaying information to
+the user do not involve modifying the form&#x2019;s host document, the parts
+of the problem description that prescribe that mechanism for conveying
+information to the user don&#x2019;t fit comfortably in the usual XForms
+patterns.  The result is that the goal of simplifying comparison by
+making all three solutions as similar as possible is in tension with
+writing the form in normal idiomatic XForms.</para>
+
+<para>In an XForm, the information displayed to the user comes in part
+from the form document itself and in part from XML <emphasis
+role="ital">instance documents</emphasis> which are managed and
+manipulated by the form.  The form is written in a <emphasis
+role="ital">host</emphasis> document language chosen by the XForms
+processor, extended with XForms elements.  For this exercise the host language is
+XHTML, but XForms can be and has been implemented for other host XML
+vocabularies instead.  The XForms extensions to the host vocabulary
+fall into two classes: elements for specifying the XML document
+instances to be worked on and constraints that govern the documents
+and their manipulation (<code>xf:model</code>,
+<code>xf:instance</code>, <code>xf:bind</code>, and others) on the one
+hand, and on the other hand elements for specifying, within the displayable
+part of a form, that particular parts of the XML instances documents
+should be displayed or made accessible for interaction
+(<code>xf:input</code>, <code>xf:output</code> and other controls, as
+well as markup for specifying event-handling rules).  As may be
+inferred, XForms makes a strict distinction between the XML documents
+being manipulated and the user interface through which that
+manipulation occurs, in a way reminiscent of the Model / View /
+Controller idiom.
+</para>
+
+<para>In XHTML-based XForms, the document instances and constraints
+are usually specified within the HTML header, wrapped in an
+<code>xf:model</code> element.  The interaction controls, by contrast,
+are placed at appropriate locations in the HTML body.  We&#x2019;ll start by
+showing the XForm implementation of the timezone selector and the
+24-hour-clock checkbox, which are straightforward applications of core
+XForms ideas, and then other aspects of the problem: how to inject
+HTML into the host document of a form, how the timezone calculations
+can be implemented in XForms, and a simple application of XForms
+facilities for event handling.</para>
+
+<para>Before we do, some notes on the implementation may be in order
+and may as well be taken care of now.</para>
+
+<para>First, there are multiple XForms implementations, which vary in
+approach.  Some have gaps in their coverage of the specification, and
+many offer extensions to the spec.  This implementation uses
+XSLTForms, a well known open source XForms engine which uses the
+browser&#x2019;s XSLT 1.0 engine to transform the user-written XHTML + XForms
+source document into pure HTML in the browser, and a Javascript
+library to support XForms functionality within the browser.  XSLTForms
+offers very simple setup &#x2014; the only thing the form author has
+to do is install the stylesheet and Javascript library on their server
+and point to the stylesheet from the form.  Other implementations use
+a different approach, often providing a server-side component which
+handles some tasks.  The implementation described here mostly uses
+standard XForms 1.1 and would look the same whatever XForms engine was
+used; when extensions specific to XSLTforms are used, the fact will be
+noted.</para>
+
+<para>Second, there are multiple versions of XForms.  The form
+described here uses XForms 1.1, which became a W3C Recommendation in
+2009.  Some implementations have also implemented parts of XForms 2.0,
+which is currently under development in a W3C community group, but the
+authors&#x2019; knowledge of XForms has not yet caught up to XForms
+2.0; where we are aware that an XForms 2.0 solution to this problem might take a
+different form, that fact may be noted.</para>
+
+<para>Third, there are multiple ways to satisfy the given
+requirements in XForms.  The implementation currently on hand is not
+necessarily the best.  Some of the more obvious alternative methods
+will be mentioned below, but they have not yet been implemented.
+Between now and August, some of them may be.  The current plan is to
+leave the current implementation in place, and put one or more
+alternative implementations beside it on the public server.  The paper
+will be updated accordingly.</para>
+
+<section xml:id="xf-controls">
+
+<title>Simple user-interaction controls and the ui instance</title>
+
+<para>In this exercise, the direct user interaction is very simple and
+rather limited: the user gets a way to select a time zone, and a way
+to specify whether a 24-hour clock or a 12-hour clock is to be
+used. For selecting one value from a controlled list of values, XForms
+uses the <code>xf:select1</code> control.  In rough outline, the
+time zone control looks like this:</para>
+
+<programlisting language="xml"><![CDATA[
+<xf:select1 id="timezone-selector" ref="instance('ui')/tz">
+  <xf:label>Timezone: </xf:label>
+  ...
+  <xf:item>
+    <xf:label>CDT  Chicago, IL, USA (UTC-05:00)</xf:label>
+    <xf:value>-05:00</xf:value>
+  </xf:item>
+  <xf:item>
+    <xf:label>EDT  Rockville, MD, USA (UTC-04:00)</xf:label>
+    <xf:value>-04:00</xf:value>
+  </xf:item>
+  ...
+  <xf:item>
+    <xf:label>CEST Prague, CZE (UTC+02:00)</xf:label>
+    <xf:value>+02:00</xf:value>
+  </xf:item>
+  ...
+</xf:select1>
+]]></programlisting>
+
+<para>The basic structure will be familiar to many who have written
+forms: the control contains a list of possible values, each with the
+label to be used in offering the choice to the user.  The list of
+options is wrapped in a <code>xf:select1</code> element, which
+describes not the user interface widget to be presented to the user,
+but the semantic affect to be achieved: the user should select one
+value from among those listed.  Whether the display engine uses a
+pull-down menu, a fully expanded menu, radio buttons, or some other
+mechanism to achieve that effect is not specified in the form or in
+the XForms spec.  (An <code>appearance</code> attribute with possible
+values <code>full</code>, <code>compact</code>, and
+<code>minimal</code> can be used to give hints about what would work
+best. At that level of abstraction, a form processor working in a
+voice browser can try to make appropriate adjustments.)  Note that the
+<code>xf:label</code> element appears at both levels: one label for
+the selection control as a whole and one for each item.  By
+associating the label structurally with the thing labeled, XForms
+makes it easier for software to understand the logical structure of
+the form, which is why it provides a better experience for users
+employing voice browsers and assistive technologies.</para>
+
+<para>But where is the selected time zone actually stored, once the
+user selects one?</para>
+
+<para>XForms 1.0 and 1.1 do not define variables; all controls are
+bound to nodes in XML document instances.  A common idiom, when the
+form needs to keep track of information that is not in any of the XML
+documents the form works with, is to add a document instance to
+contain that information and allow the form to manage it.  In this
+case, the information is all concerned with the state of the user
+interface, so the instance has been given the name <emphasis
+role="ital">ui</emphasis>.  Like the other instances used, the
+<emphasis role="ital">ui</emphasis> instance appears in the HTML
+header, inside the <code>xf:model</code> element, which in outline
+looks like this:</para>
+
+<programlisting language="xml"><![CDATA[
+<head>
+  <title>Balisage 2020 Program</title>
+  ...
+
+  <xf:model id="m1">
+
+    <xf:instance id="program" src="./Program.xhtml"/>
+
+    <xf:instance id="ui" xmlns="">
+      <ui-info clock24="false">
+        <tz>-04:00</tz>
+	...
+      </ui-info>
+    </xf:instance>
+    ...
+  </xf:model>
+  ...
+</head>]]></programlisting>
+
+<para>As can be seen, the <code>ui</code> instance
+has a <code>clock24</code> attribute on the root
+element and a child element named <code>tz</code>,
+and a bit more not shown here.</para>
+
+<para>The <code>ref</code> attribute on the <code>xf:select1</code>
+control binds the control to the <code>tz</code>
+element using the XPath expression <code>instance('ui')/tz</code>.
+The XForms function <code>instance()</code> identifies the
+outermost element of an instance document; <code>instance('ui')</code>
+thus refers to the <code>ui-info</code> element shown in the
+model.<footnote>
+<para>Users of XPath in other contexts may find themselves expecting
+<code>instance()</code> to bind to the instance&#x2019;s document node
+instead of to that node&#x2019;s single element child; a common error for
+such users would be to write <code>instance('ui')/ui-info/tz</code>
+instead of the correct XPath, in this example.</para>
+</footnote>
+The result of the binding is that when the control is used to select a
+timezone, the value in the instance document is updated
+automatically.</para>
+
+<para>The 24-hour clock checkbox is simpler.  It uses the
+<code>xf:input</code> element:</para>
+
+<programlisting language="xml"><![CDATA[<xf:input ref="instance('ui')/@clock24">
+  <xf:label>24-hour clock: </xf:label>
+</xf:input>]]></programlisting>
+
+<para>If the form knew nothing about the <code>clock24</code>
+attribute, this would be roughly equivalent to an HTML
+<code>input</code> element of type <code>text</code>.  But if we tell
+the form that the attribute holds a Boolean value, the form can use a
+more appropriate interface like a checkbox to present the value to the
+user.  This we do with an <code>xf:bind</code> element which
+identifies a node in an instance document and identifies its (XSD)
+datatype.</para>
+
+<programlisting language="xml"><![CDATA[<xf:bind nodeset="instance('ui')/@clock24"
+         type="xsd:boolean" />]]></programlisting>
+
+<para>The <code>xf:bind</code> element has other uses, some of which
+will be seen later.</para>
+
+</section>
+
+<section xml:id="xf-injection">
+<title>Injecting HTML into the host document</title>
+
+<para>Because XForms is designed to display and allow user interaction
+with nodes in the document instances of the model, and not to modify
+the nodes of the host document itself, the parts of the exercise which
+specify that various pieces of information be injected into specific
+places in the conference program require a little adjustment in
+XForms.</para>
+
+<para>The simplest example is perhaps the final item in the <link
+linkend="requirements">requirements list</link>.  In the Javascript
+and Saxon-JS solutions, an HTML <code>p</code> element in the program
+is given HTML content.  The element originally looks like this:</para>
+
+<programlisting language="xml"><![CDATA[<p id="schedlink"></p>]]></programlisting>
+
+<para>In the browser, it is to be modified to take the following form,
+or an equivalent:</para>
+
+<programlisting language="xml"><![CDATA[<p id="schedlink">
+  &#x261E; Interactive
+  <a href="#schedule">schedule at a glance</a>.
+</p>]]></programlisting>
+
+<para>This particular implementation tactic is not open to XForms, but
+we can do something conceptually similar.  In the XForms solution to
+the task, the conference program is modified so that the paragraph in
+question contains an <code>xf:output</code> element, which XForms uses
+to display data from an instance document.<footnote>
+<para>This may have the advantage of making more obvious to casual
+observers that the <code>schedlink</code> paragraph is not a mistake
+or tag abuse (as empty paragraphs often are in HTML) but a container
+for information to be supplied at display time.  New collaborators may
+be less likely to delete the element as part of &#x2018;cleaning up the
+accumulated cruft&#x2019; in the program document.</para>
+</footnote></para>
+
+<programlisting language="xml"><![CDATA[<p id="schedlink">
+  <xf:output mediatype="text/html"
+             ref="instance('ui')/schedlink"/>
+</p>]]></programlisting>
+
+<para>The <code>mediatype</code> attribute on <code>xf:output</code>
+indicates the data format of the data to be displayed. (Operationally,
+it says &#x201C;take this string and write it to the
+<code>innerHTML</code> property of the containing element.&#x201D;)
+The <code>mediatype</code> attribute is
+particularly helpful for allowing the display of image data, but as
+can be seen here it can also be used to inject HTML elements into the
+display of the form.  The <code>ref</code> attribute links this output
+control to the <code>schedlink</code> element in the <code>ui</code>
+instance document.</para>
+
+<programlisting language="xml"><![CDATA[<xf:model id="m1">
+    ...
+    <xf:instance id="ui" xmlns="">
+      <ui-info clock24="false">
+        <tz>-04:00</tz>
+        ...
+        <schedlink>
+          &#x261E; Interactive
+          <a href="#schedule">schedule at a glance</a>.
+        </schedlink>
+      </ui>
+    </xf:instance>
+
+    <xf:bind nodeset="instance('ui')/@clock24"
+             type="xsd:boolean" />
+
+    ...
+    </xf:model>]]></programlisting>
+
+<para>The same pattern is used in the main part of the tabular
+display.  Since an XForm cannot change elements in its host document,
+we need to introduce <code>xf:output</code> elements to show where the
+titles and authors of talks need to be displayed.  So the
+<code>td</code> elements of the framework table are no longer empty.
+In the current workflow, for example, the first slot on Monday takes
+the following form.</para>
+
+<programlisting language="xml"><![CDATA[<td rowspan="2" data-slot="Monday/10:00"></td>]]></programlisting>
+
+<para>In the XForm, it contains XForms elements to specify what needs
+to be displayed there:</para>
+
+<programlisting language="xml"><![CDATA[<td rowspan="2" data-slot="Monday/10:00">
+  <xf:group
+      ref="instance('program')//xhtml:div
+           [@class='ProgramEvent']
+	   [xhtml:span[@class='EventDateTime']
+           [xhtml:span[@class='Day'
+	               and string() = 'Monday']]
+           [xhtml:span[@class='timestart'
+		       and string() = '10:00']]
+           ]">
+    <xf:output value="xhtml:h2[@class='EventTitle']"/>
+    <span> &#x2014; </span>
+    <xf:repeat
+        nodeset="xhtml:h2[@class='Speakers']/xhtml:a">
+      <xf:output mediatype="text/html"
+                 value="serialize(.)"/>
+    </xf:repeat>
+  </xf:group>
+</td>]]></programlisting>
+
+<para>As may be seen, this complicates the input significantly.  A
+simpler approach is to use the <code>transform()</code> function, an
+extension offered by XSLTforms, which allows an XSLT stylesheet to be
+invoked on a specified node in an instance document.  Using that
+approach, the same slot looks like this:</para>
+
+<programlisting language="xml"><![CDATA[
+<td rowspan="2" data-slot="Monday/10:00">
+  <xf:output mediatype="text/html"
+             value="transform(instance('program'),
+                              'single-item.xsl',
+			      false,
+			      'slot',
+			      'Monday/10:00')"/>
+</td>]]></programlisting>
+
+<para>The <code>xf:output</code> element here essentially says that
+the value to be displayed (as HTML) is whatever is produced by
+invoking the XSLT 1.0 stylesheet <code>single-item.xsl</code> on the
+<code>program</code> instance, with the stylesheet parameter
+<code>slot</code> given the string value
+<code>Monday/10:00</code>.<footnote>
+<para>Some readers will wonder what the third argument of the function
+call means.  It&#x2019;s a Boolean flag indicating (if true) that the second
+argument contains a string representation of the stylesheet, or (if
+false) that the second argument is a URI which must be dereferenced to
+get the stylesheet.</para>
+<para>The stylesheet could be invoked on the specific ProgramEvent
+<code>div</code> needed, but as seen above the XPath expressions
+needed to identify the appropriate element are rather long; it&#x2019;s
+simpler to pass the entire program to the stylesheet and find the
+appropriate <code>div</code> there.</para>
+</footnote></para>
+
+<para>The <code>program</code> instance is, as the name suggests, a
+document containing authoritative information about the conference
+program.  As explained <link linkend="constraints">above</link>,
+that is the HTML document in which the form is embedded.  But an XForm
+cannot extract data from its host document any more than it can modify
+the host document.  To make the code just given work, therefore, it is
+necessary to make the host document available to the XForm <emphasis
+role="ital">as an instance document</emphasis>, which is done using an
+<code>xf:instance</code> element with the appropriate URI.</para>
+
+<programlisting language="xml"><![CDATA[<xf:instance id="program" src="./Program.xhtml"/>]]></programlisting>
+
+<para>This is not quite as self-referential as it may look.  In
+practice, the browser loads two copies of the file:  one is the XHTML
+page actually displayed by the browser,<footnote>
+<para>If we are being pedantic, we should note that what the browser
+displays is not the document <code>Program.xhtml</code>, which is an
+XHTML document with embedded XForms elements, but the result of
+processing that document with the <code>xsltforms.xsl</code>
+stylesheet, which translates the XForms elements into elements better
+understood by Web browsers.  As support for non-HTML elements has
+improved, the XSLTForms translation of XForms elements has
+changed.</para>
+</footnote> and the other is an instance document accessible to the
+form.  Changing the HTML in the instance document does not affect the
+document being displayed by the browser, except by means of the
+<code>xf:output</code> elements shown above.</para>
+
+<para>An alternative implementation approach would resemble the
+Javascript and Saxon-JS examples more closely.  In this approach:
+<itemizedlist>
+  <listitem>
+    <para>The skeleton of the schedule-at-a-glance table is left as
+    is, without the insertion of <code>xf:output</code>
+    elements.</para>
+  </listitem>
+  <listitem>
+    <para>When the program is loaded as an instance document, the form
+    updates the program-event cells in the table (in the instance
+    document) by locating the talks and injecting the appropriate HTML
+    into the table elements.</para>
+    <para>This processing is triggered automatically when the form
+    processor reports that the instance document has been loaded (by
+    dispatching the event <code>xforms-model-construct-done</code>
+    to the model).</para>
+  </listitem>
+  <listitem>
+    <para>When the user selects a new timezone, the resulting time
+    displays are injected into the table in the instance document
+    and not (as described <link linkend="xf-calculation">below</link>)
+    in the <code>ui</code> instance.</para>
+  </listitem>
+  <listitem>
+    <para>The schedule table in the form&#x2019;s host document remains
+    unchanged and empty, and it is not displayed.</para>
+    <para>Instead, an <code>xf:output</code> element in the program
+    displays the schedule table from the instance document.</para>
+  </listitem>
+</itemizedlist>
+This approach is probably preferable, since it involves less change to
+the current program document structure.  At the time this submission
+was written, however, it had not yet been implemented, mostly because
+it was not the first approach found.  (As mentioned already, the idea
+of modifying elements in the host document is foreign to normal
+practice in XForms.  It took a while for the idea described above to
+take shape.)  A second reason is that it requires a firm grasp of
+XForms event handling, which is sometimes elusive.
+</para>
+
+</section>
+
+<section xml:id="xf-calculation">
+<title>Timezone calculations</title>
+
+<para>The core idea of this exercise is to make the document
+interactive by making it react appropriately to the user&#x2019;s choice of
+timezone.  To do this, we:
+<orderedlist>
+  <listitem>
+    <para>Replace the literal time indications of the program document
+    with <code>xf:output</code> elements pointing to elements in an
+    instance document, so they can be changed dynamically.</para>
+  </listitem>
+  <listitem>
+    <para>Add a <code>slot-times</code>
+    element to the <code>ui</code> instance document, containing a
+    <code>slot</code> element for each time slot in the table.</para>
+  </listitem>
+  <listitem>
+    <para>Calculate new values for the slot elements, whenever the
+    user changes the timezone.</para>
+  </listitem>
+</orderedlist>
+</para>
+
+<para>In the XForm version of the program document, the table cells
+containing the time for each event take the following general
+form.  This is the same as the current structure, except for
+the addition of the <code>xf:output</code> element.</para>
+
+<programlisting language="xml"><![CDATA[<th id="r10" class="time" scope="row">
+  <time datetime="2020-07-27T10:00:00-04:00">10:00</time>
+  <xf:output
+      mediatype="text/html"
+      value="instance('ui')/slot-times/slot[@id='r10']"/>
+</th>]]></programlisting>
+
+<para>As can be seen, the slot elements in the <code>ui</code>
+document instance have the same IDs as the corresponding
+cells in the table, to simplify joining them up.</para>
+
+<para>In the <code>ui</code> document instance, a slot element has the
+following form.</para>
+
+<programlisting language="xml"><![CDATA[<slot id="r10"
+      datetime="2020-07-27T10:00:00-04:00"
+      user-datetime="2020-07-27T10:00:00-04:00"
+      user-time="" uh24="" uh12="" wrapped=""
+      default="10:00">10:00</slot>]]></programlisting>
+
+<para>The <code>id</code> and <code>datetime</code> attributes are
+copies of those on the table cell and the <code>time</code> element
+inside it.  The <code>default</code> attribute holds the original content
+of the table cell, in case we ever need it.  (We don&#x2019;t, as it turns
+out, but we didn&#x2019;t know that at first.)  The content of the element is
+what will ultimately be displayed to the user.  The other attributes
+are there to hold intermediate values, partly as a way of simplifying
+the XPath expressions used in the calculation of the element content,
+and partly as a way of dividing the time zone calculation up into
+manageable pieces. It may be observed that they are initially blank,
+because they are only needed when calculating the time for a new time
+zone.</para>
+
+<para>The calculation of the event&#x2019;s time in the user&#x2019;s time zone is
+handled by a series of <code>xf:bind</code> elements with
+<code>calculate</code> attributes.  The <code>calculate</code>
+attribute is used, as its name suggests, to calculate the value of
+some node from other information already available.  Its value is an
+XPath expression.</para>
+
+<para>In an XForms implementation which had full support for XPath 2.0
+functions, most of the intermediate values would not be needed and the
+entire process could be handled with a simple call to
+<code>adjust-dateTime-to-timezone()</code>, followed by a call to
+<code>format-dateTime()</code>.  Since the current version of
+XSLTforms does not have an XPath 2.0 version of
+<code>adjust-dateTime-to-timezone()</code>, we cannot do it this way;
+we need to do the timezone arithmetic ourselves.</para>
+
+<para>An alternative approach would be to implement the required XPath
+2.0 functions in Javascript and install them as extension functions.
+This is possible, but details of how to do it vary among XForms
+processors, and it requires using Javascript, which some people try to
+avoid when possible.</para>
+
+<para>Since calculating intermediate values by specifying XPath
+expressions and storing them in nodes in an XML document is easy to
+understand for any XSLT programmer, the <code>xf:bind</code> elements
+used to perform the time zone calculations will need hardly any
+commentary.  But first we need to explain briefly how the calculations
+work.</para>
+
+<para>XForms 1.1 specifies a number of functions for the XPath
+function library, including a <code>seconds-from-dateTime()</code>
+function which converts a dateTime expression into the number of
+seconds separating the dateTime indicated from the epoch at
+<code>1970-01-01T00:00:00Z</code>.<footnote><para>It is thus not at
+all similar to the XPath 2.0 function defined later under the same
+(local) name.</para></footnote> Its opposite number is
+<code>seconds-to-dateTime()</code>, which converts an integer number
+of seconds into a dateTime in UTC.  We will compute the user&#x2019;s local
+time by (1) converting the timezone offset into seconds, (2)
+converting the scheduled time of the event into seconds, (3) adding
+the two, and (4) converting the resulting number of seconds back into
+a dateTime expression.<footnote>
+<para>The resulting dateTime expression will use timezone Z (UTC
+itself), but it will <emphasis role="ital">not</emphasis> be the UTC
+time of the event.  It will be the UTC time at the moment when a
+UTC clock shows the same time as the user&#x2019;s local clocks at the
+time the event takes place.</para>
+<para>The reader can either accept this fact as a kind of black-box
+magic, or an example may help make it clear.  Suppose we wish to
+calculate the JST equivalent for the 10:00am morning slot.  The event
+time of 10:00am is given in a timezone with offset -04:00; the
+corresponding UTC time is 14:00 (10:00 + 04:00).  Japanese Standard
+Time has an offset from UTC of 09:00.  If we add 9 hours to the UTC
+time of 14:00, we get a time of 23:00.  Whether we interpret this
+23:00 as (a) the time shown by a clock in UTC timezone Z, 9 hours
+after the event time of 14:00 UTC, or (b) the time shown by a clock in
+JST at 14:00Z, is immaterial.  The expression returned by the
+<code>seconds-to-dateTime()</code> function assumes interpretation
+(a), but we can just extract the hours and minutes fields and apply
+interpretation (b).  And we do.</para>
+</footnote></para>
+
+<para>First, we calculate the timezone offset in seconds by extracting
+the number of hours and minutes in the timezone offset value.  To hold
+these, we add some blank attributes to the <code>tz</code>
+element: <code>&lt;tz h="" m="" sign="-" secs=""></code>.  The values
+to be assigned to those attributes are specified in the following bind
+elements.</para>
+
+<programlisting language="xml"><![CDATA[<xf:bind nodeset="instance('ui')/tz/@h"
+         type="xsd:integer"
+         calculate="substring(.., 2, 2)"/>
+<xf:bind nodeset="instance('ui')/tz/@m"
+	 type="xsd:integer"
+         calculate="substring(.., 5, 2)"/>
+<xf:bind nodeset="instance('ui')/tz/@sign"
+         calculate="substring(.., 1, 1)"/>
+<xf:bind nodeset="instance('ui')/tz/@secs"
+         calculate="if(../@sign = '-',
+                    0 - (((../@h * 60) + ../@m) * 60),
+                    0 + (((../@h * 60) + ../@m) * 60))"/>]]></programlisting>
+
+<para>It may need to be mentioned that the context item for
+interpretation of the <code>calculate</code> attribute is the node
+whose value is being calculated.  Thus the calculation of the
+<code>h</code> and <code>m</code> attributes must refer to
+<code>..</code> to fetch the string value of the <code>tz</code>
+element.</para>
+
+<para>The last calculation uses the XForms function
+<code>if()</code>, which allows conditionals to be expressed inside
+XPath 1.0 expressions.  It takes three arguments: the condition to be
+tested, the result if the condition evaluates to true, and the result
+if the condition evaluates to false.</para>
+
+<para>Whenever the value of the <code>tz</code> element changes, all
+other values which are known to depend on it are recalculated.  The
+dependencies expressed in the <code>calculate</code> expressions are
+known, and the XForms processor uses the same algorithm as a
+spreadsheet processor to decide on the order in which to calculate the
+values in any dependency chain.  So no effort is needed on the part of
+the form author to specify that <code>h</code> and <code>m</code> and
+<code>sign</code> need to be calculated before <code>secs</code>.  The
+processor takes care of all that.</para>
+
+<para>The <code>user-datetime</code> value on any slot is calculated
+as described above.</para>
+
+<programlisting language="xml"><![CDATA[<xf:bind nodeset="instance('ui')/slot-times
+                  /slot/@user-datetime"
+         type="xsd:dateTime"
+         calculate="seconds-to-dateTime(
+                    seconds-from-dateTime(../@datetime)
+                    +
+                    instance('ui')/tz/@secs
+                    )"
+         />]]></programlisting>
+
+<para>From the <code>user-datetime</code> value, we can extract
+several other useful values: the hours-and-minutes part of the
+dateTime expression (<code>user-time</code>), the hours part of the
+expression on a 24-hour clock (<code>uh24</code>), the hours part on a
+12-hour clock (<code>uh12</code>), and finally a Boolean flag to show
+whether the clock has moved to the next day or not
+(<code>wrapped</code>).</para>
+
+<programlisting language="xml"><![CDATA[<xf:bind nodeset="instance('ui')/slot-times
+                  /slot/@user-time"
+         type="xsd:string"
+         calculate="substring(../@user-datetime, 12, 5)" />
+<xf:bind nodeset="instance('ui')/slot-times/slot/@uh24"
+         type="xsd:string"
+         calculate="substring(../@user-time, 1, 2)" />
+<xf:bind nodeset="instance('ui')/slot-times/slot/@uh12"
+         type="xsd:string"
+         calculate="((../@uh24 + 11) mod 12) + 1" />
+<xf:bind nodeset="instance('ui')/slot-times/slot/@wrapped"
+         type="xsd:boolean"
+         calculate="substring(../@user-datetime, 9, 2)
+                    > substring(../@datetime, 9, 2)" />]]></programlisting>
+
+<para>The final calculation of the string to be displayed to the user
+is complex enough to be worth explaining in more detail.  The core
+calculation is: if the <code>clock24</code> flag is set to
+false,<footnote>
+<para>The slightly awkward form of the test, checking for both 0 and
+&#x201C;false&#x201D;, is an attempt to protect against any flaws in
+the form processor&#x2019;s implementation of the <code>xsd:boolean</code>
+datatype.  Trying to meet a deadline, it was easier to write this
+awkward expression than to establish with complete certainty whether
+there is some
+simpler formulation of the test that will always work.</para>
+</footnote> then concatenate the 12-hour version of the
+hour value with a colon and the minutes value, and add either &#x201C;am&#x201D; or
+&#x201C;pm&#x201D; as appropriate.  Otherwise (<code>clock24</code> is true), just
+use the <code>user-time</code> value, which is on a 24-hour
+clock.</para>
+
+<programlisting language="xpath"><![CDATA[
+if(instance('ui')/@clock24 = 0
+   or instance('ui')/@clock24 = 'false',
+   concat(@uh12,
+          ':', substring(@user-time, 4, 2),
+          if(@uh24 > 11, 'pm', 'am')
+         ),
+
+   substring(./@user-datetime, 12, 5)
+  )]]></programlisting>
+
+<para>But the time 12:00 should be displayed as &#x201C;noon&#x201D; or as &#x201C;midday&#x201D;,
+so the code just given is wrapped in a test for 12:00:</para>
+
+<programlisting language="xpath"><![CDATA[
+if(@user-time = '12:00',
+   if(instance('ui')/@clock24 = 0
+      or instance('ui')/@clock24 = 'false',
+      'noon',
+      'midday'),
+   ... else-case as above ...
+  )]]></programlisting>
+
+<para>A second complication is that if the time is past midnight in
+the user&#x2019;s timezone, we are to add an HTML <code>br</code> element and
+the notice &#x201C;(the next day)&#x201D;.  So the expression just given is wrapped
+in a call to <code>concat()</code>, together with a test for the
+past-midnight case.</para>
+
+<programlisting language="xpath"><![CDATA[
+concat(
+       ... time expression as given above ...
+       ,
+       if(@wrapped = 'true' or @wrapped = 1,
+          ' &lt;br />(the next day)',
+          '')
+      )]]></programlisting>
+
+<para>The final complication is that if the user time is 00:00, then
+(a) the time should be displayed as &#x201C;midnight&#x201D;, and (b) the phrase
+&#x201C;(the next day)&#x201D; should not be used, since it would raise more
+questions than it answers.  The full expression of the final step in
+the calculation is thus as follows.</para>
+
+<programlisting language="xml"><![CDATA[<xf:bind nodeset="instance('ui')/slot-times/slot"
+         type="xsd:string"
+         calculate="if(@user-time = '00:00',
+                    'midnight',
+
+                    concat(
+                    if(@user-time = '12:00',
+                    if(instance('ui')/@clock24 = 0
+		       or instance('ui')/@clock24 = 'false',
+                    'noon',
+                    'midday'),
+
+                    if(instance('ui')/@clock24 = 0
+		       or instance('ui')/@clock24 = 'false',
+                    concat(@uh12,
+                    ':', substring(@user-time, 4, 2),
+                    if(@uh24 > 11, 'pm', 'am')
+                    ),
+
+                    substring(./@user-datetime, 12, 5)
+                    )),
+
+                    if(@wrapped = 'true' or @wrapped = 1,
+                    ' &lt;br />(the next day)',
+                    '')
+                    ))
+
+                    " />]]></programlisting>
+
+<para>With the help of the <code>xf:bind</code> element, the core
+interactivity of the document can be implemented in a purely
+declarative way.  As can be seen from the first steps in the sequence,
+using instance-document nodes to hold intermediate values can help
+make the expressions at each step simpler; as can be seen from the
+final calculation, intermediate nodes are not strictly necessary, if
+one is willing to work with a more complex expression.</para>
+
+</section>
+
+<section xml:id="xf-events">
+<title>Event handling</title>
+
+<para>The final part of the XForms implementation to be explained is
+the dependency of the <code>clock24</code> flag on the timezone.
+Whenever the timezone changes, the <code>clock24</code> flag should be
+updated: for time zones in (roughly) the Western Hemisphere,
+<code>clock24</code> should be set false; for timezones in the Eastern
+Hemisphere, it should be set true.<footnote><para>This reflects the
+mostly true generalization that conference programs in the
+U.S. normally use 12-hour times, and conference programs in the rest
+of the world are more likely to use 24-hour times.  The reality, of
+course, is more complex.  But this gives us the excuse to require
+another dynamic change in the document.</para></footnote></para>
+
+<para>We could use <code>xf:bind</code> with a <code>calculate</code>
+attribute for this task, but that would effectively prevent the user
+from changing the <code>clock24</code> flag: <code>calculate</code>
+expresses an invariant relation between values in the instance
+document.  We want to change the value, but let the user change it
+back.</para>
+
+<para>XForms has an event model similar to (and derived from) that of
+the HTML document model as specified in DOM level 2.  At various times
+during the life of a form, <emphasis role="ital">events</emphasis> are
+dispatched to appropriate targets to be handled by event handlers.
+Form authors can register new event handlers which observe specified
+locations in the form and can capture and handle them.</para>
+
+<para>For the task at hand, the simplest thing to do is to listen for
+the event <code>xforms-value-changed</code> to be dispatched in
+response to a change to the <code>tz</code> element, and to handle the
+event by setting the value of the <code>clock24</code> attribute
+appropriately.  To do this, it suffices to add two
+<code>xf:setvalue</code> elements to the <code>xf:select1</code>
+element bound to the <code>tz</code> element, thus:</para>
+
+<programlisting language="xml"><![CDATA[<xf:setvalue ev:event="xforms-value-changed"
+             ref="instance('ui')/@clock24"
+             value="if(../tz/@sign = '-', 'true', 'false')"/>]]></programlisting>
+
+<para>Here, the <code>ev:event</code> attribute, in the XML Events
+namespace, gives the name of the event for which the
+<code>xf:setvalue</code> element is listening.  (It does not need to
+specify which element it is interested in, because its parent select
+controller will only receive events related to the <code>tz</code>
+element.)</para>
+
+<para>The <code>ref</code> attribute specifies the node whose value is
+to be updated.  The <code>value</code> attribute specifies the new
+value.</para>
+
+<para>In principle, this simple approach should solve the problem.
+For reasons thus far unexplained (probably an error somewhere in the
+form, or possibly in the development version of the engine), however,
+this simple approach does not work.  The event is dispatched and
+captured, but setting the new value of the <code>clock24</code>
+attribute appears to cause an infinite loop.  So until the cause of
+the problem is found, another approach is needed.</para>
+
+<para>Since the problem appears to be an infinite loop caused by the
+event <code>xforms-value-changed</code> being raised by the handler
+for that event, one plausible approach is to try to find some other
+event to be used as the trigger for resetting the <code>clock24</code>
+flag.</para>
+
+<para>When an item in an <code>xf:select1</code> element is selected,
+or de-selected, appropriate events are dispatched to the item.  So we
+should be able to reach our goal by putting an event handler on each
+item in the timezone selection control and making it listen for the
+event <code>xforms-select</code>.  At the same time, partly to
+illustrate the user of user-defined events and partly because it makes
+it easier to insert debugging messages into the form to report on what
+is going on, the <code>xf:setvalue</code> action will be replaced by
+an <code>xf:dispatch</code> action which dispatches an appropriate
+user-defined event, whose handler will (possibly among other things)
+update the <code>clock24</code> flag.</para>
+
+<para>So instead of adding one <code>xf:setvalue</code> element as a
+child of <code>xf:select1</code>, we add one <code>xf:dispatch</code>
+element to each item in the select control.  The item for Central
+Daylight Time (Chicago), for example, looks like this:</para>
+
+<programlisting language="xml"><![CDATA[
+<xf:item>
+  <xf:label>CDT  Chicago, IL, USA (UTC-05:00)</xf:label>
+  <xf:value>-05:00</xf:value>
+  <xf:dispatch ev:event="xforms-select"
+               targetid="m1"
+               name="bmt:set-12h-clock"/>
+</xf:item>]]></programlisting>
+
+<para>As before, the <code>ev:event</code> attribute specifies which
+events this handler listens for.  The <code>name</code> attribute give
+the name of the event to be <emphasis
+role="ital">dispatched</emphasis> by the handler, and the
+<code>targetid</code> gives the ID of the element which is the target
+of the event.  Here, <code>m1</code> is the ID assigned by the form
+author to the <code>xf:model</code> element, and
+<code>bmt:set-12h-clock</code> is a user-defined event (given as a
+QName) meaning the <code>clock24</code> flag should be set
+false.<footnote>
+<para>The sequence of events will thus be, roughly:  the user
+selects CDT as the value of the timezone (element <code>tz</code> in
+instance document <code>ui</code>); the forms engine dispatches
+event <code>xforms-select</code> to the matching <code>xf:item</code>
+in the selection control; the listener (here the
+<code>xf:item</code> element) detects the event and invokes any
+handlers it has for the event (here, the <code>xf:dispatch</code>
+element); the <code>xf:dispatch</code> element dispatches a
+<code>bmt:set-12h-clock</code> event to the element with ID
+<code>m1</code>, which is the <code>xf:model</code> element in
+the header; the model element detects the event and activates
+whatever handlers it has for that event, which in this case
+is the <code>xf:action</code> event described below.</para>
+</footnote>  A
+different event (<code>bmt:set-24h-clock</code>) is dispatched by
+handlers for time zones east of Greenwich.</para>
+
+<para>Because the event handlers are now embedded in each item in the
+selection control, it is easy to make them follow a more complex
+pattern than &#x201C;west, 12-hour clock; east, 24-hour clock&#x201D;.
+Some sources claim, for example, that most Anglophone countries
+normally use 12-hour clocks, and other countries normally use 24-hour
+clocks (again, with exceptions and complications not covered here).
+If we believe this claim, we can make the selection of Australian or
+New Zealand time set the flag to a 12-hour clock, even though they
+have a positive timezone offset.</para>
+
+<para>The user-defined events are dispatched to the model, and the
+handlers for those events are given as children of the
+<code>xf:model</code> element.</para>
+
+<programlisting language="xml"><![CDATA[<xf:model id="m1">
+  ...
+
+  <xf:action ev:event="bmt:set-12h-clock">
+    <xf:message if="instance('ui')/@debugging = 'true'"
+                level="modal"
+                >Clock should change to 12h.</xf:message>
+    <xf:setvalue ref="instance('ui')/@clock24"
+                 value="'false'" />
+    <xf:message if="instance('ui')/@debugging = 'true'"
+                level="modal"
+                >Check it out!  The 24h clock switch <!--
+		-->should have changed!</xf:message>
+  </xf:action>
+
+  <xf:action ev:event="bmt:set-24h-clock">
+    <xf:message if="instance('ui')/@debugging = 'true'"
+                level="modal"
+                >Clock should change to 24h.</xf:message>
+    <xf:setvalue ref="instance('ui')/@clock24"
+                 value="'true'" />
+    <xf:message if="instance('ui')/@debugging = 'true'"
+                level="modal"
+                >Did the 24h clock switch?</xf:message>
+  </xf:action>
+</xf:model>
+]]></programlisting>
+
+<para>The <code>xf:action</code> element is a wrapper for other XForms
+actions.  It executes them one at a time in turn.  The practical
+effect is that the <code>ev:event</code> attribute can be specified
+once on the enclosing <code>xf:action</code> and does not need to be
+repeated on its children.  The <code>xf:message</code> element
+displays a message to the user (here displayed in a popup window, as
+suggested by <code>level="modal"</code>).  The
+<code>xf:setvalue</code> element has been seen before.</para>
+
+<para>The <code>if</code> attribute seen here on the
+<code>xf:message</code> element specifies an arbitrary condition on
+the execution of the action.  If the condition holds, the action is
+performed, and if not, it is not performed.  Here, a Boolean
+<code>debugging</code> attribute on the <code>ui-info</code> element
+is tested; if debugging is turned on, the messages are displayed, and
+otherwise not.  Messages can in general display useful information
+about the course of events; these messages mostly serve to signal that
+the event handler has been activated.</para>
+
+</section>
+
+</section>
+
+<section xml:id="conclusion">
+<title>Concluding remarks</title>
+
+<para>We are fortunate enought to have multiple ways to provide simple
+interactivity for a document that can use it.</para>
+
+<para>The way requirements are specified can influence what solutions
+seem most applicable. They’re described in this paper in terms that
+make more sense in JavaScript and Saxon-JS than they do in XForms,
+though as we’ve demonstrated, they can certainly be accomplished in
+XForms.</para>
+
+<para>Javascript is well established both web browsers and elsewhere;
+it possesses a very larger user base and its implementations and
+libraries correspondingly benefit from intensive development
+efforts.  It's not especially declarative, but it can be used easily
+for simple tasks like that shown here.</para>
+
+<para>Saxon-JS allows XSLT programmers to leverage their knowledge of
+XSLT to provide the required functionality here in a much more
+declarative and correspondingly more compact form. The key XSLT 3.0
+stylesheet describered here is only 163 lines long (nine templates,
+two keys, and an output specification). By providing a comprehensive
+XSLT 3.0 implementation in the browser, Saxon-JS brings familiar
+design patterns and the XDM’s extensive function library within easy
+reach for fully interactive browser applications or server-side
+solutions on Node.js.
+</para>
+
+<para>XForms also allows a highly declarative description of the
+desired interaction; its <code>xf:bind</code> constraints allow
+dynamic recalculation of document values, and its support for the
+event system implemented in Web browsers makes it possible for an
+XForm to react to user actions in dramatic ways.  And if the
+<code>transform()</code> extension function is used, XForms also
+allows the browser's built-in XSLT 1.0 processor to be invoked
+interactively in ways similar to those of Saxon-JS.</para>
+
+<para>The XForm presented here requires more modification of the
+existing HTML document than the Javascript or Saxon-JS solutions of
+the task.  This is due partly to the more declarative approach taken
+by XForms and partly to the fact that the implementor was slow to
+hatch the alternative implementation approaches that would have
+involved fewer such changes.</para>
+
+<para>We have provided a quick tour of the three sample
+implementations of the task; the source code will be available for
+inspection, and (assuming we get the continuous-integration pipeline
+working) functional versions of all three implementations will be
+available for users to experiment with.  Ted Nelson's ideas about
+hypertext and interactive documents have not, of course, all been
+fully achieved.  But current technologies bring some of them closer to
+realization than they have ever been.</para>
+
+</section>
+</article>

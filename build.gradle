@@ -1,0 +1,316 @@
+buildscript {
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "https://dev.saxonica.com/maven" }
+  }
+
+  configurations.all {
+    resolutionStrategy {
+      force 'xml-apis:xml-apis:1.4.01'
+      force "org.xmlresolver:xmlresolver:3.0.1"
+    }
+  }
+
+  dependencies {
+    classpath 'org.docbook:schemas-docbook:5.2b10a4'
+    classpath 'org.docbook:docbook-xslTNG:1.5.2'
+    classpath 'org.xmlresolver:xmlresolver:3.0.1'
+  }
+}
+
+plugins {
+  id 'com.nwalsh.gradle.saxon.saxon-gradle' version '0.9.3'
+  id 'com.nwalsh.gradle.docker.container' version '0.0.3'
+}
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+  maven { url "https://dev.saxonica.com/maven" }
+}
+
+configurations {
+  docbook
+}
+
+dependencies {
+  docbook (
+    [group: 'org.docbook', name: 'schemas-docbook', version: '5.2b10a4'],
+    [group: 'org.docbook', name: 'docbook-xslTNG', version: '1.5.2']
+  )
+}
+
+import com.nwalsh.gradle.saxon.SaxonXsltTask
+import com.nwalsh.gradle.docker.DockerContainer
+
+ext {
+  // If the 'dockerup' task needs to start containers, it sets
+  // docker_started to true. This is used by the 'install_node' task
+  // so that it only does the install once.
+  docker_started = false
+  c_i3whttp = "i3whttp"
+  c_i3wnode = "i3wnode"
+  containers = [:]
+}
+
+defaultTasks "website"
+
+// ======================================================================
+
+docker_container.configure {
+  workingDir = "docker"
+}
+
+saxon.configure {
+  entityResolverClass "org.xmlresolver.Resolver"
+  uriResolverClass "org.xmlresolver.Resolver"
+  sourceSaxParser "org.xmlresolver.tools.ResolvingXMLReader"
+  stylesheetSaxParser "org.xmlresolver.tools.ResolvingXMLReader"
+  initializer 'org.docbook.xsltng.extensions.Register'
+}
+
+// ======================================================================
+
+// ======================================================================
+
+task website(dependsOn: ["plain_old_js", "saxon_js", "xforms", "paper_html", "index_html"]) {
+  // nop
+}
+
+// ======================================================================
+// Using Plain-old-JavaScript
+
+task plain_old_js(dependsOn: ["plain_old_js_files", "plain_old_js_resources",
+                              "plain_old_js_aug"]) {
+  // nop
+}
+
+task plain_old_js_aug(type: SaxonXsltTask) {
+  input "${projectDir}/src/main/resources/Program.html"
+  output "${buildDir}/website/using-js/Program.html"
+  stylesheet "${projectDir}/tools/augment-for-js.xsl"
+}
+
+task plain_old_js_files(type: Copy) {
+  into "${buildDir}/website/using-js/js"
+  from "${projectDir}/src/main/using-js/js"
+}
+
+task plain_old_js_resources(type: Copy) {
+  into "${buildDir}/website/using-js"
+  from ("${projectDir}/src/main/resources") {
+    exclude "Program.html"
+    exclude "paper/**"
+  }
+}
+  
+// ======================================================================
+// Using Saxon-JS
+
+task saxon_js(dependsOn: ["saxon_js_files", "saxon_js_resources",
+                          "saxon_js_aug", "saxon_js_compile"]) {
+  // nop
+}
+
+task saxon_js_aug(type: SaxonXsltTask) {
+  input "${projectDir}/src/main/resources/Program.html"
+  output "${buildDir}/website/using-saxon-js/Program.html"
+  stylesheet "${projectDir}/tools/augment-for-saxon-js.xsl"
+}
+
+task saxon_js_files(type: Copy) {
+  into "${buildDir}/website/using-saxon-js/js"
+  from "${projectDir}/src/main/using-saxon-js/js"
+}
+
+task saxon_js_resources(type: Copy) {
+  into "${buildDir}/website/using-saxon-js"
+  from ("${projectDir}/src/main/resources") {
+    exclude "Program.html"
+    exclude "paper/**"
+  }
+}
+
+task saxon_js_compile(dependsOn: ["dockerup"]) {
+  doLast {
+    DockerContainer.docker {
+      verbose = true
+      command = "exec"
+      args = ["-i", containers[c_i3wnode], "node", "node_modules/xslt3/xslt3.js",
+              "-xsl:/src/main/using-saxon-js/xslt/schedule.xsl",
+              "-export:/website/using-saxon-js/xslt/schedule.sef.json",
+              "-nogo", "-ns:##html5"]
+    }
+  }
+}
+  
+// ======================================================================
+// Using XForms
+
+task xforms(dependsOn: ["xforms_files", "xforms_resources"]) {
+  // nop
+}
+
+task xforms_files(type: Copy) {
+  into "${buildDir}/website/using-xforms"
+  from "${projectDir}/src/main/using-xforms"
+}
+
+task xforms_resources(type: Copy) {
+  into "${buildDir}/website/using-xforms"
+  from ("${projectDir}/src/main/resources") {
+    exclude "Program.html"
+    exclude "paper/**"
+  }
+}
+
+// ======================================================================
+// Balisage paper
+
+task paper_html(type: SaxonXsltTask, dependsOn: ["paper_resources"]) {
+  input "${projectDir}/src/main/xml/paper.xml"
+  output "${buildDir}/website/paper/index.html"
+  stylesheet "${projectDir}/tools/docbook.xsl"
+  parameters (
+    'debug': ''
+  )
+}
+
+task paper_resources() {
+  def dbjar = null
+  configurations.docbook.each { path ->
+    if (path.toString().contains("docbook-xslTNG")) {
+      dbjar = path
+    }
+  }
+
+  doFirst {
+    copy {
+      into "${buildDir}/website/paper"
+      from ("${projectDir}/src/main/resources/paper")
+    }
+  }
+
+  doLast {
+    if (dbjar == null) {
+      throw new GradleException("Failed to locate DocBook xslTNG jar file")
+    }
+    copy {
+      into "${buildDir}/website/paper"
+      from ({ zipTree(dbjar.toString()) }) {
+        include "org/docbook/xsltng/resources/**"
+      }
+      eachFile { fileCopyDetails ->
+        def originalPath = fileCopyDetails.path
+        fileCopyDetails.path = originalPath.replace('org/docbook/xsltng/resources/', '')
+      }
+    }
+  }
+
+  doLast {
+    delete "${buildDir}/website/paper/org"
+  }
+}
+paper_resources.onlyIf { !file("${buildDir}/paper/css/docbook.css").exists() }
+  
+// ======================================================================
+
+task setup_node(type: Copy) {
+  into "${buildDir}/node"
+  from "${projectDir}/src/main/node"
+  doFirst {
+    mkdir "${buildDir}/node"
+    mkdir "${buildDir}/website"
+  }
+}
+
+task install_node(dependsOn: ["dockerup"]) {
+  doLast {
+    if (docker_started) {
+      if (System.getenv('GRADLE_CI_BUILD') == 'true') {
+        exec {
+          workingDir "${buildDir}/node"
+          commandLine "npm", "install"
+        }
+      } else {
+        DockerContainer.docker {
+          verbose = true
+          command = "exec"
+          args = ["-i", containers[c_i3wnode], "npm", "install"]
+        }
+      }
+    }
+  }
+}
+
+// ======================================================================
+// Homepage
+
+task index_html(type: SaxonXsltTask) {
+  input "${projectDir}/src/main/xml/homepage.xml"
+  output "${buildDir}/website/index.html"
+  stylesheet "${projectDir}/tools/docbook.xsl"
+  parameters (
+    'debug': ''
+  )
+}
+
+// ======================================================================
+
+task dockerup(dependsOn: ["setup_node"]) {
+  doLast {
+    docker_started = false
+    if (System.getenv('GRADLE_CI_BUILD') == 'true') {
+      docker_started = true
+    } else {
+      if (!DockerContainer.allRunning([c_i3whttp, c_i3wnode])) {
+        DockerContainer.compose {
+          command = "up"
+          args = ["-d"]
+        }
+        docker_started = true
+      }
+    }
+  }
+
+  doLast {
+    containers = DockerContainer.containers()
+  }
+
+  doFirst {
+    mkdir ("${buildDir}/website")
+  }
+
+  finalizedBy install_node
+}
+
+task dockerdown() {
+  doLast {
+    if (DockerContainer.anyRunning([c_i3whttp, c_i3wnode])) {
+      DockerContainer.compose {
+        command = "down"
+      }
+    }
+  }
+
+  doLast {
+    containers = [:]
+  }
+}
+
+// ======================================================================
+
+task helloWorld() {
+  doLast {
+    println("Hello, world.")
+    configurations.each { c ->
+      println(c.name)
+    }
+    /*
+    configurations.runtime.resolve().each { path ->
+      println(path)
+    }
+     */
+  }
+}

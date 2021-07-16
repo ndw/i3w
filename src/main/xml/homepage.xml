@@ -1,0 +1,31 @@
+<?xml-stylesheet href="Balisage-1-3-xsl/balisage-proceedings-html.xsl" type="text/xsl" ?>
+<!--* I've got the Balisage-1-3-xsl directory symlinked. *-->
+<article xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         version="5.2" role="homepage">
+<title>Interactivity Three Ways</title>
+
+<para>This website supports the paper,
+<citetitle xlink:href="/paper/">Interactivity Three Ways</citetitle>, presented
+at the <link xlink:href="https://balisage.net/">Balisage</link> conference in 2021 by
+Norman Walsh and Michael Sperberg-McQueen.</para>
+
+<para>The original source files and the build script are
+<link xlink:href="https://github.com/ndw/i3w/">on GitHub</link>.</para>
+
+<para>The details of the project can be found in the paper. Three demonstrations
+of the “interactive schedule-at-a-glance” are presented here:</para>
+
+<itemizedlist>
+<listitem><para><link xlink:href="/using-js/Program.html">Using “plain old JavaScript”</link>,
+</para>
+</listitem>
+<listitem><para><link xlink:href="/using-saxon-js/Program.html">Using Saxon-JS</link>, and
+</para>
+</listitem>
+<listitem><para><link xlink:href="/using-xforms/Program.xhtml">Using XForms</link>.
+</para>
+</listitem>
+</itemizedlist>
+
+</article>

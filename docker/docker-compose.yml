@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+    i3w_webserver:
+      image: httpd:2.4
+      container_name: i3whttp
+      ports:
+        - 8484:80
+      working_dir: /src
+      volumes:
+        - ../build/website:/usr/local/apache2/htdocs
+      stdin_open: true
+      tty: true
+      networks:
+        - external_net_i3w
+
+    i3w_nodejs:
+      image: node:15.3.0-buster
+      container_name: i3wnode
+      working_dir: /node
+      volumes:
+        - ../build/node:/node
+        - ../build/website:/website
+        - ../src:/src
+      stdin_open: true
+      tty: true
+      networks:
+        - external_net_i3w
+
+networks:
+  external_net_i3w: {}
