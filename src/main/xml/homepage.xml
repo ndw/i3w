@@ -6,7 +6,7 @@
 <title>Interactivity Three Ways</title>
 
 <para>This website supports the paper,
-<citetitle xlink:href="/paper/">Interactivity Three Ways</citetitle>, presented
+<citetitle xlink:href="/i3w/paper/">Interactivity Three Ways</citetitle>, presented
 at the <link xlink:href="https://balisage.net/">Balisage</link> conference in 2021 by
 Norman Walsh and Michael Sperberg-McQueen.</para>
 
@@ -17,13 +17,13 @@ Norman Walsh and Michael Sperberg-McQueen.</para>
 of the “interactive schedule-at-a-glance” are presented here:</para>
 
 <itemizedlist>
-<listitem><para><link xlink:href="/using-js/Program.html">Using “plain old JavaScript”</link>,
+<listitem><para><link xlink:href="/i3w/using-js/Program.html">Using “plain old JavaScript”</link>,
 </para>
 </listitem>
-<listitem><para><link xlink:href="/using-saxon-js/Program.html">Using Saxon-JS</link>, and
+<listitem><para><link xlink:href="/i3w/using-saxon-js/Program.html">Using Saxon-JS</link>, and
 </para>
 </listitem>
-<listitem><para><link xlink:href="/using-xforms/Program.xhtml">Using XForms</link>.
+<listitem><para><link xlink:href="/i3w/using-xforms/Program.xhtml">Using XForms</link>.
 </para>
 </listitem>
 </itemizedlist>

@@ -88,17 +88,17 @@ task plain_old_js(dependsOn: ["plain_old_js_files", "plain_old_js_resources",
 
 task plain_old_js_aug(type: SaxonXsltTask) {
   input "${projectDir}/src/main/resources/Program.html"
-  output "${buildDir}/website/using-js/Program.html"
+  output "${buildDir}/website/i3w/using-js/Program.html"
   stylesheet "${projectDir}/tools/augment-for-js.xsl"
 }
 
 task plain_old_js_files(type: Copy) {
-  into "${buildDir}/website/using-js/js"
+  into "${buildDir}/website/i3w/using-js/js"
   from "${projectDir}/src/main/using-js/js"
 }
 
 task plain_old_js_resources(type: Copy) {
-  into "${buildDir}/website/using-js"
+  into "${buildDir}/website/i3w/using-js"
   from ("${projectDir}/src/main/resources") {
     exclude "Program.html"
     exclude "paper/**"
@@ -115,17 +115,17 @@ task saxon_js(dependsOn: ["saxon_js_files", "saxon_js_resources",
 
 task saxon_js_aug(type: SaxonXsltTask) {
   input "${projectDir}/src/main/resources/Program.html"
-  output "${buildDir}/website/using-saxon-js/Program.html"
+  output "${buildDir}/website/i3w/using-saxon-js/Program.html"
   stylesheet "${projectDir}/tools/augment-for-saxon-js.xsl"
 }
 
 task saxon_js_files(type: Copy) {
-  into "${buildDir}/website/using-saxon-js/js"
+  into "${buildDir}/website/i3w/using-saxon-js/js"
   from "${projectDir}/src/main/using-saxon-js/js"
 }
 
 task saxon_js_resources(type: Copy) {
-  into "${buildDir}/website/using-saxon-js"
+  into "${buildDir}/website/i3w/using-saxon-js"
   from ("${projectDir}/src/main/resources") {
     exclude "Program.html"
     exclude "paper/**"
@@ -139,7 +139,7 @@ task saxon_js_compile(dependsOn: ["dockerup"]) {
       command = "exec"
       args = ["-i", containers[c_i3wnode], "node", "node_modules/xslt3/xslt3.js",
               "-xsl:/src/main/using-saxon-js/xslt/schedule.xsl",
-              "-export:/website/using-saxon-js/xslt/schedule.sef.json",
+              "-export:/website/i3w/using-saxon-js/xslt/schedule.sef.json",
               "-nogo", "-ns:##html5"]
     }
   }
@@ -153,12 +153,12 @@ task xforms(dependsOn: ["xforms_files", "xforms_resources"]) {
 }
 
 task xforms_files(type: Copy) {
-  into "${buildDir}/website/using-xforms"
+  into "${buildDir}/website/i3w/using-xforms"
   from "${projectDir}/src/main/using-xforms"
 }
 
 task xforms_resources(type: Copy) {
-  into "${buildDir}/website/using-xforms"
+  into "${buildDir}/website/i3w/using-xforms"
   from ("${projectDir}/src/main/resources") {
     exclude "Program.html"
     exclude "paper/**"
@@ -170,7 +170,7 @@ task xforms_resources(type: Copy) {
 
 task paper_html(type: SaxonXsltTask, dependsOn: ["paper_resources"]) {
   input "${projectDir}/src/main/xml/paper.xml"
-  output "${buildDir}/website/paper/index.html"
+  output "${buildDir}/website/i3w/paper/index.html"
   stylesheet "${projectDir}/tools/docbook.xsl"
   parameters (
     'debug': ''
@@ -187,7 +187,7 @@ task paper_resources() {
 
   doFirst {
     copy {
-      into "${buildDir}/website/paper"
+      into "${buildDir}/website/i3w/paper"
       from ("${projectDir}/src/main/resources/paper")
     }
   }
@@ -197,7 +197,7 @@ task paper_resources() {
       throw new GradleException("Failed to locate DocBook xslTNG jar file")
     }
     copy {
-      into "${buildDir}/website/paper"
+      into "${buildDir}/website/i3w/paper"
       from ({ zipTree(dbjar.toString()) }) {
         include "org/docbook/xsltng/resources/**"
       }
@@ -209,7 +209,7 @@ task paper_resources() {
   }
 
   doLast {
-    delete "${buildDir}/website/paper/org"
+    delete "${buildDir}/website/i3w/paper/org"
   }
 }
 paper_resources.onlyIf { !file("${buildDir}/paper/css/docbook.css").exists() }
@@ -249,7 +249,7 @@ task install_node(dependsOn: ["dockerup"]) {
 
 task index_html(type: SaxonXsltTask) {
   input "${projectDir}/src/main/xml/homepage.xml"
-  output "${buildDir}/website/index.html"
+  output "${buildDir}/website/i3w/index.html"
   stylesheet "${projectDir}/tools/docbook.xsl"
   parameters (
     'debug': ''

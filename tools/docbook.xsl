@@ -18,7 +18,7 @@
 
 <xsl:param name="persistent-toc" select="'true'"/>
 
-<xsl:param name="resource-base-uri" select="'/paper/'"/>
+<xsl:param name="resource-base-uri" select="'/i3w/paper/'"/>
 
 <xsl:param name="css-links"
            select="'css/docbook.css css/docbook-screen.css css/paper.css'"/>
