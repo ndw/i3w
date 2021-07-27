@@ -254,4 +254,27 @@ to “click” events on the elements it matches:
 </itemizedlist>
 </chapter>
 
+<chapter xml:id="saxonjs6">
+<info>
+<title>Saxon-JS: But what about…</title>
+</info>
+<para>There are practical details that we didn’t have time to cover:</para>
+<itemizedlist>
+<listitem><para>Compiling the stylesheet.
+</para></listitem>
+<listitem><para>Configuring the HTML page.
+</para></listitem>
+<listitem><para>Getting Saxon-JS started.
+</para></listitem>
+<listitem><para>(And other infrastructure details.)
+</para></listitem>
+</itemizedlist>
+
+<para>Check the paper, or the repository, or ask!</para>
+
+<para>If you’d like a more detailed introduction, Debbie Lockett and I
+have pitched a Saxon-JS tutorial for <citetitle>Declarative
+Amsterdam</citetitle> this fall. If that’s accepted…</para>
+</chapter>
+
 </book>
