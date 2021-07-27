@@ -182,6 +182,7 @@ task paper_html(type: SaxonXsltTask, dependsOn: ["paper_resources"]) {
   parameters (
     'debug': '',
     'resource-base-uri': '/i3w/paper/',
+    'css-links': 'css/docbook.css css/docbook-screen.css css/paper.css'
   )
 }
 
@@ -237,7 +238,7 @@ task presentation_html(type: SaxonXsltTask, dependsOn: ["presentation_resources"
     'resource-base-uri': '/i3w/presentation/',
     'annotation-style': 'javascript',
     'profile-outputformat': 'online',
-    'persistent-toc': true
+    'persistent-toc': true,
   )
 }
 
@@ -325,7 +326,10 @@ task index_html(type: SaxonXsltTask) {
   output "${buildDir}/website/i3w/index.html"
   stylesheet "${projectDir}/tools/docbook.xsl"
   parameters (
-    'debug': ''
+    'debug': '',
+    'css-links': 'paper/css/docbook.css paper/css/docbook-screen.css paper/css/paper.css',
+    'persistent-toc-css': 'paper/css/docbook-toc.css',
+    'persistent-toc-js': 'paper/js/persistent-toc.js'
   )
 }
 

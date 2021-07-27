@@ -18,9 +18,6 @@
 
 <xsl:param name="persistent-toc" select="'true'"/>
 
-<xsl:param name="css-links"
-           select="'css/docbook.css css/docbook-screen.css css/paper.css'"/>
-
 <xsl:variable name="v:templates" as="document-node()">
   <xsl:document>
     <db:article xmlns:tmp="http://docbook.org/ns/docbook/templates"
