@@ -19,7 +19,7 @@
 <xsl:param name="persistent-toc" select="'true'"/>
 
 <xsl:param name="css-links"
-           select="'css/docbook.css css/docbook-screen.css css/paper.css'"/>
+           select="'css/docbook.css css/docbook-screen.css css/presentation.css'"/>
 
 <xsl:variable name="v:templates" as="document-node()">
   <xsl:document>
@@ -51,6 +51,13 @@
 
 <xsl:template match="db:affiliation" mode="m:titlepage">
   <xsl:apply-templates select="db:orgname/node()" mode="m:docbook"/>
+</xsl:template>
+
+<xsl:template match="db:chapter" mode="m:headline-label">
+  <xsl:param name="purpose" as="xs:string" select="'title'"/>
+  <xsl:param name="number" as="node()*" required="yes"/>
+  <xsl:param name="title" as="node()*" required="yes"/>
+  <xsl:sequence select="()"/>
 </xsl:template>
 
 </xsl:stylesheet>

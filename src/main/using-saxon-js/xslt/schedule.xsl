@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:array="http://www.w3.org/2005/xpath-functions/array"
+                xmlns:f="https://nwalsh.com/ns/functions"
                 xmlns:h="http://www.w3.org/1999/xhtml"
                 xmlns:ixsl="http://saxonica.com/ns/interactiveXSLT"
                 xmlns:js="http://saxonica.com/ns/globalJS"
@@ -8,7 +9,7 @@
                 xmlns:saxon="http://saxon.sf.net/"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns="http://www.w3.org/1999/xhtml"
-                exclude-result-prefixes="h ixsl js saxon xs"
+                exclude-result-prefixes="#all"
                 version="3.0">
 
 <xsl:output method="html" html-version="5" encoding="utf-8" indent="no"/>
@@ -46,33 +47,43 @@
 <xsl:template match="td[@data-slot]">
   <xsl:variable name="event" select="key('slot', @data-slot)"/>
 
-  <xsl:choose>
-    <xsl:when test="$event">
-      <xsl:variable name="lb"
-                    select="if (empty($event/h2[@class='Speakers']/a))
-                            then ' lb '
-                            else ''"/>
-      <xsl:copy>
-        <xsl:apply-templates select="@* except @class"/>
-        <xsl:if test="normalize-space(@class || $lb) != ''">
-          <xsl:attribute name="class"
-                         select="normalize-space(@class || $lb)"/>
-        </xsl:if>
-        <span class="title" title="{normalize-space($event/p[@class='blurb'])}">
-          <xsl:sequence select="string($event/h2[@class='EventTitle'])"/>
-        </span>
-        <xsl:apply-templates select="$event/h2[@class='Speakers']/a"/>
-      </xsl:copy>
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:copy>
-        <xsl:apply-templates select="@* except @class"/>
+  <xsl:copy>
+    <xsl:apply-templates select="@* except @class"/>
+
+    <xsl:choose>
+      <xsl:when test="$event">
+        <xsl:sequence select="f:event-class(@class, $event)"/>
+        <xsl:apply-templates select="$event" mode="data-content"/>
+      </xsl:when>
+      <xsl:otherwise>
         <xsl:attribute name="class"
                        select="normalize-space(@class || ' none')"/>
         <xsl:text>No talk scheduled.</xsl:text>
-      </xsl:copy>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:copy>
+</xsl:template>
+
+<xsl:function name="f:event-class" as="attribute()?">
+  <xsl:param name="class" as="attribute()?"/>
+  <xsl:param name="event" as="element(h:div)"/>
+
+  <xsl:choose>
+    <xsl:when test="empty($event/h2[@class='Speakers']/a)">
+      <xsl:attribute name="class"
+                     select="normalize-space($class || ' lb')"/>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:sequence select="$class"/>
     </xsl:otherwise>
   </xsl:choose>
+</xsl:function>
+
+<xsl:template match="h:div" mode="data-content">
+  <span class="title" title="{normalize-space(p[@class='blurb'])}">
+    <xsl:sequence select="string(h2[@class='EventTitle'])"/>
+  </span>
+  <xsl:apply-templates select="h2[@class='Speakers']/a"/>
 </xsl:template>
 
 <xsl:template match="h2/a">

@@ -89,7 +89,7 @@ table.querySelectorAll("tr").forEach(function (row) {
 
         talk.authors.forEach(function(author, index) {
           if (index === 0) {
-            html += "—";
+            html += "—﻿";
           } else {
             html += ", ";
           }
@@ -229,7 +229,7 @@ document.querySelectorAll("time").forEach(adjustTime);
 // Finally, turn it all on if we succeeded
 if (success) {
   let link = document.querySelector("#schedlink");
-  link.innerHTML = "🖝 <a href='#schedule'>Interactive schedule-at-a-glance</a>";
+  link.innerHTML = "🌐 <a href='#schedule'>Interactive schedule-at-a-glance</a>";
   link.style.display = "block";
   let sched = document.querySelector("#schedule");
   sched.style.display = "block";
