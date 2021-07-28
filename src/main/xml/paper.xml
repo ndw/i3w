@@ -502,7 +502,7 @@ to build a summary data structure.
 <para>For each talk, we construct a little JSON object containing the relevant details.
 For example:
 </para>
-<programlisting language="json">const talk = {
+<programlisting language="javascript">const talk = {
   "day": "Monday",
   "dtstart": "12:00",
   "dtend": "12:30 EDT",

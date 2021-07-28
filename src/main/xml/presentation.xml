@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<book xmlns="http://docbook.org/ns/docbook"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xml:id="book" version="5.1">
+<info>
+  <title>Interactivity Three Ways</title>
+  <author>
+    <personname>
+      <firstname>Norman</firstname>
+      <surname>Tovey-Walsh</surname>
+    </personname>
+    <email>ndw@nwalsh.com</email>
+  </author>
+  <author>
+    <personname>
+      <firstname>Michael</firstname>
+      <surname>Sperberg-McQueen</surname>
+    </personname>
+    <email>cmsmcq@blackmesatech.com</email>
+  </author>
+  <pubdate>2021-07-27</pubdate>
+  <abstract>
+    <para>Adding interactivity to a document presented on the web:
+    “plain old JavaScript”, Saxon-JS, and XForms.</para>
+  </abstract>
+<!--
+  <revhistory>
+    <revision>
+      <revnumber>1.0.0</revnumber>
+      <date>2021-08-01</date>
+      <authorinitials>ndw/cmsmcq</authorinitials>
+      <revremark>First presented at Balisage 2021.</revremark>
+    </revision>
+  </revhistory>
+-->
+  <copyright>
+    <year>2021</year>
+    <holder>Norman Tovey-Walsh and Michael Sperberg-McQueen</holder>
+  </copyright>
+  <?db xlink-style="javascript" page-style="verso"?>
+</info>
+
+<chapter xml:id="background">
+<title>Background</title>
+<para>…</para>
+</chapter>
+
+<chapter xml:id="task">
+<title>The task</title>
+<para>…</para>
+</chapter>
+
+<chapter xml:id="playalong">
+<title>Play along at home!</title>
+<itemizedlist>
+<listitem><para>All of the materials presented in this paper are available
+at <link xlink:href="https://github.com/ndw/i3w/"/>.
+</para></listitem>
+<listitem><para>This presentation, the paper, and interactive versions of all
+three techniques are published automatically from that repository 
+to <link xlink:href="https://ndw.github.io/i3w/"/>.
+</para></listitem>
+</itemizedlist>
+</chapter>
+
+<chapter xml:id="poj">
+<info>
+<title>Plain old JavaScript</title>
+</info>
+<para>Question: Is it practical to add a bit of interactivity to a web page?</para>
+<itemizedlist>
+<listitem><para>Can it be done with “a small amount” of JavaScript
+</para></listitem>
+<listitem><para>Without any frameworks
+</para></listitem>
+<listitem><para>In a way that would “makes sense” to your average programmer
+</para></listitem>
+<listitem><para>And would be painlessly cross-platform in modern browsers?
+</para></listitem>
+</itemizedlist>
+</chapter>
+
+<chapter xml:id="poj2">
+<info>
+<title>Plain old JavaScript (continued)</title>
+<annotation annotates="caniuse">
+<para><link xlink:href="https://caniuse.com/"/>:</para>
+<mediaobject>
+<imageobject>
+<imagedata fileref="caniuse.png" width="35%" align="center"/>
+</imageobject>
+</mediaobject>
+</annotation>
+</info>
+<para>Answer: yes.</para>
+<itemizedlist>
+<listitem><para xml:id="caniuse">In general, modern JavaScript is a
+lot more stable across platforms that it was historically.
+</para></listitem>
+<listitem><para>The <code>querySelector</code> and <code>querySelectorAll</code> APIs
+make it practical to query HTML.
+</para></listitem>
+<listitem><para>The <code>innerHTML</code> API makes it practical to update the page.
+</para></listitem>
+<listitem><para>There are lots of APIs for responding to user behavior (form changes,
+mouse clicks, etc.)
+</para></listitem>
+<listitem><para>The single-threaded, non-preemptive scheduler forces the programmer
+to handle asynchrony rather directly, but you get used to it.
+</para></listitem>
+</itemizedlist>
+</chapter>
+
+<chapter xml:id="poj3">
+<info>
+<title>Plain old JavaScript (continued)</title>
+</info>
+<itemizedlist>
+<listitem><para>The ad hoc approach taken here for a ~200 line script doesn’t scale.
+</para></listitem>
+<listitem><para>For thousands, or tens of thousands of lines of JavaScript code,
+you’d probably want to invest in one of the big frameworks.
+</para></listitem>
+<listitem><para>They offer more functional approaches and more automatic behavior.
+</para></listitem>
+</itemizedlist>
+</chapter>
+
+<chapter xml:id="xforms">
+<info>
+<title>XForms</title>
+</info>
+<para>…</para>
+</chapter>
+
+<chapter xml:id="saxonjs">
+<info>
+<title>Saxon-JS</title>
+</info>
+<para>Is this an XML problem? Of course it is. At its core, it’s just
+an “almost identity” transformation:</para>
+<programlisting language="xml"><![CDATA[<xsl:template match="td[@data-slot]">
+  <xsl:variable name="event" select="key('slot', @data-slot)"/>
+
+  <xsl:copy>
+    <xsl:apply-templates select="@* except @class"/>
+
+    <xsl:choose>
+      <xsl:when test="$event">
+        <xsl:sequence select="f:event-class(@class, $event)"/>
+        <xsl:apply-templates select="$event" mode="data-content"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:attribute name="class"
+                       select="normalize-space(@class || ' none')"/>
+        <xsl:text>No talk scheduled.</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:copy>
+</xsl:template>]]></programlisting>
+</chapter>
+
+<chapter xml:id="saxonjs2">
+<info>
+<title>Saxon-JS (continued)</title>
+</info>
+<para>There are three things we need to do beyond the transformation:</para>
+<itemizedlist>
+<listitem><para>Query the browser web page.
+</para></listitem>
+<listitem><para>Update the browser web page.
+</para></listitem>
+<listitem><para>Respond to events.
+</para></listitem>
+</itemizedlist>
+</chapter>
+
+<chapter xml:id="saxonjs3">
+<info>
+<title>Saxon-JS: Querying the browser web page</title>
+</info>
+<itemizedlist>
+<listitem><para>The browser’s HTML object model isn’t quite the XDM object model.
+</para></listitem>
+<listitem><para>The <code>ixsl:page()</code> extension function shims things up:
+</para>
+<programlisting language="xml"><![CDATA[<xsl:template name="xsl:initial-template">
+  <xsl:apply-templates select="ixsl:page()/html"/>
+</xsl:template>]]></programlisting>
+</listitem>
+<listitem><para>Everything works the way you’d expect after you get
+into the XDM.</para></listitem>
+</itemizedlist>
+</chapter>
+
+<chapter xml:id="saxonjs4">
+<info>
+<title>Saxon-JS: Updating the browser web page</title>
+</info>
+<itemizedlist>
+<listitem><para>It’s impractical to expose an API like <code>innerHTML</code> from within
+XSLT.
+</para></listitem>
+<listitem><para>Instead, Saxon-JS leverages the existing mechanism for producing
+result documents <code>xsl:result-document</code>:
+</para>
+<programlisting language="xml"><![CDATA[<xsl:result-document href="#schedule">
+  <xsl:apply-templates select="ixsl:page()/html"/>
+</xsl:result-document>]]></programlisting>
+</listitem>
+<listitem><para>If the <tag class="attribute">href</tag> attribute is a same-document
+fragment identifier, the resulting output is appended to the element with the
+corresponding ID.</para></listitem>
+<listitem><para>The extension method <code>ixsl:replace-content</code> instructs
+the processor to replace the content, rather than appending to it:
+</para>
+<programlisting language="xml"><![CDATA[<xsl:result-document href="#schedule" method="ixsl:replace-content">
+  <xsl:apply-templates select="ixsl:page()/html"/>
+</xsl:result-document>]]></programlisting>
+</listitem>
+<listitem><para>(It’s possible to write to any element, even elements that don’t
+have IDs, by making them the context node first.)</para>
+</listitem>
+</itemizedlist>
+</chapter>
+
+<chapter xml:id="saxonjs5">
+<info>
+<title>Saxon-JS: Event handling</title>
+</info>
+<itemizedlist>
+<listitem><para>The natural unit of computation in XSLT is the template.
+</para></listitem>
+<listitem><para>Saxon-JS leverages templates for event handling by using special
+modes. A template in the <code>ixsl:onchange</code> mode, for example, will respond
+to “change” events on the elements it matches:
+</para>
+<programlisting language="xml"><![CDATA[<xsl:template mode="ixsl:onchange" match="select[@id='tz']">
+  <!-- Handle changes to the drop down -->
+</xsl:template>]]></programlisting>
+</listitem>
+<listitem><para>A template in the <code>ixsl:onclick</code> mode will respond
+to “click” events on the elements it matches:
+</para>
+<programlisting language="xml"><![CDATA[<xsl:template mode="ixsl:onclick" match="input[@id='clock24']">
+  <!-- Handle clicks on the 24-hour clock checkbox -->
+</xsl:template>]]></programlisting>
+</listitem>
+<listitem><para>Generally, for all event types that “bubble”, a template in the mode
+<code>ixsl:on<replaceable>type</replaceable></code> will respond to
+“<replaceable>type</replaceable>” events in the DOM.</para>
+</listitem>
+</itemizedlist>
+</chapter>
+
+<chapter xml:id="saxonjs6">
+<info>
+<title>Saxon-JS: But what about…</title>
+</info>
+<para>There are practical details that we didn’t have time to cover:</para>
+<itemizedlist>
+<listitem><para>Compiling the stylesheet.
+</para></listitem>
+<listitem><para>Configuring the HTML page.
+</para></listitem>
+<listitem><para>Getting Saxon-JS started.
+</para></listitem>
+<listitem><para>(And other infrastructure details.)
+</para></listitem>
+</itemizedlist>
+
+<para>Check the paper, or the repository, or ask!</para>
+
+<para>If you’d like a more detailed introduction, Debbie Lockett and I
+have pitched a Saxon-JS tutorial for <citetitle>Declarative
+Amsterdam</citetitle> this fall. If that’s accepted…</para>
+</chapter>
+
+</book>

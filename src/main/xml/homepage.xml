@@ -6,9 +6,12 @@
 <title>Interactivity Three Ways</title>
 
 <para>This website supports the paper,
-<citetitle xlink:href="/i3w/paper/">Interactivity Three Ways</citetitle>, presented
-at the <link xlink:href="https://balisage.net/">Balisage</link> conference in 2021 by
-Norman Walsh and Michael Sperberg-McQueen.</para>
+<citetitle xlink:href="/i3w/paper/">Interactivity Three Ways</citetitle>
+by Norman Walsh and Michael Sperberg-McQueen,
+originally
+published in the proceedings of <link xlink:href="https://balisage.net/">Balisage: The
+Markup Conference 2021</link>. The paper was
+<link xlink:href="/i3w/presentation/">presented</link> on Sunday, 1 Aug 2021.</para>
 
 <para>The original source files and the build script are
 <link xlink:href="https://github.com/ndw/i3w/">on GitHub</link>.</para>

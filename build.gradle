@@ -74,7 +74,8 @@ saxon.configure {
 
 // ======================================================================
 
-task website(dependsOn: ["plain_old_js", "saxon_js", "xforms", "paper_html", "index_html"]) {
+task website(dependsOn: ["plain_old_js", "saxon_js", "xforms",
+                         "paper_html", "index_html", "presentation_html"]) {
   // nop
 }
 
@@ -87,7 +88,7 @@ task plain_old_js(dependsOn: ["plain_old_js_files", "plain_old_js_resources",
 }
 
 task plain_old_js_aug(type: SaxonXsltTask) {
-  input "${projectDir}/src/main/resources/Program.html"
+  input "${projectDir}/src/main/resources/Program-2021.html"
   output "${buildDir}/website/i3w/using-js/Program.html"
   stylesheet "${projectDir}/tools/augment-for-js.xsl"
 }
@@ -100,8 +101,10 @@ task plain_old_js_files(type: Copy) {
 task plain_old_js_resources(type: Copy) {
   into "${buildDir}/website/i3w/using-js"
   from ("${projectDir}/src/main/resources") {
-    exclude "Program.html"
+    exclude "Program-2020.html"
+    exclude "Program-2021.html"
     exclude "paper/**"
+    exclude "presentation/**"
   }
 }
   
@@ -114,7 +117,7 @@ task saxon_js(dependsOn: ["saxon_js_files", "saxon_js_resources",
 }
 
 task saxon_js_aug(type: SaxonXsltTask) {
-  input "${projectDir}/src/main/resources/Program.html"
+  input "${projectDir}/src/main/resources/Program-2021.html"
   output "${buildDir}/website/i3w/using-saxon-js/Program.html"
   stylesheet "${projectDir}/tools/augment-for-saxon-js.xsl"
 }
@@ -127,8 +130,10 @@ task saxon_js_files(type: Copy) {
 task saxon_js_resources(type: Copy) {
   into "${buildDir}/website/i3w/using-saxon-js"
   from ("${projectDir}/src/main/resources") {
-    exclude "Program.html"
+    exclude "Program-2020.html"
+    exclude "Program-2021.html"
     exclude "paper/**"
+    exclude "presentation/**"
   }
 }
 
@@ -160,8 +165,10 @@ task xforms_files(type: Copy) {
 task xforms_resources(type: Copy) {
   into "${buildDir}/website/i3w/using-xforms"
   from ("${projectDir}/src/main/resources") {
-    exclude "Program.html"
+    exclude "Program-2020.html"
+    exclude "Program-2021.html"
     exclude "paper/**"
+    exclude "presentation/**"
   }
 }
 
@@ -173,7 +180,9 @@ task paper_html(type: SaxonXsltTask, dependsOn: ["paper_resources"]) {
   output "${buildDir}/website/i3w/paper/index.html"
   stylesheet "${projectDir}/tools/docbook.xsl"
   parameters (
-    'debug': ''
+    'debug': '',
+    'resource-base-uri': '/i3w/paper/',
+    'css-links': 'css/docbook.css css/docbook-screen.css css/paper.css'
   )
 }
 
@@ -213,6 +222,71 @@ task paper_resources() {
   }
 }
 paper_resources.onlyIf { !file("${buildDir}/paper/css/docbook.css").exists() }
+
+// ======================================================================
+// Balisage presentation
+
+task presentation_html(type: SaxonXsltTask, dependsOn: ["presentation_resources"]) {
+  input "${projectDir}/src/main/xml/presentation.xml"
+  output "${buildDir}/website/i3w/presentation/index.html"
+  stylesheet "${projectDir}/tools/presentation.xsl"
+  parameters (
+    'debug': '',
+    'chunk': 'index.html',
+    'chunk-output-base-uri': "${buildDir}/website/i3w/presentation/",
+    'mediaobject-input-base-uri': "${projectDir}/src/main/xml/",
+    'resource-base-uri': '/i3w/presentation/',
+    'annotation-style': 'javascript',
+    'profile-outputformat': 'online',
+    'persistent-toc': true,
+  )
+}
+
+task presentation_resources() {
+  def dbjar = null
+  configurations.docbook.each { path ->
+    if (path.toString().contains("docbook-xslTNG")) {
+      dbjar = path
+    }
+  }
+
+  doFirst {
+    copy {
+      into "${buildDir}/website/i3w/presentation"
+      from ("${projectDir}/src/main/resources/presentation")
+    }
+  }
+
+  doFirst {
+    copy {
+      into "${buildDir}/website/i3w/presentation"
+      from ("${projectDir}/src/main/xml") {
+        include "caniuse.png"
+      }
+    }
+  }
+
+  doLast {
+    if (dbjar == null) {
+      throw new GradleException("Failed to locate DocBook xslTNG jar file")
+    }
+    copy {
+      into "${buildDir}/website/i3w/presentation"
+      from ({ zipTree(dbjar.toString()) }) {
+        include "org/docbook/xsltng/resources/**"
+      }
+      eachFile { fileCopyDetails ->
+        def originalPath = fileCopyDetails.path
+        fileCopyDetails.path = originalPath.replace('org/docbook/xsltng/resources/', '')
+      }
+    }
+  }
+
+  doLast {
+    delete "${buildDir}/website/i3w/presentation/org"
+  }
+}
+paper_resources.onlyIf { !file("${buildDir}/presentation/css/docbook.css").exists() }
   
 // ======================================================================
 
@@ -252,7 +326,10 @@ task index_html(type: SaxonXsltTask) {
   output "${buildDir}/website/i3w/index.html"
   stylesheet "${projectDir}/tools/docbook.xsl"
   parameters (
-    'debug': ''
+    'debug': '',
+    'css-links': 'paper/css/docbook.css paper/css/docbook-screen.css paper/css/paper.css',
+    'persistent-toc-css': 'paper/css/docbook-toc.css',
+    'persistent-toc-js': 'paper/js/persistent-toc.js'
   )
 }
 
