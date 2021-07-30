@@ -21,7 +21,7 @@ buildscript {
 
 plugins {
   id 'com.nwalsh.gradle.saxon.saxon-gradle' version '0.9.3'
-  id 'com.nwalsh.gradle.docker.container' version '0.0.3'
+  id 'com.nwalsh.gradle.docker.container' version '0.0.4'
 }
 
 repositories {
@@ -152,7 +152,7 @@ task saxon_js_compile(dependsOn: ["dockerup"]) {
       DockerContainer.docker {
         verbose = true
         command = "exec"
-        args = ["-i", containers[c_i3wnode], "node", "node_modules/xslt3/xslt3.js",
+        args = ["-i", "${containers[c_i3wnode]}", "node", "node_modules/xslt3/xslt3.js",
                 "-xsl:/src/main/using-saxon-js/xslt/schedule.xsl",
                 "-export:${buildDir}/website/i3w/using-saxon-js/xslt/schedule.sef.json",
                 "-nogo", "-ns:##html5"]
@@ -232,7 +232,7 @@ task paper_resources() {
     delete "${buildDir}/website/i3w/paper/org"
   }
 }
-paper_resources.onlyIf { !file("${buildDir}/paper/css/docbook.css").exists() }
+paper_resources.onlyIf { !file("${buildDir}/website/i3w/paper/css/docbook.css").exists() }
 
 // ======================================================================
 // Balisage presentation
@@ -297,7 +297,7 @@ task presentation_resources() {
     delete "${buildDir}/website/i3w/presentation/org"
   }
 }
-paper_resources.onlyIf { !file("${buildDir}/presentation/css/docbook.css").exists() }
+paper_resources.onlyIf { !file("${buildDir}/website/i3w/presentation/css/docbook.css").exists() }
   
 // ======================================================================
 
