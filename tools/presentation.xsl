@@ -9,10 +9,10 @@
                 exclude-result-prefixes="#all"
                 version="3.0">
 
-<!--
 <xsl:import href="https://cdn.docbook.org/release/xsltng/current/xslt/docbook.xsl"/>
--->
+<!--
 <xsl:import href="/Users/ndw/projects/docbook/xslTNG/build/xslt/docbook.xsl"/>
+-->
 
 <xsl:output method="html" html-version="5" encoding="utf-8" indent="no"/>
 
