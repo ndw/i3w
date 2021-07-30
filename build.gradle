@@ -138,14 +138,25 @@ task saxon_js_resources(type: Copy) {
 }
 
 task saxon_js_compile(dependsOn: ["dockerup"]) {
-  doLast {
-    DockerContainer.docker {
-      verbose = true
-      command = "exec"
-      args = ["-i", containers[c_i3wnode], "node", "node_modules/xslt3/xslt3.js",
-              "-xsl:/src/main/using-saxon-js/xslt/schedule.xsl",
-              "-export:/website/i3w/using-saxon-js/xslt/schedule.sef.json",
-              "-nogo", "-ns:##html5"]
+  if (skip_docker == "true") {
+    doLast {
+      println("Cannot compile stylesheet; using published version.")
+      new File("${buildDir}/website/i3w/using-saxon-js/xslt/schedule.sef.json").text =
+        new URL('https://ndw.github.io/i3w/using-saxon-js/xslt/schedule.sef.json').text
+    }
+    doFirst {
+      mkdir "${buildDir}/website/i3w/using-saxon-js/xslt"
+    }
+  } else {
+    doLast {
+      DockerContainer.docker {
+        verbose = true
+        command = "exec"
+        args = ["-i", containers[c_i3wnode], "node", "node_modules/xslt3/xslt3.js",
+                "-xsl:/src/main/using-saxon-js/xslt/schedule.xsl",
+                "-export:${buildDir}/website/i3w/using-saxon-js/xslt/schedule.sef.json",
+                "-nogo", "-ns:##html5"]
+      }
     }
   }
 }
@@ -335,31 +346,39 @@ task index_html(type: SaxonXsltTask) {
 
 // ======================================================================
 
-task dockerup(dependsOn: ["setup_node"]) {
-  doLast {
-    docker_started = false
-    if (System.getenv('GRADLE_CI_BUILD') == 'true') {
-      docker_started = true
-    } else {
-      if (!DockerContainer.allRunning([c_i3whttp, c_i3wnode])) {
-        DockerContainer.compose {
-          command = "up"
-          args = ["-d"]
-        }
-        docker_started = true
-      }
+if (skip_docker == "true") {
+  task dockerup() {
+    doLast {
+      println("Skipping docker; stylesheet cannot be compiled.")
     }
   }
+} else {
+  task dockerup(dependsOn: ["setup_node"]) {
+    doLast {
+      docker_started = false
+      if (System.getenv('GRADLE_CI_BUILD') == 'true') {
+        docker_started = true
+      } else {
+        if (!DockerContainer.allRunning([c_i3whttp, c_i3wnode])) {
+          DockerContainer.compose {
+            command = "up"
+            args = ["-d"]
+          }
+          docker_started = true
+        }
+      }
+    }
 
-  doLast {
-    containers = DockerContainer.containers()
+    doLast {
+      containers = DockerContainer.containers()
+    }
+
+    doFirst {
+      mkdir ("${buildDir}/website")
+    }
+
+    finalizedBy install_node
   }
-
-  doFirst {
-    mkdir ("${buildDir}/website")
-  }
-
-  finalizedBy install_node
 }
 
 task dockerdown() {
