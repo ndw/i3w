@@ -7,18 +7,28 @@
   <title>Interactivity Three Ways</title>
   <author>
     <personname>
-      <firstname>Norman</firstname>
+      <firstname>Norm</firstname>
       <surname>Tovey-Walsh</surname>
     </personname>
     <email>ndw@nwalsh.com</email>
+    <affiliation>
+      <orgname>Saxonica</orgname>
+    </affiliation>
   </author>
   <author>
     <personname>
       <firstname>Michael</firstname>
       <surname>Sperberg-McQueen</surname>
     </personname>
+    <affiliation>
+      <orgname>Black Mesa Technologies</orgname>
+    </affiliation>
     <email>cmsmcq@blackmesatech.com</email>
   </author>
+  <confgroup>
+    <conftitle>Balisage: The Markup Conference</conftitle>
+    <confdates>1-6 August 2021</confdates>
+  </confgroup>
   <pubdate>2021-07-27</pubdate>
   <abstract>
     <para>Adding interactivity to a document presented on the web:
@@ -85,7 +95,7 @@ mostly static document.</para>
 <chapter>
   <title>A picture is worth 1000 words</title>
   <para>
-    <emphasis>Demo</emphasis>
+    <emphasis xlink:href="https://ndw.github.io/i3w/using-js/Program.html#schedule">Demo</emphasis>
   </para>
 </chapter>
 <chapter xml:id="groundrules">
@@ -178,7 +188,7 @@ to handle asynchrony rather directly, but you get used to it.
 <listitem><para>For thousands, or tens of thousands of lines of JavaScript code,
 you’d probably want to invest in one of the big frameworks.
 </para></listitem>
-<listitem><para>They offer more functional approaches and more automatic behavior.
+<listitem><para>They offer more declarative approaches and more automatic behavior.
 </para></listitem>
 </itemizedlist>
 </chapter>
@@ -229,7 +239,7 @@ you’d probably want to invest in one of the big frameworks.
   <info><title>Selecting time zone</title></info>
   <para>To select one out of several possible values,
   use an XForms <code>select1</code> widget:
-  <programlisting>&lt;xf:select1 id="timezone-selector" ref="instance('ui')/tz"&gt;
+  <programlisting language="xml">&lt;xf:select1 id="timezone-selector" ref="instance('ui')/tz"&gt;
   &lt;xf:label&gt;Timezone: &lt;/xf:label&gt;
   ...
   &lt;xf:item&gt;
@@ -255,8 +265,7 @@ you’d probably want to invest in one of the big frameworks.
   <para>To store information, use an XML instance:
   here, <code>tz</code> element and <code>clock24</code> attribute.
     
-<programlisting>
-&lt;head&gt;
+<programlisting language="xml">&lt;head&gt;
   &lt;title&gt;Balisage 2020 Program&lt;/title&gt;
   ...
 
@@ -284,7 +293,7 @@ you’d probably want to invest in one of the big frameworks.
   so the XForms engine knows what it is.
   Checkboxes are a natural way to present Booleans.
 
-<programlisting>&lt;xf:bind nodeset="instance('ui')/@clock24"
+<programlisting language="xml">&lt;xf:bind nodeset="instance('ui')/@clock24"
          type="xsd:boolean" /&gt;</programlisting>
   </para>
 </chapter>
@@ -292,15 +301,14 @@ you’d probably want to invest in one of the big frameworks.
   <info><title>HTML injection</title></info>
   <para>HTML can be injected using an XForms <code>output</code> widget:
 
-  <programlisting>&lt;p id="schedlink"&gt;
+  <programlisting language="xml">&lt;p id="schedlink"&gt;
   &lt;xf:output mediatype="text/html"
              ref="instance('ui')/schedlink"/&gt;
 &lt;/p&gt;</programlisting>
   </para>
   <para>Or, using the <code>transform()</code> function (not
   standardized):
-<programlisting>
-&lt;td rowspan="2" data-slot="Monday/10:00"&gt;
+<programlisting language="xml">&lt;td rowspan="2" data-slot="Monday/10:00"&gt;
   &lt;xf:output mediatype="text/html"
              value="transform(instance('program'),
                               'single-item.xsl',
@@ -314,7 +322,7 @@ you’d probably want to invest in one of the big frameworks.
   <info><title>Timezone display</title></info>
   <para>Display the time from the <code>ui</code> document, using
   an <code>output</code> widget:
-<programlisting>&lt;th id="r10" class="time" scope="row"&gt;
+<programlisting language="xml">&lt;th id="r10" class="time" scope="row"&gt;
   &lt;time datetime="2020-07-27T10:00:00-04:00"&gt;10:00&lt;/time&gt;
   &lt;xf:output
       mediatype="text/html"
@@ -327,7 +335,7 @@ you’d probably want to invest in one of the big frameworks.
   <para>Calculate the times in the <code>ui</code> document, using
   XForms <code>bind</code> elements to specify the calculation.</para>
   <para>Start with slots for default and user-specified timezone offsets:
-<programlisting>&lt;slot id="r10"
+<programlisting language="xml">&lt;slot id="r10"
       datetime="2020-07-27T10:00:00-04:00"
       user-datetime="2020-07-27T10:00:00-04:00"
       user-time="" uh24="" uh12="" wrapped=""
@@ -341,7 +349,7 @@ you’d probably want to invest in one of the big frameworks.
   <para>Use <code>bind</code> to define how the various values are calculated
   (here: hours part, minutes part, sign, and number of seconds
   since the epoch):
-<programlisting>&lt;xf:bind nodeset="instance('ui')/tz/@h"
+<programlisting language="xml">&lt;xf:bind nodeset="instance('ui')/tz/@h"
          type="xsd:integer"
          calculate="substring(.., 2, 2)"/&gt;
 &lt;xf:bind nodeset="instance('ui')/tz/@m"
@@ -365,8 +373,7 @@ you’d probably want to invest in one of the big frameworks.
   changing.
   (West of Greenwich:  false; east:  true.)</para>
   <para>In principle, it's simple:
-  <programlisting>
-  &lt;xf:setvalue ev:event="xforms-value-changed"
+  <programlisting language="xml">  &lt;xf:setvalue ev:event="xforms-value-changed"
              ref="instance('ui')/@clock24"
              value="if(../tz/@sign = '-', 'true', 'false')"/&gt;</programlisting>
   </para>
@@ -390,8 +397,33 @@ you’d probably want to invest in one of the big frameworks.
     </listitem>
   </itemizedlist>
 </chapter>
-      
+
 <chapter xml:id="saxonjs">
+<info>
+<title>Saxon-JS</title>
+</info>
+
+<blockquote>
+<para>Saxon-JS is an XSLT 3.0 processor written mainly in JavaScript,
+and partly in XSLT. Saxon-JS is available for two JavaScript
+environments: the browser, and Node.js.
+</para>
+</blockquote>
+
+<itemizedlist>
+  <listitem>
+    <para>Is this the sort of problem you’d expect to be able to solve with XSLT?</para>
+  </listitem>
+  <listitem>
+    <para>What else do we need?</para>
+  </listitem>
+  <listitem>
+    <para>Setup and infrastructure</para>
+  </listitem>
+</itemizedlist>
+</chapter>
+
+<chapter xml:id="saxonjs1">
 <info>
 <title>Saxon-JS</title>
 </info>
@@ -406,11 +438,12 @@ an “almost identity” transformation:</para>
     <xsl:choose>
       <xsl:when test="$event">
         <xsl:sequence select="f:event-class(@class, $event)"/>
-        <xsl:apply-templates select="$event" mode="data-content"/>
+        <xsl:apply-templates select="$event"
+                             mode="data-content"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:attribute name="class"
-                       select="normalize-space(@class || ' none')"/>
+             select="normalize-space(@class || ' none')"/>
         <xsl:text>No talk scheduled.</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
@@ -532,6 +565,27 @@ to “click” events on the elements it matches:
 <para>If you’d like a more detailed introduction, Debbie Lockett and I
 have pitched a Saxon-JS tutorial for <citetitle>Declarative
 Amsterdam</citetitle> this fall. If that’s accepted…</para>
+</chapter>
+
+<chapter xml:id="conclusions">
+<info>
+<title>Conclusions</title>
+</info>
+<itemizedlist>
+<listitem><para>All three approaches work!
+</para></listitem>
+<listitem><para>Plain old JavaScript is the smallest: no runtime to download.
+</para></listitem>
+<listitem><para>Saxon-JS lets you take advantage of XSLT design patterns.
+</para></listitem>
+<listitem><para>XForms is probably the most declarative.
+</para></listitem>
+<listitem><para>Be careful how you formulate your requirements!
+</para></listitem>
+<listitem><para>Three axes to consider: standardized to implementation-specific,
+declarative to imperative, and smaller user communities to larger.
+</para></listitem>
+</itemizedlist>
 </chapter>
 
 </book>
