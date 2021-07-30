@@ -3,7 +3,10 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:db="http://docbook.org/ns/docbook"
                 xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+                xmlns:f="http://docbook.org/ns/docbook/functions"
+                xmlns:h="http://www.w3.org/1999/xhtml"
                 xmlns:m="http://docbook.org/ns/docbook/modes"
+                xmlns:t="http://docbook.org/ns/docbook/templates"
                 xmlns:v="http://docbook.org/ns/docbook/variables"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 exclude-result-prefixes="#all"
@@ -23,8 +26,7 @@
 
 <xsl:variable name="v:templates" as="document-node()">
   <xsl:document>
-    <db:article xmlns:tmp="http://docbook.org/ns/docbook/templates"
-                context="empty(parent::*)">
+    <db:book xmlns:tmp="http://docbook.org/ns/docbook/templates">
       <header>
         <tmp:apply-templates select="db:title">
           <h1><tmp:content/></h1>
@@ -40,14 +42,29 @@
             </tmp:apply-templates>
           </div>
         </tmp:apply-templates>
+        <tmp:apply-templates select="db:confgroup"/>
         <tmp:apply-templates select="db:pubdate">
           <p class="pubdate"><tmp:content/></p>
         </tmp:apply-templates>
-        <tmp:apply-templates select="db:abstract"/>
       </header>
-    </db:article>
+    </db:book>
   </xsl:document>
 </xsl:variable>
+
+<xsl:template match="db:confgroup" mode="m:titlepage">
+  <p>
+    <xsl:apply-templates select="." mode="m:attributes"/>
+    <xsl:apply-templates mode="m:titlepage"/>
+  </p>
+</xsl:template>
+
+<xsl:template match="db:conftitle|db:confdates" mode="m:titlepage">
+  <span>
+    <xsl:apply-templates select="." mode="m:attributes"/>
+    <xsl:apply-templates mode="m:titlepage"/>
+  </span>
+</xsl:template>
+  
 
 <xsl:template match="db:affiliation" mode="m:titlepage">
   <xsl:apply-templates select="db:orgname/node()" mode="m:docbook"/>
@@ -59,5 +76,179 @@
   <xsl:param name="title" as="node()*" required="yes"/>
   <xsl:sequence select="()"/>
 </xsl:template>
+
+<!-- ============================================================ -->
+
+<xsl:template match="*" mode="m:html-head-links">
+  <script type="text/javascript"
+          src="https://kit.fontawesome.com/c94d537c36.js" crossorigin="anonymous"/>
+</xsl:template>
+
+<!-- ============================================================ -->
+
+<xsl:template name="t:top-nav">
+  <xsl:param name="docbook" as="node()" tunnel="yes"/>
+  <xsl:param name="node" as="element()"/>
+  <xsl:param name="prev" as="element()?"/>
+  <xsl:param name="next" as="element()?"/>
+  <xsl:param name="up" as="element()?"/>
+  <xsl:param name="top" as="element()?"/>
+
+  <span class="nav">
+    <a title="{$docbook/db:book/db:info/db:title}" href="{$top/@db-chunk/string()}">
+      <i class="fas fa-home"></i>
+    </a>
+    <xsl:text>&#160;</xsl:text>
+
+    <xsl:choose>
+      <xsl:when test="exists($prev)">
+        <a href="{$prev/@db-chunk/string()}" title="{f:title-content($prev)}">
+          <i class="fas fa-arrow-left"></i>
+        </a>
+      </xsl:when>
+      <xsl:otherwise>
+        <span class="inactive">
+          <i class="fas fa-arrow-left"></i>
+        </span>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>&#160;</xsl:text>
+
+    <xsl:choose>
+      <xsl:when test="exists($up)">
+        <a title="{f:title-content($up)}" href="{$up/@db-chunk/string()}">
+          <i class="fas fa-arrow-up"></i>
+        </a>
+      </xsl:when>
+      <xsl:otherwise>
+        <span class="inactive">
+          <i class="fas fa-arrow-up"></i>
+        </span>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>&#160;</xsl:text>
+
+    <xsl:choose>
+      <xsl:when test="exists($next)">
+        <a title="{f:title-content($next)}" href="{$next/@db-chunk/string()}">
+          <i class="fas fa-arrow-right"></i>
+        </a>
+      </xsl:when>
+      <xsl:otherwise>
+        <span class="inactive">
+          <i class="fas fa-arrow-right"></i>
+        </span>
+      </xsl:otherwise>
+    </xsl:choose>
+  </span>
+  
+  <span class="text">
+    <i class="title"><xsl:value-of select="/h:html/h:head/h:title"/></i>
+  </span>
+  <span class="nav"/>
+</xsl:template>
+
+<xsl:template name="t:bottom-nav">
+  <xsl:param name="docbook" as="node()" tunnel="yes"/>
+  <xsl:param name="node" as="element()"/>
+  <xsl:param name="prev" as="element()?"/>
+  <xsl:param name="next" as="element()?"/>
+  <xsl:param name="up" as="element()?"/>
+  <xsl:param name="top" as="element()?"/>
+
+  <div class="navrow">
+    <div class="navleft">
+      <xsl:if test="count($prev)>0">
+        <a title="{f:title-content($prev)}" href="{$prev/@db-chunk/string()}">
+          <i class="fas fa-arrow-left"></i>
+        </a>
+      </xsl:if>
+    </div>
+    <div class="navmiddle">
+      <xsl:if test="exists($top)">
+        <a title="{f:title-content($top)}" href="{$top/@db-chunk/string()}">
+          <i class="fas fa-home"></i>
+        </a>
+      </xsl:if>
+    </div>
+    <div class="navright">
+      <xsl:if test="count($next)>0">
+        <a title="{f:title-content($next)}" href="{$next/@db-chunk/string()}">
+          <i class="fas fa-arrow-right"></i>
+        </a>
+      </xsl:if>
+    </div>
+  </div>
+
+  <div class="navrow">
+    <div class="navleft navtitle">
+      <xsl:value-of select="f:title-content($prev)"/>
+    </div>
+    <div class="navmiddle">
+      <xsl:if test="count($up) gt 0">
+        <a title="{f:title-content($up)}" href="{$up/@db-chunk/string()}">
+          <i class="fas fa-arrow-up"></i>
+        </a>
+      </xsl:if>
+    </div>
+    <div class="navright navtitle">
+      <xsl:value-of select="f:title-content($next)"/>
+    </div>
+  </div>
+
+  <xsl:variable name="db-node"
+                select="key('genid', $node/@db-id, $docbook)"/>
+
+  <div class="infofooter">
+    <span class="copyrightfooter">
+      <xsl:apply-templates select="$docbook/db:book/db:info/db:copyright" mode="m:docbook"/>
+    </span>
+
+    <xsl:if test="$db-node/db:info/db:releaseinfo[@role='hash']">
+      <xsl:variable name="hash"
+                    select="$db-node/db:info/db:releaseinfo[@role='hash']"/>
+
+      <span class="revision">
+        <xsl:attribute name="title"
+                       select="'git hash: '
+                               || substring($hash, 1, 6)
+                               || '…'"/>
+        <xsl:text>Last revised by </xsl:text>
+        <xsl:value-of
+            select="substring-before($db-node/db:info/db:releaseinfo[@role='author'],
+                                     ' &lt;')"/>
+        <xsl:text> on </xsl:text>
+        <xsl:for-each select="$db-node/db:info/db:pubdate">
+          <!-- hack: there should be only one -->
+          <xsl:if test=". castable as xs:dateTime">
+            <xsl:value-of select="format-dateTime(. cast as xs:dateTime,
+                                                  '[D1] [MNn,*-3] [Y0001]')"/>
+          </xsl:if>
+        </xsl:for-each>
+      </span>
+    </xsl:if>
+  </div>
+</xsl:template>
+
+<xsl:function name="f:title-content" as="node()*">
+  <xsl:param name="node" as="element()?"/>
+
+  <xsl:variable name="header" select="($node/h:header, $node/h:article/h:header)[1]"/>
+
+  <xsl:variable name="title" as="element()?"
+                select="($header/h:h1,
+                         $header/h:h2,
+                         $header/h:h3,
+                         $header/h:h4,
+                         $header/h:h5)"/>
+
+  <xsl:variable name="title" as="element()?"
+                select="if (exists($title))
+                        then $title
+                        else $node/h:div[@class='refnamediv']
+                                /h:p/h:span[@class='refname']"/>
+ 
+  <xsl:sequence select="$title/node()"/>
+</xsl:function>
 
 </xsl:stylesheet>
