@@ -245,7 +245,7 @@ task presentation_html(type: SaxonXsltTask, dependsOn: ["presentation_resources"
     'debug': '',
     'chunk': 'index.html',
     'chunk-output-base-uri': "${buildDir}/website/i3w/presentation/",
-    'mediaobject-input-base-uri': "${projectDir}/src/main/xml/",
+    'mediaobject-input-base-uri': "file:${projectDir}/src/main/xml/",
     'resource-base-uri': '/i3w/presentation/',
     'annotation-style': 'javascript',
     'profile-outputformat': 'online',
