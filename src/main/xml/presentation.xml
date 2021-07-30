@@ -41,14 +41,70 @@
   <?db xlink-style="javascript" page-style="verso"?>
 </info>
 
-<chapter xml:id="background">
-<title>Background</title>
-<para>…</para>
+<chapter xml:id="overview">
+  <title>Overview</title>
+  <itemizedlist>
+    <listitem>
+      <para>The challenge</para>
+    </listitem>
+    <listitem>
+      <para>Javascript solution</para>
+    </listitem>
+    <listitem>
+      <para>XForms solution</para>
+    </listitem>
+    <listitem>
+      <para>Saxon-JS solution</para>
+    </listitem>
+    <listitem>
+      <para>Lessons learned</para>
+    </listitem>
+  </itemizedlist>
 </chapter>
+
 
 <chapter xml:id="task">
 <title>The task</title>
-<para>…</para>
+
+<para>Compare different ways to provide
+a little simple activity in a
+mostly static document.</para>
+<itemizedlist>
+  <listitem>
+    <para>single problem</para>
+  </listitem>
+  <listitem>
+    <para>multiple solutions</para>
+  </listitem>
+  <listitem>
+    <para>common ground-rules</para>
+  </listitem>
+</itemizedlist>
+</chapter>
+
+<chapter>
+  <title>A picture is worth 1000 words</title>
+  <para>
+    <emphasis>Demo</emphasis>
+  </para>
+</chapter>
+<chapter xml:id="groundrules">
+  <title>The ground rules</title>
+  <itemizedlist>
+    <listitem>
+      <para>workflow should not change much
+      </para>
+    </listitem>
+    <listitem>
+      <para>dynamic display in the browser (not static pre-calculation
+      of 24 or so versions of schedule)
+      </para>
+    </listitem>
+    <listitem>
+      <para>schedule table authored by hand</para>
+    </listitem>
+  </itemizedlist>
+  <para>More specific requirements in the paper.</para>
 </chapter>
 
 <chapter xml:id="playalong">
@@ -131,9 +187,210 @@ you’d probably want to invest in one of the big frameworks.
 <info>
 <title>XForms</title>
 </info>
-<para>…</para>
+
+<itemizedlist>
+  <listitem>
+    <para>it works</para>
+  </listitem>
+  <listitem>
+    <para>selecting and storing time zone</para>
+  </listitem>
+  <listitem>
+    <para>HTML injection</para>
+  </listitem>
+  <listitem>
+    <para>timezone calculations</para>
+  </listitem>
+  <listitem>
+    <para>event handling</para>
+  </listitem>
+  <listitem>
+    <para>some shortcomings</para>
+  </listitem>
+</itemizedlist>
 </chapter>
 
+<chapter>
+  <info><title>It works</title></info>
+  <para>The XForms solution:</para>
+  <itemizedlist>
+    <listitem>
+      <para>meets the requirements</para>
+    </listitem>
+    <listitem>
+      <para>requires 800k download (XSLT, Javascript)</para>
+    </listitem>
+    <listitem>
+      <para>mostly pure XForms (some XSLTForms extensions)</para>
+    </listitem>
+  </itemizedlist>
+</chapter>
+<chapter>
+  <info><title>Selecting time zone</title></info>
+  <para>To select one out of several possible values,
+  use an XForms <code>select1</code> widget:
+  <programlisting>&lt;xf:select1 id="timezone-selector" ref="instance('ui')/tz"&gt;
+  &lt;xf:label&gt;Timezone: &lt;/xf:label&gt;
+  ...
+  &lt;xf:item&gt;
+    &lt;xf:label&gt;CDT  Chicago, IL, USA (UTC-05:00)&lt;/xf:label&gt;
+    &lt;xf:value&gt;-05:00&lt;/xf:value&gt;
+  &lt;/xf:item&gt;
+  &lt;xf:item&gt;
+    &lt;xf:label&gt;EDT  Rockville, MD, USA (UTC-04:00)&lt;/xf:label&gt;
+    &lt;xf:value&gt;-04:00&lt;/xf:value&gt;
+  &lt;/xf:item&gt;
+  ...
+  &lt;xf:item&gt;
+    &lt;xf:label&gt;CEST Prague, CZE (UTC+02:00)&lt;/xf:label&gt;
+    &lt;xf:value&gt;+02:00&lt;/xf:value&gt;
+  &lt;/xf:item&gt;
+  ...
+&lt;/xf:select1&gt;</programlisting>
+  </para>
+</chapter>
+<chapter>
+  <info><title>Remembering time zone</title></info>
+  <para>XForms has no variables.</para>
+  <para>To store information, use an XML instance:
+  here, <code>tz</code> element and <code>clock24</code> attribute.
+    
+<programlisting>
+&lt;head&gt;
+  &lt;title&gt;Balisage 2020 Program&lt;/title&gt;
+  ...
+
+  &lt;xf:model id="m1"&gt;
+
+    &lt;xf:instance id="program" src="./Program.xhtml"/&gt;
+
+    &lt;xf:instance id="ui" xmlns=""&gt;
+      &lt;ui-info clock24="false"&gt;
+        &lt;tz&gt;-04:00&lt;/tz&gt;
+	...
+      &lt;/ui-info&gt;
+    &lt;/xf:instance&gt;
+    ...
+  &lt;/xf:model&gt;
+  ...
+&lt;/head&gt;</programlisting>
+  </para>
+</chapter>
+
+<chapter>
+  <info><title>How do I get a checkbox*?</title></info>
+  <para>To get the 24-hour clock checkbox ...</para>
+  <para>... bind an instance node to an XSD type,
+  so the XForms engine knows what it is.
+  Checkboxes are a natural way to present Booleans.
+
+<programlisting>&lt;xf:bind nodeset="instance('ui')/@clock24"
+         type="xsd:boolean" /&gt;</programlisting>
+  </para>
+</chapter>
+<chapter>
+  <info><title>HTML injection</title></info>
+  <para>HTML can be injected using an XForms <code>output</code> widget:
+
+  <programlisting>&lt;p id="schedlink"&gt;
+  &lt;xf:output mediatype="text/html"
+             ref="instance('ui')/schedlink"/&gt;
+&lt;/p&gt;</programlisting>
+  </para>
+  <para>Or, using the <code>transform()</code> function (not
+  standardized):
+<programlisting>
+&lt;td rowspan="2" data-slot="Monday/10:00"&gt;
+  &lt;xf:output mediatype="text/html"
+             value="transform(instance('program'),
+                              'single-item.xsl',
+			      false,
+			      'slot',
+			      'Monday/10:00')"/&gt;
+&lt;/td&gt;</programlisting>
+  </para>
+</chapter>
+<chapter>
+  <info><title>Timezone display</title></info>
+  <para>Display the time from the <code>ui</code> document, using
+  an <code>output</code> widget:
+<programlisting>&lt;th id="r10" class="time" scope="row"&gt;
+  &lt;time datetime="2020-07-27T10:00:00-04:00"&gt;10:00&lt;/time&gt;
+  &lt;xf:output
+      mediatype="text/html"
+      value="instance('ui')/slot-times/slot[@id='r10']"/&gt;
+&lt;/th&gt;</programlisting>
+  </para>
+</chapter>
+<chapter>
+  <info><title>Timezone calculations (1)</title></info>
+  <para>Calculate the times in the <code>ui</code> document, using
+  XForms <code>bind</code> elements to specify the calculation.</para>
+  <para>Start with slots for default and user-specified timezone offsets:
+<programlisting>&lt;slot id="r10"
+      datetime="2020-07-27T10:00:00-04:00"
+      user-datetime="2020-07-27T10:00:00-04:00"
+      user-time="" uh24="" uh12="" wrapped=""
+      default="10:00"&gt;10:00&lt;/slot&gt;</programlisting>
+  </para>
+</chapter>
+<chapter>
+  <info><title>Timezone calculations (2)</title></info>
+  <para>Calculate the times in the <code>ui</code> document, using
+  XForms <code>bind</code> elements to specify the calculation.</para>
+  <para>Use <code>bind</code> to define how the various values are calculated
+  (here: hours part, minutes part, sign, and number of seconds
+  since the epoch):
+<programlisting>&lt;xf:bind nodeset="instance('ui')/tz/@h"
+         type="xsd:integer"
+         calculate="substring(.., 2, 2)"/&gt;
+&lt;xf:bind nodeset="instance('ui')/tz/@m"
+	 type="xsd:integer"
+         calculate="substring(.., 5, 2)"/&gt;
+&lt;xf:bind nodeset="instance('ui')/tz/@sign"
+         calculate="substring(.., 1, 1)"/&gt;
+&lt;xf:bind nodeset="instance('ui')/tz/@secs"
+         calculate="if(../@sign = '-',
+                    0 - (((../@h * 60) + ../@m) * 60),
+                    0 + (((../@h * 60) + ../@m) * 60))"/&gt;</programlisting>
+  </para>
+  <para>Etc., etc., etc.
+  All calculations
+  use <code>xf:bind/@calculate</code>.</para>
+  <para>Details in the paper.</para>
+</chapter>
+<chapter>
+  <info><title>Event handling</title></info>
+  <para>When the time zone changes, the 24-hour flag may also need
+  changing.
+  (West of Greenwich:  false; east:  true.)</para>
+  <para>In principle, it's simple:
+  <programlisting>
+  &lt;xf:setvalue ev:event="xforms-value-changed"
+             ref="instance('ui')/@clock24"
+             value="if(../tz/@sign = '-', 'true', 'false')"/&gt;</programlisting>
+  </para>
+  <para>In practice, it's more complicated.  (Details in paper.)</para>
+</chapter>
+
+<chapter>
+  <info><title>Some shortcomings</title></info>
+  <itemizedlist>
+    <listitem>
+      <para>XForms separates view from control; bad fit for requirements
+      to modify the host document.</para>
+    </listitem>
+    <listitem>
+      <para>This implementation interferes more with the base document
+      than the other approaches.</para>
+      <para>(But other XForms approaches are possible.*)</para>
+    </listitem>
+    <listitem>
+      <para>Using XSLT to calculate values requires an extension.</para>
+    </listitem>
+  </itemizedlist>
+</chapter>
+      
 <chapter xml:id="saxonjs">
 <info>
 <title>Saxon-JS</title>
