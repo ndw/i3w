@@ -15,6 +15,8 @@
 <xsl:output method="html" html-version="5" encoding="utf-8" indent="no"/>
 
 <xsl:variable name="Z" select="xs:dayTimeDuration('PT0H')"/>
+<xsl:variable name="UTC" select="adjust-dateTime-to-timezone(current-dateTime(), $Z)"/>
+<xsl:variable name="first-day" select="xs:date('2021-07-31')"/>
 
 <xsl:key name="slot" match="div[@class='ProgramEvent']"
          use="span[@class='EventDateTime']/span[@class='Day']
@@ -32,10 +34,152 @@
   <xsl:result-document href="#schedlink" method="ixsl:replace-content">
     <xsl:text>🖝 </xsl:text>
     <a href='#schedule'>Interactive schedule-at-a-glance</a>
+    <xsl:apply-templates select="ixsl:page()//p[@class='controls']"
+                         mode="ics"/>
   </xsl:result-document>
   <ixsl:set-style name="display" select="'block'"
                   object="ixsl:page()//p[@id='schedlink']"/>
 </xsl:template>
+
+<!-- ============================================================ -->
+
+<xsl:template match="p" mode="ics">
+  <xsl:variable name="vtimezone" as="xs:string">BEGIN:VTIMEZONE
+TZID:America/New_York
+BEGIN:DAYLIGHT
+TZOFFSETFROM:-0500
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU
+DTSTART:20070311T020000
+TZNAME:EDT
+TZOFFSETTO:-0400
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:-0400
+RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU
+DTSTART:20071104T020000
+TZNAME:EST
+TZOFFSETTO:-0500
+END:STANDARD
+END:VTIMEZONE
+</xsl:variable>
+
+  <xsl:variable name="vevents" as="xs:string*">
+    <xsl:apply-templates select="//div[@class='ProgramEvent']" mode="ics"/>
+  </xsl:variable>
+
+  <xsl:variable name="calendar" as="xs:string*">BEGIN:VCALENDAR
+METHOD:PUBLISH
+VERSION:2.0
+X-WR-CALNAME:Balisage 2021
+PRODID:-//Apple Inc.//macOS 11.4//EN
+X-WR-TIMEZONE:America/New_York
+CALSCALE:GREGORIAN
+<xsl:sequence select="$vtimezone"/>
+<xsl:sequence select="string-join($vevents,'&#10;')"/>
+END:VCALENDAR</xsl:variable>
+
+  <xsl:text> (</xsl:text>
+  <a href="data:text/ics;charset=utf-8,{encode-for-uri(string-join($calendar, ''))}"
+       target="_blank" download="Balisage-2021.ics">ICS</a>
+  <xsl:text>)</xsl:text>
+</xsl:template>
+
+<xsl:template match="div[@class='ProgramEvent']" mode="ics" as="xs:string">
+  <xsl:variable name="day"
+                select="ancestor::div[@class='Program-Day']"/>
+  <xsl:variable name="daypos"
+                select="count($day/preceding-sibling::div[@class='Program-Day'])"/>
+
+  <xsl:variable name="dtstamp"
+                select="format-dateTime($UTC, '[Y0001][M01][D01]T[h01][m01][s01]Z')"/>
+
+  <xsl:variable name="ts"
+                select="tokenize(substring(span/span[@class='timestart'], 1 , 5), ':')"/>
+  <xsl:variable name="te"
+                select="tokenize(substring(span/span[@class='timeend'], 1, 5), ':')"/>
+
+  <xsl:variable name="date" select="$first-day + xs:dayTimeDuration('P'||$daypos||'D')"/>
+
+  <xsl:variable name="dtstart"
+                select="format-date($date, '[Y0001][M01][D01]T')
+                        || $ts[1] || $ts[2] || '00'"/>
+
+  <xsl:variable name="dtend"
+                select="format-date($date, '[Y0001][M01][D01]T')
+                        || $te[1] || $te[2] || '00'"/>
+
+
+  <xsl:variable name="speakers" as="xs:string*"
+                select=".//span[@class='SpeakerName']"/>
+
+  <xsl:variable name="speakers" as="xs:string*">
+    <xsl:for-each select="$speakers">
+      <xsl:if test="position() gt 1 and count($speakers) gt 2">
+        <xsl:text>, </xsl:text>
+      </xsl:if>
+      <xsl:if test="position() gt 1 and position() = last()">
+        <xsl:text> and </xsl:text>
+      </xsl:if>
+      <xsl:sequence select="."/>
+    </xsl:for-each>
+  </xsl:variable>
+
+  <xsl:variable name="description" as="xs:string*">
+    <xsl:sequence select="string-join($speakers, '')"/>
+    <xsl:sequence select="normalize-space(p[@class='blurb'])"/>
+  </xsl:variable>
+
+  <xsl:variable name="event" as="node()">
+    <xsl:text expand-text="yes">BEGIN:VEVENT
+TRANSP:OPAQUE
+DTSTAMP:{$dtstamp}
+UID:{f:uuid(@id)}
+DTSTART;TZID=America/New_York:{$dtstart}
+DTEND;TZID=America/New_York:{$dtend}
+DESCRIPTION:{string-join($description, '\n\n')}
+URL;VALUE=URI:https://www.balisage.net/2021/Program.html#{@id}
+SEQUENCE:1
+SUMMARY:{normalize-space(h2[@class='EventTitle'])}
+LAST-MODIFIED:{$dtstamp}
+CREATED:{$dtstamp}
+END:VEVENT</xsl:text>
+  </xsl:variable>
+
+  <xsl:sequence select="string($event)"/>
+</xsl:template>
+
+<xsl:function name="f:uuid" as="xs:string">
+  <xsl:param name="seed" as="xs:string"/>
+
+  <xsl:variable name="hexdigits" select="('0', '1', '2', '3', '4', '5', '6', '7',
+                                          '8', '9', 'A', 'B', 'C', 'D', 'E', 'F')"/>
+
+  <xsl:variable name="hexstring" as="xs:string">
+    <xsl:iterate select="1 to 32">
+      <xsl:param name="digits" select="''"/>
+      <xsl:param name="random" select="random-number-generator($seed)"/>
+      <xsl:on-completion select="$digits"/>
+
+      <xsl:variable name="hex" select="floor($random?number * 16) + 1"/>
+
+      <xsl:next-iteration>
+        <xsl:with-param name="digits" select="$digits || subsequence($hexdigits, $hex, 1)"/>
+        <xsl:with-param name="random" select="$random?next()"/>
+      </xsl:next-iteration>
+    </xsl:iterate>
+  </xsl:variable>
+
+  <xsl:sequence select="substring($hexstring, 1, 8)
+                        || '-'
+                        || substring($hexstring, 9, 4)
+                        || '-'
+                        || substring($hexstring, 13, 4)
+                        || '-'
+                        || substring($hexstring, 17, 4)
+                        || '-'
+                        || substring($hexstring, 21)"/>
+
+</xsl:function>
 
 <!-- ============================================================ -->
 

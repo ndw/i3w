@@ -1,4 +1,4 @@
-# Interactivity Three Ways
+# Interactivity Three Ways (ICS branch)
 
 This repository contains the source code that Norman Walsh and Michael Sperberg-McQueen
 describe in their Balisage 2021 paper, “[Interactivity Three Ways](https://ndw.github.io/i3w/paper/)”.
@@ -7,6 +7,12 @@ _[Balisage: The Markup Conference](https://www.balisage.net/)_.
 
 The [generated website](https://ndw.github.io/i3w/) provides
 interactive demonstrations of all three approaches.
+
+## ICS branch
+
+This branch differs from the main branch in that the `schedule.xsl` stylesheet in the
+“Using Saxon-JS” approach also generates an [iCalendar](https://en.wikipedia.org/wiki/ICalendar)
+version of the schedule that you can download.
 
 ## Building locally
 
