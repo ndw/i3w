@@ -138,6 +138,9 @@ task saxon_js_resources(type: Copy) {
 }
 
 task saxon_js_compile(dependsOn: ["dockerup"]) {
+  inputs.file "${projectDir}/src/main/using-saxon-js/xslt/schedule.xsl"
+  outputs.file "${buildDir}/website/i3w/using-saxon-js/xslt/schedule.sef.json"
+
   if (skip_docker == "true") {
     doLast {
       println("Cannot compile stylesheet; using published version.")
@@ -149,12 +152,14 @@ task saxon_js_compile(dependsOn: ["dockerup"]) {
     }
   } else {
     doLast {
+      // Note: this command runs in the Docker container; the paths /src and
+      // /website are mounted to the right locations in the container!
       DockerContainer.docker {
         verbose = true
         command = "exec"
         args = ["-i", "${containers[c_i3wnode]}", "node", "node_modules/xslt3/xslt3.js",
                 "-xsl:/src/main/using-saxon-js/xslt/schedule.xsl",
-                "-export:${buildDir}/website/i3w/using-saxon-js/xslt/schedule.sef.json",
+                "-export:/website/i3w/using-saxon-js/xslt/schedule.sef.json",
                 "-nogo", "-ns:##html5"]
       }
     }
