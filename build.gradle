@@ -8,14 +8,14 @@ buildscript {
   configurations.all {
     resolutionStrategy {
       force 'xml-apis:xml-apis:1.4.01'
-      force "org.xmlresolver:xmlresolver:3.0.1"
+      force "org.xmlresolver:xmlresolver:3.0.2"
     }
   }
 
   dependencies {
-    classpath 'org.docbook:schemas-docbook:5.2b10a4'
-    classpath 'org.docbook:docbook-xslTNG:1.5.2'
-    classpath 'org.xmlresolver:xmlresolver:3.0.1'
+    classpath 'org.docbook:schemas-docbook:5.2b11'
+    classpath 'org.docbook:docbook-xslTNG:1.5.3'
+    classpath 'org.xmlresolver:xmlresolver:3.0.2'
   }
 }
 
