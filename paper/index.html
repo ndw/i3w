@@ -1,4 +1,4 @@
-<!DOCTYPE HTML><html xmlns="http://www.w3.org/1999/xhtml" class="no-js"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><script>(function(H){H.className=H.className.replace(/\bno-js\b/,'js')})(document.documentElement)</script><title>Interactivity Three Ways</title><meta name="keywords" content="JavaScript,Saxon-JS,XForms"><link href="/i3w/paper/css/pygments.css" rel="stylesheet"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://purl.org/dc/elements/1.1/" rel="schema.dc"><meta name="dc.modified" content="2021-07-30T12:12:04Z"><meta name="dc.created" content="2021-07-16"><meta name="generator" content="DocBook xslTNG version 1.5.2 / ecd74dd / SAXON HE 10.5"><link href="/i3w/paper/css/docbook.css" rel="stylesheet"><link href="/i3w/paper/css/docbook-screen.css" rel="stylesheet"><link href="/i3w/paper/css/paper.css" rel="stylesheet"><link href="/i3w/paper/css/docbook-toc.css" rel="stylesheet"></head><body class="home"><nav class="top"></nav><main><article class="article"><header><h1>Interactivity Three Ways</h1><div class="author"><h3><span class="first-last personname"><span class="firstname">Norman</span> <span class="surname">Walsh</span></span></h3><p class="affiliation">Saxonica</p></div><div class="author"><h3><span class="first-last personname"><span class="firstname">C. M.</span> <span class="surname">Sperberg-McQueen</span></span></h3><p class="affiliation">Black Mesa Technologies</p></div><p class="pubdate"><time class="pubdate" datetime="2021-07-16">16&nbsp;Jul&nbsp;2021</time></p><div class="abstract"><p>This paper describes three different technologies that can
+<!DOCTYPE HTML><html xmlns="http://www.w3.org/1999/xhtml" class="no-js"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><script>(function(H){H.className=H.className.replace(/\bno-js\b/,'js')})(document.documentElement)</script><title>Interactivity Three Ways</title><meta name="keywords" content="JavaScript,Saxon-JS,XForms"><link href="/i3w/paper/css/pygments.css" rel="stylesheet"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://purl.org/dc/elements/1.1/" rel="schema.dc"><meta name="dc.modified" content="2021-08-01T10:49:16Z"><meta name="dc.created" content="2021-07-16"><meta name="generator" content="DocBook xslTNG version 1.5.2 / ecd74dd / SAXON HE 10.5"><link href="/i3w/paper/css/docbook.css" rel="stylesheet"><link href="/i3w/paper/css/docbook-screen.css" rel="stylesheet"><link href="/i3w/paper/css/paper.css" rel="stylesheet"><link href="/i3w/paper/css/docbook-toc.css" rel="stylesheet"></head><body class="home"><nav class="top"></nav><main><article class="article"><header><h1>Interactivity Three Ways</h1><div class="author"><h3><span class="first-last personname"><span class="firstname">Norman</span> <span class="surname">Walsh</span></span></h3><p class="affiliation">Saxonica</p></div><div class="author"><h3><span class="first-last personname"><span class="firstname">C. M.</span> <span class="surname">Sperberg-McQueen</span></span></h3><p class="affiliation">Black Mesa Technologies</p></div><p class="pubdate"><time class="pubdate" datetime="2021-07-16">16&nbsp;Jul&nbsp;2021</time></p><div class="abstract"><p>This paper describes three different technologies that can
     be used to add interactivity to a document presented on the web:
     “plain old JavaScript”, Saxon-JS, and XForms. A specific feature
     is implemented in each system so that the differences between
@@ -71,7 +71,7 @@ changes to the page allows us to configure the schedule-at-a-glance
 table so that it will be easier to process. These changes only have to
 be done once and have no impact on the other editorial changes to the
 table.</p><p>First, we can add some markup to each cell in the “time” column
-to identify the time of the talk in a machine-readable way:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="1"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;time</span> <span class="na">datetime=</span><span class="s">"2020-07-27T14:00:00-04:00"</span><span class="nt">&gt;</span>14:00<span class="nt">&lt;/time&gt;</span></code></span></span>
+to identify the time of the talk in a machine-readable way:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="1"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code>&lt;time datetime="2020-07-27T14:00:00-04:00"&gt;14:00&lt;/time&gt;</code></span></span>
 </pre></div><p>The <code>datetime</code> attribute contains an ISO 8601 value for
 time. This value includes a timezone and represents the moment to display, but we
 can assume they’ll all be in the timezone of Rockville, MD.
@@ -80,7 +80,7 @@ change as a function of the selected local timezone.)</p><p>Additionally, we can
 each table cell where a talk occurs. The presence of that attribute
 identifies that a talk should be injected into this cell and the value
 of the attribute identifies the talk.</p><p>Markup for the table cell for the talk on Monday at 10:00am is
-</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="1"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;td</span> <span class="na">row-span=</span><span class="s">"2"</span> <span class="na">data-slot=</span><span class="s">"Monday/10:00"</span><span class="nt">&gt;&lt;/td&gt;</span></code></span></span>
+</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="1"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code>&lt;td row-span="2" data-slot="Monday/10:00"&gt;&lt;/td&gt;</code></span></span>
 </pre></div><p>
 The <code>data-slot</code> attribute identifies the talk by day and
 time, not by its XML identifier, to protect the schedule-at-a-glance
@@ -119,7 +119,7 @@ is used, noon otherwise.
 must be added to the displayed times that occur after midnight.
 </p></li><li><p>If the table is successfully constructed, the content of the <code>p</code>
 element on the page that has the id “<code>schedlink</code>” must be changed to:
-</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="1"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">'#schedule'</span><span class="nt">&gt;</span>Interactive schedule-at-a-glance<span class="nt">&lt;/a&gt;</span></code></span></span>
+</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="1"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code>&lt;a href='#schedule'&gt;Interactive schedule-at-a-glance&lt;/a&gt;</code></span></span>
 </pre></div></li></ol></section><section id="markup" class="section"><header><h3><span class="number">1<span class="sep">.</span>4<span class="sep">&nbsp;</span></span>Markup</h3></header><p>Historically, the schedule page was the “single source of truth”
 used to generate both web pages and a printed conference program. Consequently,
 the existing editorial process already adds sufficient markup to correctly
@@ -129,22 +129,22 @@ on the schedule page.</p><p>In brief: there’s a <code>div</code> for each day.
 its own <code>div</code> within the day. The date and time, title, speakers,
 and abstract are encoded within that div. By way of example,
 <a href="#figmarkup" class="xref xref-figure"><span><span class="label">Figure<span class="sep">&nbsp;</span></span><span class="number">1<span class="sep">.</span>4<span class="sep">.</span>1, </span><span class="xreftitle">Scheduled event markup example</span></span></a> shows how a talk scheduled for Monday at
-10:00am would be tagged.</p><div id="figmarkup" class="figure"><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="17"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"Program-Day"</span> <span class="na">id=</span><span class="s">"Monday"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;h1&gt;</span>Monday, August 2, 2021<span class="nt">&lt;/h1&gt;</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"ProgramEvent"</span> <span class="na">id=</span><span class="s">"M10"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"EventDateTime"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>      <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"Day"</span><span class="nt">&gt;</span>Monday<span class="nt">&lt;/span&gt;</span></code></span></span>
-<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>      <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"timestart"</span><span class="nt">&gt;</span>10:00<span class="nt">&lt;/span&gt;</span></code></span></span>
-<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>      <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"timeend"</span><span class="nt">&gt;</span>10:30 EDT<span class="nt">&lt;/span&gt;&lt;/span&gt;</span></code></span></span>
-<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>      (+ Q<span class="ni">&amp;amp;</span>A 10:30 - 10:50)</code></span></span>
-<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>      <span class="nt">&lt;h2</span> <span class="na">class=</span><span class="s">"EventTitle"</span><span class="nt">&gt;</span>The Title of the Talk<span class="nt">&lt;/h2&gt;</span></code></span></span>
-<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>      <span class="nt">&lt;h2</span> <span class="na">class=</span><span class="s">"Speakers"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code>          <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">"biolink"</span> <span class="na">href=</span><span class="s">"Bios.html#xxx"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code>            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"SpeakerName"</span><span class="nt">&gt;</span>J. Doe<span class="nt">&lt;/span&gt;&lt;/a&gt;</span>,</code></span></span>
-<span class="line" db-line="13"><span class="ln"></span><span class="ld"><code>            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"affil"</span><span class="nt">&gt;</span>Some affiliation<span class="nt">&lt;/span&gt;</span></code></span></span>
-<span class="line" db-line="14"><span class="ln"></span><span class="ld"><code>      <span class="nt">&lt;/h2&gt;</span></code></span></span>
-<span class="line" db-line="15"><span class="ln">15</span><span class="ld"><code>      <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"blurb"</span><span class="nt">&gt;</span>A short abstract of the talk.<span class="nt">&lt;/p&gt;</span></code></span></span>
-<span class="line" db-line="16"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;/div&gt;</span></code></span></span>
+10:00am would be tagged.</p><div id="figmarkup" class="figure"><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="17"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code>&lt;div class="Program-Day" id="Monday"&gt;</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  &lt;h1&gt;Monday, August 2, 2021&lt;/h1&gt;</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  &lt;div class="ProgramEvent" id="M10"&gt;</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>    &lt;span class="EventDateTime"&gt;</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>      &lt;span class="Day"&gt;Monday&lt;/span&gt;</code></span></span>
+<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>      &lt;span class="timestart"&gt;10:00&lt;/span&gt;</code></span></span>
+<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>      &lt;span class="timeend"&gt;10:30 EDT&lt;/span&gt;&lt;/span&gt;</code></span></span>
+<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>      (+ Q&amp;amp;A 10:30 - 10:50)</code></span></span>
+<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>      &lt;h2 class="EventTitle"&gt;The Title of the Talk&lt;/h2&gt;</code></span></span>
+<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>      &lt;h2 class="Speakers"&gt;</code></span></span>
+<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code>          &lt;a class="biolink" href="Bios.html#xxx"&gt;</code></span></span>
+<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code>            &lt;span class="SpeakerName"&gt;J. Doe&lt;/span&gt;&lt;/a&gt;,</code></span></span>
+<span class="line" db-line="13"><span class="ln"></span><span class="ld"><code>            &lt;span class="affil"&gt;Some affiliation&lt;/span&gt;</code></span></span>
+<span class="line" db-line="14"><span class="ln"></span><span class="ld"><code>      &lt;/h2&gt;</code></span></span>
+<span class="line" db-line="15"><span class="ln">15</span><span class="ld"><code>      &lt;p class="blurb"&gt;A short abstract of the talk.&lt;/p&gt;</code></span></span>
+<span class="line" db-line="16"><span class="ln"></span><span class="ld"><code>  &lt;/div&gt;</code></span></span>
 <span class="line" db-line="17"><span class="ln"></span><span class="ld"><code>  …</code></span></span>
 </pre></div><header><div class="title"><span class="label">Figure<span class="sep">&nbsp;</span></span><span class="number">1<span class="sep">.</span>4<span class="sep">.</span>1<span class="sep">&nbsp;</span></span>Scheduled event markup example</div></header></div></section><section id="browsers" class="section"><header><h3><span class="number">1<span class="sep">.</span>5<span class="sep">&nbsp;</span></span>Observations about browser architecture</h3></header><p>All three of the solutions discussed here ultimately run in the
 browser, using the architecture and features exposed there. XForms
@@ -185,19 +185,19 @@ waits for too long.</p><p>In order to avoid this, JavaScript programmers have to
 run a query to find something on the page, a particular
 <code>div</code>, for example, and then process it. A naive
 implementation would ask the browser to run the query, wait for it to
-return the result, and then process it.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="5"><pre class="language-javascript long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="c1">// This looks a little bit like JavaScript,</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code><span class="c1">// but it's just pseudo-code</span></code></span></span>
+return the result, and then process it.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="5"><pre class="language-javascript long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code>// This looks a little bit like JavaScript,</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>// but it's just pseudo-code</code></span></span>
 <span class="line" db-line="3"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code><span class="kd">let</span> <span class="nx">myDiv</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s2">"div.ProgramEvent"</span><span class="p">);</span></code></span></span>
-<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code><span class="nx">processMyDiv</span><span class="p">(</span><span class="nx">myDiv</span><span class="p">);</span></code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>let myDiv = document.find("div.ProgramEvent");</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>processMyDiv(myDiv);</code></span></span>
 </pre></div><p>There are lots of other
 JavaScript functions waiting in the wings to run (even if you didn’t
 write them, chunks of the browser itself are waiting for their turn to
 run). Waiting for something to finish is bad practice.
 It’s your responsibility to give up control and let someone else
 have a turn!</p><p>What you do instead of waiting, and what many JavaScript APIs force you to do,
-is tell the engine what function to “call back” when the query results are ready.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="2"><pre class="language-javascript numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="c1">// More pseudo-code</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code><span class="nb">document</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s2">"div.ProgramEvent"</span><span class="p">,</span> <span class="nx">processMyDiv</span><span class="p">);</span></code></span></span>
+is tell the engine what function to “call back” when the query results are ready.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="2"><pre class="language-javascript numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code>// More pseudo-code</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>document.find("div.ProgramEvent", processMyDiv);</code></span></span>
 </pre></div><p>Execution of your script stops at the point where you call
 <code>document.find</code>. Someone else gets their turn, and when the
 results are ready, your <code>processMyDiv</code> function will be called.
@@ -205,11 +205,11 @@ This mostly works just fine, even if it’s a little confusing at first.</p><p>T
 be tedious if you had to write a separate, named function (like
 <code>processMyDiv</code>) for every callback you used. JavaScript
 lets you just inline the function. Again, this may look a little
-confusing, but you get used to it.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="5"><pre class="language-javascript long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="c1">// One final bit of pseudo-code</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code><span class="nb">document</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s2">"div.ProgramEvent"</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  <span class="c1">// just write the code that processes the</span></code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>  <span class="c1">// div right here.</span></code></span></span>
-<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code><span class="p">});</span></code></span></span>
+confusing, but you get used to it.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="5"><pre class="language-javascript long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code>// One final bit of pseudo-code</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>document.find("div.ProgramEvent", function() {</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  // just write the code that processes the</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>  // div right here.</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>});</code></span></span>
 </pre></div><p>Another area where callback functions come into play is in
 handling events. From the perspective of your application, the browser
 is “out there” displaying HTML elements, scrolling the page, reacting
@@ -220,9 +220,9 @@ lots and lots of kinds of events, we won’t try to enumerate them all
 here.
 </p><p>If your application wants to participate, it needs to tell the browser
 what events it cares about. It does that by registering a special kind of callback
-function, an event listener:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="3"><pre class="language-javascript numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="nx">a_button</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'change'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  <span class="c1">// do something in response to the event</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code><span class="p">});</span></code></span></span>
+function, an event listener:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="3"><pre class="language-javascript numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code>a_button.addEventListener('change', function(event) {</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  // do something in response to the event</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>});</code></span></span>
 </pre></div><p>When the “this item changed” event occurs on the page element
 identified by “<code>a_button</code>”, the “listening” callback
 function will be run.
@@ -236,39 +236,41 @@ nodes. When called from the <code>document</code> object, the selector
 applies to the whole document. When called from some other node, such as one
 returned by an earlier query, the selector applies to the
 descendants of that node. Where <code>querySelector</code> returns
-the first match, <code>querySelectorAll</code> returns all the matches.</p><p>For example,</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="1"><pre class="language-javascript numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"div.ProgramEvent"</span><span class="p">)</span></code></span></span>
+the first match, <code>querySelectorAll</code> returns all the matches.</p><p>For example,</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="1"><pre class="language-javascript numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code>document.querySelectorAll("div.ProgramEvent")</code></span></span>
 </pre></div><p>returns all of the <code>div</code> elements with the <code>ProgramEvent</code> class.
 If you look back at the markup example in <a href="#figmarkup" class="xref xref-figure"><span><span class="label">Figure<span class="sep">&nbsp;</span></span><span class="number">1<span class="sep">.</span>4<span class="sep">.</span>1, </span><span class="xreftitle">Scheduled event markup example</span></span></a>, you’ll see that
 that is the wrapper for each scheduled talk. You can process those elements
-with a JavaScript <code>forEach</code> and our friend, the callback function:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="4"><pre class="language-javascript numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"div.ProgramEvent"</span><span class="p">)</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>        <span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>                   <span class="c1">// ProgramEvent processing goes here</span></code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>                 <span class="p">})</span></code></span></span>
+with a JavaScript <code>forEach</code> and our friend, the callback function:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="5"><pre class="language-javascript long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code> </code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>document.querySelectorAll("div.ProgramEvent")</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>        .forEach(function(item) {</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>                   // ProgramEvent processing goes here</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>                 })</code></span></span>
 </pre></div><p>You can nest these API calls and callbacks arbitrarily.
 To finish our little detour into the mechanics of the query
 selector APIs, here’s an example that will process each event and write the
-day of the week to the console:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="4"><pre class="language-javascript numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"div.ProgramEvent"</span><span class="p">)</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>        <span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>                   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"span.Day"</span><span class="p">))</span></code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>                 <span class="p">})</span></code></span></span>
+day of the week to the console:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="5"><pre class="language-javascript long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code> </code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>document.querySelectorAll("div.ProgramEvent")</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>        .forEach(function(item) {</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>                   console.log(item.querySelector("span.Day"))</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>                 })</code></span></span>
 </pre></div><p>The only difference is that
 <code>querySelector("span.Day")</code> is rooted at the
 <code>item</code> we’re currently processing to get the first
 <code>span</code> element with the <code>Day</code> class. That’s the
 day of the week for this event.
-</p><p>If you run that code in the browser console, you’ll get all of the day spans:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="6"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"Day"</span><span class="nt">&gt;</span>Monday<span class="nt">&lt;/span&gt;</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"Day"</span><span class="nt">&gt;</span>Monday<span class="nt">&lt;/span&gt;</span></code></span></span>
+</p><p>If you run that code in the browser console, you’ll get all of the day spans:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="6"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code>&lt;span class="Day"&gt;Monday&lt;/span&gt;</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>&lt;span class="Day"&gt;Monday&lt;/span&gt;</code></span></span>
 <span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>…</code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"Day"</span><span class="nt">&gt;</span>Monday<span class="nt">&lt;/span&gt;</span></code></span></span>
-<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code><span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"Day"</span><span class="nt">&gt;</span>Tuesday<span class="nt">&lt;/span&gt;</span></code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>&lt;span class="Day"&gt;Monday&lt;/span&gt;</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>&lt;span class="Day"&gt;Tuesday&lt;/span&gt;</code></span></span>
 <span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>…</code></span></span>
 </pre></div><p>The other API that plays a central role is “<code>innerHTML</code>”. The
 inner HTML of an element is its HTML content, as a string. You can read from
 <code>innerHTML</code> to get the content, but you can also <em>write</em>
-to it to change the content.</p><p>In other words,</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="1"><pre class="language-javascript numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"table caption"</span><span class="p">).</span><span class="nx">innerHTML</span></code></span></span>
+to it to change the content.</p><p>In other words,</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="1"><pre class="language-javascript numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code>document.querySelector("table caption").innerHTML</code></span></span>
 </pre></div><p>returns “Interactive schedule-at-a-glance” (if you’re on the
-schedule page). But</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="2"><pre class="language-javascript numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"table caption"</span><span class="p">).</span><span class="nx">innerHTML</span> <span class="o">=</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>   <span class="s2">"&lt;span&gt;Hello &lt;i&gt;everyone&lt;/i&gt;!&lt;/span&gt;"</span></code></span></span>
+schedule page). But</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="2"><pre class="language-javascript numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code>document.querySelector("table caption").innerHTML =</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>   "&lt;span&gt;Hello &lt;i&gt;everyone&lt;/i&gt;!&lt;/span&gt;"</code></span></span>
 </pre></div><p>Will change the caption to “Hello <em>everyone</em>!”.
 If you’ve got your browser handy,
 try it and see!</p><p>Armed with these JavaScript APIs, the task isn’t too difficult.</p><p>JavaScript is neither especially declarative nor necessarily functional.
@@ -277,17 +279,17 @@ with <code>querySelectorAll</code>, <code>querySelector</code> and <code>innerHT
 to build a summary data structure.
 </p><p>For each talk, we construct a little JSON object containing the relevant details.
 For example:
-</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="8"><pre class="language-javascript long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="kd">const</span> <span class="nx">talk</span> <span class="o">=</span> <span class="p">{</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  <span class="s2">"day"</span><span class="o">:</span> <span class="s2">"Monday"</span><span class="p">,</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  <span class="s2">"dtstart"</span><span class="o">:</span> <span class="s2">"12:00"</span><span class="p">,</span></code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>  <span class="s2">"dtend"</span><span class="o">:</span> <span class="s2">"12:30 EDT"</span><span class="p">,</span></code></span></span>
-<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>  <span class="s2">"title"</span><span class="o">:</span> <span class="s2">"XSLT 3.0 on ordinary prose"</span><span class="p">,</span></code></span></span>
-<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>  <span class="s2">"blurb"</span><span class="o">:</span> <span class="s2">"You work with text and documents for a living,…"</span><span class="p">,</span></code></span></span>
-<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>  <span class="s2">"authors"</span><span class="o">:</span> <span class="p">[</span><span class="s2">"Norman Tovey-Walsh"</span><span class="p">]</span></code></span></span>
-<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code><span class="p">};</span></code></span></span>
+</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="8"><pre class="language-javascript long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code>const talk = {</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  "day": "Monday",</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  "dtstart": "12:00",</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>  "dtend": "12:30 EDT",</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>  "title": "XSLT 3.0 on ordinary prose",</code></span></span>
+<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>  "blurb": "You work with text and documents for a living,…",</code></span></span>
+<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>  "authors": ["Norman Tovey-Walsh"]</code></span></span>
+<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>};</code></span></span>
 </pre></div><p>And we insert those into a global object, <code>talks</code> with the
-value that will be in the <code>data-slot</code> attribute as the key:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="2"><pre class="language-javascript numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="kd">const</span> <span class="nx">key</span> <span class="o">=</span> <span class="nx">talk</span><span class="p">[</span><span class="s2">"day"</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"/"</span> <span class="o">+</span> <span class="nx">talk</span><span class="p">[</span><span class="s2">"dtstart"</span><span class="p">];</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code><span class="nx">talks</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">talk</span><span class="p">;</span></code></span></span>
+value that will be in the <code>data-slot</code> attribute as the key:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="2"><pre class="language-javascript numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code>const key = talk["day"] + "/" + talk["dtstart"];</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>talks[key] = talk;</code></span></span>
 </pre></div><p>Next, we use <code>querySelector</code> to find the table and nested
 <code>querySelectorAll</code> calls to process each row and cell.
 </p><p>If the cell has a <code>data-slot</code> attribute, we populate it by
@@ -298,91 +300,91 @@ time zone and we have to arrange for the browser to run the adjustment whenever
 the user changes the timezone, or the 24 hour clock checkbox.</p><p>The actual adjustment is straightforward. If we know what the offset is between
 the time in Rockville and the time zone to display, we simply add that offset (possibly
 negative) to the time, do a few small cosmetic adjustments (12 or 24 hour clock, etc.)
-and display the result:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="57"><pre class="language-javascript long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="kd">function</span> <span class="nx">adjustTime</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  <span class="kd">let</span> <span class="nx">timez</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span><span class="s2">"datetime"</span><span class="p">);</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  <span class="c1">// We assume timez is in ISO 8601 format</span></code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>  <span class="kd">let</span> <span class="nx">hours</span> <span class="o">=</span> <span class="nx">timez</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mf">11</span><span class="p">,</span><span class="mf">13</span><span class="p">);</span></code></span></span>
-<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>  <span class="kd">let</span> <span class="nx">minutes</span> <span class="o">=</span> <span class="nx">timez</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mf">14</span><span class="p">,</span> <span class="mf">16</span><span class="p">);</span></code></span></span>
+and display the result:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="57"><pre class="language-javascript long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code>function adjustTime(item) {</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  let timez = item.getAttribute("datetime");</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  // We assume timez is in ISO 8601 format</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>  let hours = timez.substring(11,13);</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>  let minutes = timez.substring(14, 16);</code></span></span>
 <span class="line" db-line="6"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>  <span class="nx">hours</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">hours</span><span class="p">)</span> <span class="o">+</span> <span class="nx">OFSHOURS</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>  <span class="nx">minutes</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">minutes</span><span class="p">)</span> <span class="o">+</span> <span class="nx">OFSMINUTES</span><span class="p">;</span></code></span></span>
+<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>  hours = parseInt(hours) + OFSHOURS;</code></span></span>
+<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>  minutes = parseInt(minutes) + OFSMINUTES;</code></span></span>
 <span class="line" db-line="9"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>  <span class="k">while</span> <span class="p">(</span><span class="nx">minutes</span> <span class="o">&gt;=</span> <span class="mf">60</span><span class="p">)</span> <span class="p">{</span></code></span></span>
-<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code>    <span class="nx">hours</span> <span class="o">+=</span> <span class="mf">1</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code>    <span class="nx">minutes</span> <span class="o">-=</span> <span class="mf">60</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="13"><span class="ln"></span><span class="ld"><code>  <span class="p">}</span></code></span></span>
+<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>  while (minutes &gt;= 60) {</code></span></span>
+<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code>    hours += 1;</code></span></span>
+<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code>    minutes -= 60;</code></span></span>
+<span class="line" db-line="13"><span class="ln"></span><span class="ld"><code>  }</code></span></span>
 <span class="line" db-line="14"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="15"><span class="ln">15</span><span class="ld"><code>  <span class="kd">let</span> <span class="nx">plusday</span> <span class="o">=</span> <span class="s2">""</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="16"><span class="ln"></span><span class="ld"><code>  <span class="k">if</span> <span class="p">(</span><span class="nx">hours</span> <span class="o">&gt;=</span> <span class="mf">24</span><span class="p">)</span> <span class="p">{</span></code></span></span>
-<span class="line" db-line="17"><span class="ln"></span><span class="ld"><code>    <span class="nx">plusday</span> <span class="o">=</span> <span class="s2">"&lt;br /&gt;(the next day)"</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="18"><span class="ln"></span><span class="ld"><code>    <span class="nx">hours</span> <span class="o">-=</span> <span class="mf">24</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="19"><span class="ln"></span><span class="ld"><code>  <span class="p">}</span></code></span></span>
+<span class="line" db-line="15"><span class="ln">15</span><span class="ld"><code>  let plusday = "";</code></span></span>
+<span class="line" db-line="16"><span class="ln"></span><span class="ld"><code>  if (hours &gt;= 24) {</code></span></span>
+<span class="line" db-line="17"><span class="ln"></span><span class="ld"><code>    plusday = "&lt;br /&gt;(the next day)";</code></span></span>
+<span class="line" db-line="18"><span class="ln"></span><span class="ld"><code>    hours -= 24;</code></span></span>
+<span class="line" db-line="19"><span class="ln"></span><span class="ld"><code>  }</code></span></span>
 <span class="line" db-line="20"><span class="ln">20</span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="21"><span class="ln"></span><span class="ld"><code>  <span class="kd">let</span> <span class="nx">ampm</span> <span class="o">=</span> <span class="s1">'am'</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="22"><span class="ln"></span><span class="ld"><code>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">CLOCK24</span> <span class="o">&amp;&amp;</span> <span class="nx">hours</span> <span class="o">&gt;=</span> <span class="mf">12</span><span class="p">)</span> <span class="p">{</span></code></span></span>
-<span class="line" db-line="23"><span class="ln"></span><span class="ld"><code>    <span class="k">if</span> <span class="p">(</span><span class="nx">hours</span> <span class="o">&gt;</span> <span class="mf">12</span><span class="p">)</span> <span class="p">{</span></code></span></span>
-<span class="line" db-line="24"><span class="ln"></span><span class="ld"><code>      <span class="nx">hours</span> <span class="o">-=</span> <span class="mf">12</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="25"><span class="ln">25</span><span class="ld"><code>    <span class="p">}</span></code></span></span>
-<span class="line" db-line="26"><span class="ln"></span><span class="ld"><code>    <span class="nx">ampm</span> <span class="o">=</span> <span class="s1">'pm'</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="27"><span class="ln"></span><span class="ld"><code>  <span class="p">}</span></code></span></span>
+<span class="line" db-line="21"><span class="ln"></span><span class="ld"><code>  let ampm = 'am';</code></span></span>
+<span class="line" db-line="22"><span class="ln"></span><span class="ld"><code>  if (!CLOCK24 &amp;&amp; hours &gt;= 12) {</code></span></span>
+<span class="line" db-line="23"><span class="ln"></span><span class="ld"><code>    if (hours &gt; 12) {</code></span></span>
+<span class="line" db-line="24"><span class="ln"></span><span class="ld"><code>      hours -= 12;</code></span></span>
+<span class="line" db-line="25"><span class="ln">25</span><span class="ld"><code>    }</code></span></span>
+<span class="line" db-line="26"><span class="ln"></span><span class="ld"><code>    ampm = 'pm';</code></span></span>
+<span class="line" db-line="27"><span class="ln"></span><span class="ld"><code>  }</code></span></span>
 <span class="line" db-line="28"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="29"><span class="ln"></span><span class="ld"><code>  <span class="k">if</span> <span class="p">(</span><span class="nx">CLOCK24</span><span class="p">)</span> <span class="p">{</span></code></span></span>
-<span class="line" db-line="30"><span class="ln">30</span><span class="ld"><code>    <span class="nx">hours</span> <span class="o">=</span> <span class="nx">hours</span><span class="p">.</span><span class="nx">toString</span><span class="p">().</span><span class="nx">padStart</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span> <span class="s2">"0"</span><span class="p">);</span></code></span></span>
-<span class="line" db-line="31"><span class="ln"></span><span class="ld"><code>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span></code></span></span>
-<span class="line" db-line="32"><span class="ln"></span><span class="ld"><code>    <span class="nx">hours</span> <span class="o">=</span> <span class="nx">hours</span><span class="p">.</span><span class="nx">toString</span><span class="p">().</span><span class="nx">padStart</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span> <span class="s2">" "</span><span class="p">);</span></code></span></span>
-<span class="line" db-line="33"><span class="ln"></span><span class="ld"><code>  <span class="p">}</span></code></span></span>
+<span class="line" db-line="29"><span class="ln"></span><span class="ld"><code>  if (CLOCK24) {</code></span></span>
+<span class="line" db-line="30"><span class="ln">30</span><span class="ld"><code>    hours = hours.toString().padStart(2, "0");</code></span></span>
+<span class="line" db-line="31"><span class="ln"></span><span class="ld"><code>  } else {</code></span></span>
+<span class="line" db-line="32"><span class="ln"></span><span class="ld"><code>    hours = hours.toString().padStart(2, " ");</code></span></span>
+<span class="line" db-line="33"><span class="ln"></span><span class="ld"><code>  }</code></span></span>
 <span class="line" db-line="34"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="35"><span class="ln">35</span><span class="ld"><code>  <span class="nx">minutes</span> <span class="o">=</span> <span class="nx">minutes</span><span class="p">.</span><span class="nx">toString</span><span class="p">().</span><span class="nx">padStart</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span> <span class="s2">"0"</span><span class="p">);</span></code></span></span>
+<span class="line" db-line="35"><span class="ln">35</span><span class="ld"><code>  minutes = minutes.toString().padStart(2, "0");</code></span></span>
 <span class="line" db-line="36"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="37"><span class="ln"></span><span class="ld"><code>  <span class="kd">let</span> <span class="nx">timel</span> <span class="o">=</span> <span class="nx">hours</span> <span class="o">+</span> <span class="s2">":"</span> <span class="o">+</span> <span class="nx">minutes</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="38"><span class="ln"></span><span class="ld"><code>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">CLOCK24</span><span class="p">)</span> <span class="p">{</span></code></span></span>
-<span class="line" db-line="39"><span class="ln"></span><span class="ld"><code>    <span class="nx">timel</span> <span class="o">=</span> <span class="nx">timel</span> <span class="o">+</span> <span class="nx">ampm</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="40"><span class="ln">40</span><span class="ld"><code>  <span class="p">}</span></code></span></span>
+<span class="line" db-line="37"><span class="ln"></span><span class="ld"><code>  let timel = hours + ":" + minutes;</code></span></span>
+<span class="line" db-line="38"><span class="ln"></span><span class="ld"><code>  if (!CLOCK24) {</code></span></span>
+<span class="line" db-line="39"><span class="ln"></span><span class="ld"><code>    timel = timel + ampm;</code></span></span>
+<span class="line" db-line="40"><span class="ln">40</span><span class="ld"><code>  }</code></span></span>
 <span class="line" db-line="41"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="42"><span class="ln"></span><span class="ld"><code>  <span class="k">if</span> <span class="p">(</span><span class="nx">hours</span> <span class="o">==</span> <span class="mf">0</span> <span class="o">&amp;&amp;</span> <span class="nx">minutes</span> <span class="o">==</span> <span class="mf">0</span><span class="p">)</span> <span class="p">{</span></code></span></span>
-<span class="line" db-line="43"><span class="ln"></span><span class="ld"><code>    <span class="nx">timel</span> <span class="o">=</span> <span class="s2">"midnight"</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="44"><span class="ln"></span><span class="ld"><code>    <span class="nx">plusday</span> <span class="o">=</span> <span class="s2">""</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="45"><span class="ln">45</span><span class="ld"><code>  <span class="p">}</span></code></span></span>
+<span class="line" db-line="42"><span class="ln"></span><span class="ld"><code>  if (hours == 0 &amp;&amp; minutes == 0) {</code></span></span>
+<span class="line" db-line="43"><span class="ln"></span><span class="ld"><code>    timel = "midnight";</code></span></span>
+<span class="line" db-line="44"><span class="ln"></span><span class="ld"><code>    plusday = "";</code></span></span>
+<span class="line" db-line="45"><span class="ln">45</span><span class="ld"><code>  }</code></span></span>
 <span class="line" db-line="46"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="47"><span class="ln"></span><span class="ld"><code>  <span class="k">if</span> <span class="p">(</span><span class="nx">hours</span> <span class="o">==</span> <span class="mf">12</span> <span class="o">&amp;&amp;</span> <span class="nx">minutes</span> <span class="o">==</span> <span class="mf">0</span><span class="p">)</span> <span class="p">{</span></code></span></span>
-<span class="line" db-line="48"><span class="ln"></span><span class="ld"><code>    <span class="k">if</span> <span class="p">(</span><span class="nx">CLOCK24</span><span class="p">)</span> <span class="p">{</span></code></span></span>
-<span class="line" db-line="49"><span class="ln"></span><span class="ld"><code>      <span class="nx">timel</span> <span class="o">=</span> <span class="s2">"midday"</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="50"><span class="ln">50</span><span class="ld"><code>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span></code></span></span>
-<span class="line" db-line="51"><span class="ln"></span><span class="ld"><code>      <span class="nx">timel</span> <span class="o">=</span> <span class="s2">"noon"</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="52"><span class="ln"></span><span class="ld"><code>    <span class="p">}</span></code></span></span>
-<span class="line" db-line="53"><span class="ln"></span><span class="ld"><code>    <span class="nx">plusday</span> <span class="o">=</span> <span class="s2">""</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="54"><span class="ln"></span><span class="ld"><code>  <span class="p">}</span></code></span></span>
+<span class="line" db-line="47"><span class="ln"></span><span class="ld"><code>  if (hours == 12 &amp;&amp; minutes == 0) {</code></span></span>
+<span class="line" db-line="48"><span class="ln"></span><span class="ld"><code>    if (CLOCK24) {</code></span></span>
+<span class="line" db-line="49"><span class="ln"></span><span class="ld"><code>      timel = "midday";</code></span></span>
+<span class="line" db-line="50"><span class="ln">50</span><span class="ld"><code>    } else {</code></span></span>
+<span class="line" db-line="51"><span class="ln"></span><span class="ld"><code>      timel = "noon";</code></span></span>
+<span class="line" db-line="52"><span class="ln"></span><span class="ld"><code>    }</code></span></span>
+<span class="line" db-line="53"><span class="ln"></span><span class="ld"><code>    plusday = "";</code></span></span>
+<span class="line" db-line="54"><span class="ln"></span><span class="ld"><code>  }</code></span></span>
 <span class="line" db-line="55"><span class="ln">55</span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="56"><span class="ln"></span><span class="ld"><code>  <span class="nx">item</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="nx">timel</span> <span class="o">+</span> <span class="nx">plusday</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="57"><span class="ln"></span><span class="ld"><code><span class="p">}</span></code></span></span>
+<span class="line" db-line="56"><span class="ln"></span><span class="ld"><code>  item.innerHTML = timel + plusday;</code></span></span>
+<span class="line" db-line="57"><span class="ln"></span><span class="ld"><code>}</code></span></span>
 </pre></div><p>The key ingredients in that function are the <code>OFSHOURS</code>,
 <code>OFSMINUTES</code>, and <code>CLOCK24</code>. Those values come from the user’s
-selections. We listen for when the timezone is changed:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="4"><pre class="language-javascript numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="kd">let</span> <span class="nx">timezone</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#tz"</span><span class="p">);</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code><span class="nx">timezone</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'change'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  <span class="nx">adjustOffset</span><span class="p">(</span><span class="k">this</span><span class="p">);</span></code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code><span class="p">},</span> <span class="kc">false</span><span class="p">);</span></code></span></span>
+selections. We listen for when the timezone is changed:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="4"><pre class="language-javascript numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code>let timezone = document.querySelector("#tz");</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>timezone.addEventListener('change', function() {</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  adjustOffset(this);</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>}, false);</code></span></span>
 </pre></div><p>The <code>adjustOffset</code> function is passed the select
 control. The selected option is identified by the <code>selecedIndex</code>
 property on that control. That gives us access to the selected timezone.
 </p><p>From there, we compute the offsets and the default value of the
-24 hour clock, then we run <code>adjustTime</code> on each time value:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="18"><pre class="language-javascript long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="kd">function</span> <span class="nx">adjustOffset</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  <span class="kd">let</span> <span class="nx">tz</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">options</span><span class="p">[</span><span class="nx">item</span><span class="p">.</span><span class="nx">selectedIndex</span><span class="p">].</span><span class="nx">value</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  <span class="kd">let</span> <span class="nx">pos</span> <span class="o">=</span> <span class="nx">tz</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s2">":"</span><span class="p">);</span></code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>  <span class="kd">let</span> <span class="nx">hours</span> <span class="o">=</span> <span class="nx">tz</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span> <span class="nx">pos</span><span class="p">);</span></code></span></span>
-<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>  <span class="kd">let</span> <span class="nx">minutes</span> <span class="o">=</span> <span class="nx">tz</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="nx">pos</span><span class="o">+</span><span class="mf">1</span><span class="p">);</span></code></span></span>
-<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>  <span class="nx">OFSHOURS</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">hours</span><span class="p">)</span> <span class="o">+</span> <span class="nx">ROCKVILLE_OFFSET</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>  <span class="nx">OFSMINUTES</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">minutes</span><span class="p">);</span></code></span></span>
+24 hour clock, then we run <code>adjustTime</code> on each time value:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="18"><pre class="language-javascript long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code>function adjustOffset(item) {</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  let tz = item.options[item.selectedIndex].value;</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  let pos = tz.indexOf(":");</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>  let hours = tz.substring(0, pos);</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>  let minutes = tz.substring(pos+1);</code></span></span>
+<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>  OFSHOURS = parseInt(hours) + ROCKVILLE_OFFSET;</code></span></span>
+<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>  OFSMINUTES = parseInt(minutes);</code></span></span>
 <span class="line" db-line="8"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>  <span class="k">if</span> <span class="p">(</span><span class="nx">OFSHOURS</span> <span class="o">&gt;</span> <span class="mf">0</span><span class="p">)</span> <span class="p">{</span></code></span></span>
-<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>    <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#clock24"</span><span class="p">).</span><span class="nx">checked</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code>    <span class="nx">CLOCK24</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span></code></span></span>
-<span class="line" db-line="13"><span class="ln"></span><span class="ld"><code>    <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#clock24"</span><span class="p">).</span><span class="nx">checked</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="14"><span class="ln"></span><span class="ld"><code>    <span class="nx">CLOCK24</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span></code></span></span>
-<span class="line" db-line="15"><span class="ln">15</span><span class="ld"><code>  <span class="p">}</span></code></span></span>
+<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>  if (OFSHOURS &gt; 0) {</code></span></span>
+<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>    document.querySelector("#clock24").checked = true;</code></span></span>
+<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code>    CLOCK24 = true;</code></span></span>
+<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code>  } else {</code></span></span>
+<span class="line" db-line="13"><span class="ln"></span><span class="ld"><code>    document.querySelector("#clock24").checked = false;</code></span></span>
+<span class="line" db-line="14"><span class="ln"></span><span class="ld"><code>    CLOCK24 = false;</code></span></span>
+<span class="line" db-line="15"><span class="ln">15</span><span class="ld"><code>  }</code></span></span>
 <span class="line" db-line="16"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="17"><span class="ln"></span><span class="ld"><code>  <span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">"time"</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">adjustTime</span><span class="p">);</span></code></span></span>
-<span class="line" db-line="18"><span class="ln"></span><span class="ld"><code><span class="p">}</span></code></span></span>
+<span class="line" db-line="17"><span class="ln"></span><span class="ld"><code>  document.querySelectorAll("time").forEach(adjustTime);</code></span></span>
+<span class="line" db-line="18"><span class="ln"></span><span class="ld"><code>}</code></span></span>
 </pre></div><p>A similar listener function adjusts the <code>CLOCK24</code> value
 when the checkbox changes and recomputes the times.
 </p></section><section id="saxon-js" class="section"><header><h2><span class="number">3<span class="sep">&nbsp;</span></span>Saxon-JS</h2></header><p class="glance">At a glance: satisfies all the requirements, 6K stylesheet (42K compiled),
@@ -393,22 +395,22 @@ of just those cells that have a <code>data-slot</code> attribute.
 Having an XSLT processor in the browser lets us leverage those common
 design patterns directly.</p><p>It’s easy to match the cells that have a <code>data-slot</code>
 attribute. Finding the corresponding <code>ProgramEvent</code> object can
-be accomplished directly with a key:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="4"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;xsl:key</span> <span class="na">name=</span><span class="s">"slot"</span> <span class="na">match=</span><span class="s">"div[@class='ProgramEvent']"</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>         <span class="na">use=</span><span class="s">"span[@class='EventDateTime']/span[@class='Day']</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code><span class="s">              || '/'</span></code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code><span class="s">              || span[@class='EventDateTime']/span[@class='timestart']"</span><span class="nt">/&gt;</span></code></span></span>
-</pre></div><p>So the heart of our table transformation is just this simple template:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="12"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="nt">&lt;xsl:template</span> <span class="na">match=</span><span class="s">"td[@data-slot]"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xsl:variable</span> <span class="na">name=</span><span class="s">"event"</span> <span class="na">select=</span><span class="s">"key('slot', @data-slot)"</span><span class="nt">/&gt;</span></code></span></span>
+be accomplished directly with a key:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="4"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code>&lt;xsl:key name="slot" match="div[@class='ProgramEvent']"</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>         use="span[@class='EventDateTime']/span[@class='Day']</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>              || '/'</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>              || span[@class='EventDateTime']/span[@class='timestart']"/&gt;</code></span></span>
+</pre></div><p>So the heart of our table transformation is just this simple template:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="12"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code>&lt;xsl:template match="td[@data-slot]"&gt;</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  &lt;xsl:variable name="event" select="key('slot', @data-slot)"/&gt;</code></span></span>
 <span class="line" db-line="3"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xsl:choose&gt;</span></code></span></span>
-<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>    <span class="nt">&lt;xsl:when</span> <span class="na">test=</span><span class="s">"$event"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>      <span class="c">&lt;!-- copy the event details into the table --&gt;</span></code></span></span>
-<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;/xsl:when&gt;</span></code></span></span>
-<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;xsl:otherwise&gt;</span></code></span></span>
-<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>      <span class="c">&lt;!-- mark this cell as "No talk scheduled" --&gt;</span></code></span></span>
-<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>    <span class="nt">&lt;/xsl:otherwise&gt;</span></code></span></span>
-<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;/xsl:choose&gt;</span></code></span></span>
-<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;/xsl:template&gt;</span></code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>  &lt;xsl:choose&gt;</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>    &lt;xsl:when test="$event"&gt;</code></span></span>
+<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>      &lt;!-- copy the event details into the table --&gt;</code></span></span>
+<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>    &lt;/xsl:when&gt;</code></span></span>
+<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>    &lt;xsl:otherwise&gt;</code></span></span>
+<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>      &lt;!-- mark this cell as "No talk scheduled" --&gt;</code></span></span>
+<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>    &lt;/xsl:otherwise&gt;</code></span></span>
+<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code>  &lt;/xsl:choose&gt;</code></span></span>
+<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code>&lt;/xsl:template&gt;</code></span></span>
 </pre></div><p>Like JavaScript, Saxon-JS has APIs for interacting with the
 browser. Idiomatically, they’re exposed as XSLT extension functions
 and extension elements, but they’re very similar to JavaScript. This
@@ -417,16 +419,16 @@ running in the browser using the underlying JavaScript APIs on your
 stylesheet’s behalf.</p><p>Let’s step back and look at how those APIs work.</p><p>At the top of our web page, we need to load Saxon-JS and a small JavaScript hook
 to start the ball rolling. (In practice, the hook function can be inserted directly in the
 HTML page with a <code>script</code> element, but Norm has chosen to keep it outside to
-satisfy his aesthetic sensibilities.)</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="2"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;script</span> <span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"js/SaxonJS2.rt.js"</span><span class="nt">&gt;&lt;/script&gt;</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;script</span> <span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"js/start.js"</span><span class="nt">&gt;&lt;/script&gt;</span></code></span></span>
+satisfy his aesthetic sensibilities.)</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="2"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code>&lt;script type="text/javascript" src="js/SaxonJS2.rt.js"&gt;&lt;/script&gt;</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>&lt;script type="text/javascript" src="js/start.js"&gt;&lt;/script&gt;</code></span></span>
 </pre></div><p>The startup script is just a function assigned to the browsers
 “onload” event so that it runs automatically when the page is
-loaded:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="6"><pre class="language-javascript long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="kd">function</span> <span class="nx">render_schedule</span><span class="p">()</span> <span class="p">{</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  <span class="kd">let</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">stylesheetLocation</span><span class="o">:</span> <span class="s2">"xslt/schedule.sef.json"</span> <span class="p">};</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  <span class="nx">SaxonJS</span><span class="p">.</span><span class="nx">transform</span><span class="p">(</span><span class="nx">options</span><span class="p">,</span> <span class="s2">"async"</span><span class="p">);</span></code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code><span class="p">}</span></code></span></span>
+loaded:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="6"><pre class="language-javascript long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code>function render_schedule() {</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  let options = { stylesheetLocation: "xslt/schedule.sef.json" };</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  SaxonJS.transform(options, "async");</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>}</code></span></span>
 <span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code><span class="nb">window</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="nx">render_schedule</span><span class="p">;</span></code></span></span>
+<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>window.onload = render_schedule;</code></span></span>
 </pre></div><p>Saxon-JS evaluates a compiled form of XSLT stored in a “SEF”
 file, most often in a JSON document. XSLT stylesheets can be compiled
 with Saxon-EE or with Saxon-JS running on Node. That step just becomes
@@ -443,86 +445,86 @@ Enter <code>xsl:result-document</code>. The content of <code>xsl:result-document
 is output to the location identified by the <code>href</code> attribute.
 In Saxon-JS, this concept has been extended such that if the
 <code>href</code> attribute begins with a “#” sign, the output goes into
-the browser page in the element with the corresponding ID. This instruction:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="3"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;xsl:result-document</span> <span class="na">href=</span><span class="s">"#main"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;div&gt;</span>New content<span class="nt">&lt;/div&gt;</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;/xsl:result-document&gt;</span></code></span></span>
+the browser page in the element with the corresponding ID. This instruction:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="3"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code>&lt;xsl:result-document href="#main"&gt;</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  &lt;div&gt;New content&lt;/div&gt;</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>&lt;/xsl:result-document&gt;</code></span></span>
 </pre></div><p>adds the “new content” <code>div</code> to the end of the
 element with the id “<code>main</code>” in the document. There’s an
-extension attribute as well, <code>method</code>. This instruction:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="3"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;xsl:result-document</span> <span class="na">href=</span><span class="s">"#caption"</span> <span class="na">method=</span><span class="s">"ixsl:replace-content"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;span&gt;</span>Hello <span class="nt">&lt;i&gt;</span>everyone<span class="nt">&lt;/i&gt;</span>!<span class="nt">&lt;/span&gt;</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;/xsl:result-document&gt;</span></code></span></span>
+extension attribute as well, <code>method</code>. This instruction:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="3"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code>&lt;xsl:result-document href="#caption" method="ixsl:replace-content"&gt;</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  &lt;span&gt;Hello &lt;i&gt;everyone&lt;/i&gt;!&lt;/span&gt;</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>&lt;/xsl:result-document&gt;</code></span></span>
 </pre></div><p>Will change the content of the element with the id “<code>caption</code>”
 to “Hello <em>everyone</em>!”.</p><p>(Keen observers may have noticed that the table <code>caption</code> on the schedule
 at a glance page doesn’t <em>have</em> an ID. That’s ok. We can use
 <code>xsl:result-document</code> to update any element on the page. If it doesn’t
 have an ID, we can arrange for that element to be the context node and use
 <code>href="?."</code> to change it.)</p><p>Saxon-JS manages event listeners with special modes. These templates fire when
-a user changes the timezone or clicks on the 24 hour clock checkbox:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="9"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="nt">&lt;xsl:template</span> <span class="na">mode=</span><span class="s">"ixsl:onchange"</span> <span class="na">match=</span><span class="s">"select[@id='tz']"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xsl:apply-templates</span> <span class="na">select=</span><span class="s">"ixsl:page()"</span> <span class="na">mode=</span><span class="s">"update-times"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;xsl:with-param</span> <span class="na">name=</span><span class="s">"changetz"</span> <span class="na">select=</span><span class="s">"true()"</span><span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;/xsl:apply-templates&gt;</span></code></span></span>
-<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code><span class="nt">&lt;/xsl:template&gt;</span></code></span></span>
+a user changes the timezone or clicks on the 24 hour clock checkbox:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="9"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code>&lt;xsl:template mode="ixsl:onchange" match="select[@id='tz']"&gt;</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  &lt;xsl:apply-templates select="ixsl:page()" mode="update-times"&gt;</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>    &lt;xsl:with-param name="changetz" select="true()"/&gt;</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>  &lt;/xsl:apply-templates&gt;</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>&lt;/xsl:template&gt;</code></span></span>
 <span class="line" db-line="6"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;xsl:template</span> <span class="na">mode=</span><span class="s">"ixsl:onclick"</span> <span class="na">match=</span><span class="s">"input[@id='clock24']"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xsl:apply-templates</span> <span class="na">select=</span><span class="s">"ixsl:page()"</span> <span class="na">mode=</span><span class="s">"update-times"</span><span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;/xsl:template&gt;</span></code></span></span>
-</pre></div><p>That code is mostly straight-forward XSLT:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="57"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="nt">&lt;xsl:template</span> <span class="na">match=</span><span class="s">"/"</span> <span class="na">mode=</span><span class="s">"update-times"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xsl:param</span> <span class="na">name=</span><span class="s">"changetz"</span> <span class="na">select=</span><span class="s">"false()"</span><span class="nt">/&gt;</span></code></span></span>
+<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>&lt;xsl:template mode="ixsl:onclick" match="input[@id='clock24']"&gt;</code></span></span>
+<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>  &lt;xsl:apply-templates select="ixsl:page()" mode="update-times"/&gt;</code></span></span>
+<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>&lt;/xsl:template&gt;</code></span></span>
+</pre></div><p>That code is mostly straight-forward XSLT:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="57"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code>&lt;xsl:template match="/" mode="update-times"&gt;</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  &lt;xsl:param name="changetz" select="false()"/&gt;</code></span></span>
 <span class="line" db-line="3"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xsl:variable</span> <span class="na">name=</span><span class="s">"zone"</span></code></span></span>
-<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>                <span class="na">select=</span><span class="s">"ixsl:get(//select[@id='tz'], 'value')"</span><span class="nt">/&gt;</span></code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>  &lt;xsl:variable name="zone"</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>                select="ixsl:get(//select[@id='tz'], 'value')"/&gt;</code></span></span>
 <span class="line" db-line="6"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xsl:variable</span> <span class="na">name=</span><span class="s">"hours"</span></code></span></span>
-<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>                <span class="na">select=</span><span class="s">"xs:integer(substring-before($zone, ':'))"</span><span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xsl:variable</span> <span class="na">name=</span><span class="s">"minutes"</span></code></span></span>
-<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>                <span class="na">select=</span><span class="s">"xs:integer(substring-after($zone, ':'))"</span><span class="nt">/&gt;</span></code></span></span>
+<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>  &lt;xsl:variable name="hours"</code></span></span>
+<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>                select="xs:integer(substring-before($zone, ':'))"/&gt;</code></span></span>
+<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>  &lt;xsl:variable name="minutes"</code></span></span>
+<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>                select="xs:integer(substring-after($zone, ':'))"/&gt;</code></span></span>
 <span class="line" db-line="11"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xsl:variable</span> <span class="na">name=</span><span class="s">"iso8601"</span></code></span></span>
-<span class="line" db-line="13"><span class="ln"></span><span class="ld"><code>                <span class="na">select=</span><span class="s">"(if ($hours lt 0) then '-' else '')</span></code></span></span>
-<span class="line" db-line="14"><span class="ln"></span><span class="ld"><code><span class="s">                        || 'PT' || abs($hours)</span></code></span></span>
-<span class="line" db-line="15"><span class="ln">15</span><span class="ld"><code><span class="s">                        || 'H' || $minutes || 'M'"</span><span class="nt">/&gt;</span></code></span></span>
+<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code>  &lt;xsl:variable name="iso8601"</code></span></span>
+<span class="line" db-line="13"><span class="ln"></span><span class="ld"><code>                select="(if ($hours lt 0) then '-' else '')</code></span></span>
+<span class="line" db-line="14"><span class="ln"></span><span class="ld"><code>                        || 'PT' || abs($hours)</code></span></span>
+<span class="line" db-line="15"><span class="ln">15</span><span class="ld"><code>                        || 'H' || $minutes || 'M'"/&gt;</code></span></span>
 <span class="line" db-line="16"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="17"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xsl:if</span> <span class="na">test=</span><span class="s">"$changetz"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="18"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;ixsl:set-property</span> <span class="na">name=</span><span class="s">"checked"</span></code></span></span>
-<span class="line" db-line="19"><span class="ln"></span><span class="ld"><code>                       <span class="na">select=</span><span class="s">"$hours ge 0"</span></code></span></span>
-<span class="line" db-line="20"><span class="ln">20</span><span class="ld"><code>                       <span class="na">object=</span><span class="s">"//input[@id='clock24']"</span><span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="21"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;/xsl:if&gt;</span></code></span></span>
+<span class="line" db-line="17"><span class="ln"></span><span class="ld"><code>  &lt;xsl:if test="$changetz"&gt;</code></span></span>
+<span class="line" db-line="18"><span class="ln"></span><span class="ld"><code>    &lt;ixsl:set-property name="checked"</code></span></span>
+<span class="line" db-line="19"><span class="ln"></span><span class="ld"><code>                       select="$hours ge 0"</code></span></span>
+<span class="line" db-line="20"><span class="ln">20</span><span class="ld"><code>                       object="//input[@id='clock24']"/&gt;</code></span></span>
+<span class="line" db-line="21"><span class="ln"></span><span class="ld"><code>  &lt;/xsl:if&gt;</code></span></span>
 <span class="line" db-line="22"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="23"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xsl:variable</span> <span class="na">name=</span><span class="s">"ampm"</span></code></span></span>
-<span class="line" db-line="24"><span class="ln"></span><span class="ld"><code>                <span class="na">select=</span><span class="s">"not(ixsl:get(//input[@id='clock24'], 'checked'))"</span><span class="nt">/&gt;</span></code></span></span>
+<span class="line" db-line="23"><span class="ln"></span><span class="ld"><code>  &lt;xsl:variable name="ampm"</code></span></span>
+<span class="line" db-line="24"><span class="ln"></span><span class="ld"><code>                select="not(ixsl:get(//input[@id='clock24'], 'checked'))"/&gt;</code></span></span>
 <span class="line" db-line="25"><span class="ln">25</span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="26"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xsl:variable</span> <span class="na">name=</span><span class="s">"format"</span></code></span></span>
-<span class="line" db-line="27"><span class="ln"></span><span class="ld"><code>                <span class="na">select=</span><span class="s">"if ($ampm)</span></code></span></span>
-<span class="line" db-line="28"><span class="ln"></span><span class="ld"><code><span class="s">                        then '[h1]:[m01][P]'</span></code></span></span>
-<span class="line" db-line="29"><span class="ln"></span><span class="ld"><code><span class="s">                        else '[H01]:[m01]'"</span><span class="nt">/&gt;</span></code></span></span>
+<span class="line" db-line="26"><span class="ln"></span><span class="ld"><code>  &lt;xsl:variable name="format"</code></span></span>
+<span class="line" db-line="27"><span class="ln"></span><span class="ld"><code>                select="if ($ampm)</code></span></span>
+<span class="line" db-line="28"><span class="ln"></span><span class="ld"><code>                        then '[h1]:[m01][P]'</code></span></span>
+<span class="line" db-line="29"><span class="ln"></span><span class="ld"><code>                        else '[H01]:[m01]'"/&gt;</code></span></span>
 <span class="line" db-line="30"><span class="ln">30</span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="31"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xsl:variable</span> <span class="na">name=</span><span class="s">"tz"</span> <span class="na">select=</span><span class="s">"xs:dayTimeDuration($iso8601)"</span><span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="32"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xsl:for-each</span> <span class="na">select=</span><span class="s">"//div[@id='schedule']//time"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="33"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;xsl:variable</span> <span class="na">name=</span><span class="s">"conftime"</span></code></span></span>
-<span class="line" db-line="34"><span class="ln"></span><span class="ld"><code>                  <span class="na">select=</span><span class="s">"xs:dateTime(@datetime)"</span><span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="35"><span class="ln">35</span><span class="ld"><code>    <span class="nt">&lt;xsl:variable</span> <span class="na">name=</span><span class="s">"dt"</span></code></span></span>
-<span class="line" db-line="36"><span class="ln"></span><span class="ld"><code>                  <span class="na">select=</span><span class="s">"adjust-dateTime-to-timezone($conftime, $tz)"</span><span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="37"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;xsl:result-document</span> <span class="na">href=</span><span class="s">"?."</span> <span class="na">method=</span><span class="s">"ixsl:replace-content"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="38"><span class="ln"></span><span class="ld"><code>      <span class="nt">&lt;xsl:choose&gt;</span></code></span></span>
-<span class="line" db-line="39"><span class="ln"></span><span class="ld"><code>        <span class="nt">&lt;xsl:when</span> <span class="na">test=</span><span class="s">"hours-from-dateTime($dt) = 0</span></code></span></span>
-<span class="line" db-line="40"><span class="ln">40</span><span class="ld"><code><span class="s">                        and minutes-from-dateTime($dt) = 0"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="41"><span class="ln"></span><span class="ld"><code>          <span class="nt">&lt;xsl:text&gt;</span>midnight<span class="nt">&lt;/xsl:text&gt;</span></code></span></span>
-<span class="line" db-line="42"><span class="ln"></span><span class="ld"><code>        <span class="nt">&lt;/xsl:when&gt;</span></code></span></span>
-<span class="line" db-line="43"><span class="ln"></span><span class="ld"><code>        <span class="nt">&lt;xsl:when</span> <span class="na">test=</span><span class="s">"hours-from-dateTime($dt) = 12</span></code></span></span>
-<span class="line" db-line="44"><span class="ln"></span><span class="ld"><code><span class="s">                        and minutes-from-dateTime($dt) = 0"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="45"><span class="ln">45</span><span class="ld"><code>          <span class="nt">&lt;xsl:sequence</span> <span class="na">select=</span><span class="s">"if ($ampm) then 'noon' else 'midday'"</span><span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="46"><span class="ln"></span><span class="ld"><code>        <span class="nt">&lt;/xsl:when&gt;</span></code></span></span>
-<span class="line" db-line="47"><span class="ln"></span><span class="ld"><code>        <span class="nt">&lt;xsl:otherwise&gt;</span></code></span></span>
-<span class="line" db-line="48"><span class="ln"></span><span class="ld"><code>          <span class="nt">&lt;xsl:sequence</span> <span class="na">select=</span><span class="s">"format-dateTime($dt, $format)"</span><span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="49"><span class="ln"></span><span class="ld"><code>          <span class="nt">&lt;xsl:if</span> <span class="na">test=</span><span class="s">"day-from-dateTime($conftime) != day-from-dateTime($dt)"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="50"><span class="ln">50</span><span class="ld"><code>            <span class="nt">&lt;br/&gt;</span></code></span></span>
-<span class="line" db-line="51"><span class="ln"></span><span class="ld"><code>            <span class="nt">&lt;xsl:text&gt;</span> (the next day)<span class="nt">&lt;/xsl:text&gt;</span></code></span></span>
-<span class="line" db-line="52"><span class="ln"></span><span class="ld"><code>          <span class="nt">&lt;/xsl:if&gt;</span></code></span></span>
-<span class="line" db-line="53"><span class="ln"></span><span class="ld"><code>        <span class="nt">&lt;/xsl:otherwise&gt;</span></code></span></span>
-<span class="line" db-line="54"><span class="ln"></span><span class="ld"><code>      <span class="nt">&lt;/xsl:choose&gt;</span></code></span></span>
-<span class="line" db-line="55"><span class="ln">55</span><span class="ld"><code>    <span class="nt">&lt;/xsl:result-document&gt;</span></code></span></span>
-<span class="line" db-line="56"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;/xsl:for-each&gt;</span></code></span></span>
-<span class="line" db-line="57"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;/xsl:template&gt;</span></code></span></span>
+<span class="line" db-line="31"><span class="ln"></span><span class="ld"><code>  &lt;xsl:variable name="tz" select="xs:dayTimeDuration($iso8601)"/&gt;</code></span></span>
+<span class="line" db-line="32"><span class="ln"></span><span class="ld"><code>  &lt;xsl:for-each select="//div[@id='schedule']//time"&gt;</code></span></span>
+<span class="line" db-line="33"><span class="ln"></span><span class="ld"><code>    &lt;xsl:variable name="conftime"</code></span></span>
+<span class="line" db-line="34"><span class="ln"></span><span class="ld"><code>                  select="xs:dateTime(@datetime)"/&gt;</code></span></span>
+<span class="line" db-line="35"><span class="ln">35</span><span class="ld"><code>    &lt;xsl:variable name="dt"</code></span></span>
+<span class="line" db-line="36"><span class="ln"></span><span class="ld"><code>                  select="adjust-dateTime-to-timezone($conftime, $tz)"/&gt;</code></span></span>
+<span class="line" db-line="37"><span class="ln"></span><span class="ld"><code>    &lt;xsl:result-document href="?." method="ixsl:replace-content"&gt;</code></span></span>
+<span class="line" db-line="38"><span class="ln"></span><span class="ld"><code>      &lt;xsl:choose&gt;</code></span></span>
+<span class="line" db-line="39"><span class="ln"></span><span class="ld"><code>        &lt;xsl:when test="hours-from-dateTime($dt) = 0</code></span></span>
+<span class="line" db-line="40"><span class="ln">40</span><span class="ld"><code>                        and minutes-from-dateTime($dt) = 0"&gt;</code></span></span>
+<span class="line" db-line="41"><span class="ln"></span><span class="ld"><code>          &lt;xsl:text&gt;midnight&lt;/xsl:text&gt;</code></span></span>
+<span class="line" db-line="42"><span class="ln"></span><span class="ld"><code>        &lt;/xsl:when&gt;</code></span></span>
+<span class="line" db-line="43"><span class="ln"></span><span class="ld"><code>        &lt;xsl:when test="hours-from-dateTime($dt) = 12</code></span></span>
+<span class="line" db-line="44"><span class="ln"></span><span class="ld"><code>                        and minutes-from-dateTime($dt) = 0"&gt;</code></span></span>
+<span class="line" db-line="45"><span class="ln">45</span><span class="ld"><code>          &lt;xsl:sequence select="if ($ampm) then 'noon' else 'midday'"/&gt;</code></span></span>
+<span class="line" db-line="46"><span class="ln"></span><span class="ld"><code>        &lt;/xsl:when&gt;</code></span></span>
+<span class="line" db-line="47"><span class="ln"></span><span class="ld"><code>        &lt;xsl:otherwise&gt;</code></span></span>
+<span class="line" db-line="48"><span class="ln"></span><span class="ld"><code>          &lt;xsl:sequence select="format-dateTime($dt, $format)"/&gt;</code></span></span>
+<span class="line" db-line="49"><span class="ln"></span><span class="ld"><code>          &lt;xsl:if test="day-from-dateTime($conftime) != day-from-dateTime($dt)"&gt;</code></span></span>
+<span class="line" db-line="50"><span class="ln">50</span><span class="ld"><code>            &lt;br/&gt;</code></span></span>
+<span class="line" db-line="51"><span class="ln"></span><span class="ld"><code>            &lt;xsl:text&gt; (the next day)&lt;/xsl:text&gt;</code></span></span>
+<span class="line" db-line="52"><span class="ln"></span><span class="ld"><code>          &lt;/xsl:if&gt;</code></span></span>
+<span class="line" db-line="53"><span class="ln"></span><span class="ld"><code>        &lt;/xsl:otherwise&gt;</code></span></span>
+<span class="line" db-line="54"><span class="ln"></span><span class="ld"><code>      &lt;/xsl:choose&gt;</code></span></span>
+<span class="line" db-line="55"><span class="ln">55</span><span class="ld"><code>    &lt;/xsl:result-document&gt;</code></span></span>
+<span class="line" db-line="56"><span class="ln"></span><span class="ld"><code>  &lt;/xsl:for-each&gt;</code></span></span>
+<span class="line" db-line="57"><span class="ln"></span><span class="ld"><code>&lt;/xsl:template&gt;</code></span></span>
 </pre></div><p>It’s certainly nice to have access to the XPath datetime
 functions! Also noteworthy are a couple of calls to
 <code>ixsl:get</code>, another extension function. This one gives you
@@ -612,24 +614,25 @@ rather limited: the user gets a way to select a time zone, and a way
 to specify whether a 24-hour clock or a 12-hour clock is to be
 used. For selecting one value from a controlled list of values, XForms
 uses the <code>xf:select1</code> control.  In rough outline, the
-time zone control looks like this:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="18"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="nt">&lt;xf:select1</span> <span class="na">id=</span><span class="s">"timezone-selector"</span> <span class="na">ref=</span><span class="s">"instance('ui')/tz"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xf:label&gt;</span>Timezone: <span class="nt">&lt;/xf:label&gt;</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  ...</code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xf:item&gt;</span></code></span></span>
-<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>    <span class="nt">&lt;xf:label&gt;</span>CDT  Chicago, IL, USA (UTC-05:00)<span class="nt">&lt;/xf:label&gt;</span></code></span></span>
-<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;xf:value&gt;</span>-05:00<span class="nt">&lt;/xf:value&gt;</span></code></span></span>
-<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;/xf:item&gt;</span></code></span></span>
-<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xf:item&gt;</span></code></span></span>
-<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;xf:label&gt;</span>EDT  Rockville, MD, USA (UTC-04:00)<span class="nt">&lt;/xf:label&gt;</span></code></span></span>
-<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>    <span class="nt">&lt;xf:value&gt;</span>-04:00<span class="nt">&lt;/xf:value&gt;</span></code></span></span>
-<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;/xf:item&gt;</span></code></span></span>
-<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code>  ...</code></span></span>
-<span class="line" db-line="13"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xf:item&gt;</span></code></span></span>
-<span class="line" db-line="14"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;xf:label&gt;</span>CEST Prague, CZE (UTC+02:00)<span class="nt">&lt;/xf:label&gt;</span></code></span></span>
-<span class="line" db-line="15"><span class="ln">15</span><span class="ld"><code>    <span class="nt">&lt;xf:value&gt;</span>+02:00<span class="nt">&lt;/xf:value&gt;</span></code></span></span>
-<span class="line" db-line="16"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;/xf:item&gt;</span></code></span></span>
-<span class="line" db-line="17"><span class="ln"></span><span class="ld"><code>  ...</code></span></span>
-<span class="line" db-line="18"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;/xf:select1&gt;</span></code></span></span>
+time zone control looks like this:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="19"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code> </code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>&lt;xf:select1 id="timezone-selector" ref="instance('ui')/tz"&gt;</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  &lt;xf:label&gt;Timezone: &lt;/xf:label&gt;</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>  ...</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>  &lt;xf:item&gt;</code></span></span>
+<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>    &lt;xf:label&gt;CDT  Chicago, IL, USA (UTC-05:00)&lt;/xf:label&gt;</code></span></span>
+<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>    &lt;xf:value&gt;-05:00&lt;/xf:value&gt;</code></span></span>
+<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>  &lt;/xf:item&gt;</code></span></span>
+<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>  &lt;xf:item&gt;</code></span></span>
+<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>    &lt;xf:label&gt;EDT  Rockville, MD, USA (UTC-04:00)&lt;/xf:label&gt;</code></span></span>
+<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code>    &lt;xf:value&gt;-04:00&lt;/xf:value&gt;</code></span></span>
+<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code>  &lt;/xf:item&gt;</code></span></span>
+<span class="line" db-line="13"><span class="ln"></span><span class="ld"><code>  ...</code></span></span>
+<span class="line" db-line="14"><span class="ln"></span><span class="ld"><code>  &lt;xf:item&gt;</code></span></span>
+<span class="line" db-line="15"><span class="ln">15</span><span class="ld"><code>    &lt;xf:label&gt;CEST Prague, CZE (UTC+02:00)&lt;/xf:label&gt;</code></span></span>
+<span class="line" db-line="16"><span class="ln"></span><span class="ld"><code>    &lt;xf:value&gt;+02:00&lt;/xf:value&gt;</code></span></span>
+<span class="line" db-line="17"><span class="ln"></span><span class="ld"><code>  &lt;/xf:item&gt;</code></span></span>
+<span class="line" db-line="18"><span class="ln"></span><span class="ld"><code>  ...</code></span></span>
+<span class="line" db-line="19"><span class="ln"></span><span class="ld"><code>&lt;/xf:select1&gt;</code></span></span>
 </pre></div><p>The basic structure will be familiar to many who have written
 forms: the control contains a list of possible values, each with the
 label to be used in offering the choice to the user.  The list of
@@ -659,24 +662,25 @@ case, the information is all concerned with the state of the user
 interface, so the instance has been given the name <em class="ital">ui</em>.  Like the other instances used, the
 <em class="ital">ui</em> instance appears in the HTML
 header, inside the <code>xf:model</code> element, which in outline
-looks like this:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="18"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="nt">&lt;head&gt;</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;title&gt;</span>Balisage 2020 Program<span class="nt">&lt;/title&gt;</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  ...</code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>  <span class="nt">&lt;xf:model</span> <span class="na">id=</span><span class="s">"m1"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;xf:instance</span> <span class="na">id=</span><span class="s">"program"</span> <span class="na">src=</span><span class="s">"./Program.xhtml"</span><span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;xf:instance</span> <span class="na">id=</span><span class="s">"ui"</span> <span class="na">xmlns=</span><span class="s">""</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>      <span class="nt">&lt;ui-info</span> <span class="na">clock24=</span><span class="s">"false"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code>        <span class="nt">&lt;tz&gt;</span>-04:00<span class="nt">&lt;/tz&gt;</span></code></span></span>
-<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code>	...</code></span></span>
-<span class="line" db-line="13"><span class="ln"></span><span class="ld"><code>      <span class="nt">&lt;/ui-info&gt;</span></code></span></span>
-<span class="line" db-line="14"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;/xf:instance&gt;</span></code></span></span>
-<span class="line" db-line="15"><span class="ln">15</span><span class="ld"><code>    ...</code></span></span>
-<span class="line" db-line="16"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;/xf:model&gt;</span></code></span></span>
-<span class="line" db-line="17"><span class="ln"></span><span class="ld"><code>  ...</code></span></span>
-<span class="line" db-line="18"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;/head&gt;</span></code></span></span>
+looks like this:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="19"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code> </code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>&lt;head&gt;</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  &lt;title&gt;Balisage 2020 Program&lt;/title&gt;</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>  ...</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code> </code></span></span>
+<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>  &lt;xf:model id="m1"&gt;</code></span></span>
+<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code> </code></span></span>
+<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>    &lt;xf:instance id="program" src="./Program.xhtml"/&gt;</code></span></span>
+<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code> </code></span></span>
+<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>    &lt;xf:instance id="ui" xmlns=""&gt;</code></span></span>
+<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code>      &lt;ui-info clock24="false"&gt;</code></span></span>
+<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code>        &lt;tz&gt;-04:00&lt;/tz&gt;</code></span></span>
+<span class="line" db-line="13"><span class="ln"></span><span class="ld"><code>	...</code></span></span>
+<span class="line" db-line="14"><span class="ln"></span><span class="ld"><code>      &lt;/ui-info&gt;</code></span></span>
+<span class="line" db-line="15"><span class="ln">15</span><span class="ld"><code>    &lt;/xf:instance&gt;</code></span></span>
+<span class="line" db-line="16"><span class="ln"></span><span class="ld"><code>    ...</code></span></span>
+<span class="line" db-line="17"><span class="ln"></span><span class="ld"><code>  &lt;/xf:model&gt;</code></span></span>
+<span class="line" db-line="18"><span class="ln"></span><span class="ld"><code>  ...</code></span></span>
+<span class="line" db-line="19"><span class="ln"></span><span class="ld"><code>&lt;/head&gt;</code></span></span>
 </pre></div><p>As can be seen, the <code>ui</code> instance
 has a <code>clock24</code> attribute on the root
 element and a child element named <code>tz</code>,
@@ -690,9 +694,9 @@ model.<sup id="xf-controls_para6_footnote1-fref" db-footnote="1" class="footnote
 The result of the binding is that when the control is used to select a
 timezone, the value in the instance document is updated
 automatically.</p><p>The 24-hour clock checkbox is simpler.  It uses the
-<code>xf:input</code> element:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="3"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;xf:input</span> <span class="na">ref=</span><span class="s">"instance('ui')/@clock24"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xf:label&gt;</span>24-hour clock: <span class="nt">&lt;/xf:label&gt;</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;/xf:input&gt;</span></code></span></span>
+<code>xf:input</code> element:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="3"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code>&lt;xf:input ref="instance('ui')/@clock24"&gt;</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  &lt;xf:label&gt;24-hour clock: &lt;/xf:label&gt;</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>&lt;/xf:input&gt;</code></span></span>
 </pre></div><p>If the form knew nothing about the <code>clock24</code>
 attribute, this would be roughly equivalent to an HTML
 <code>input</code> element of type <code>text</code>.  But if we tell
@@ -700,8 +704,8 @@ the form that the attribute holds a Boolean value, the form can use a
 more appropriate interface like a checkbox to present the value to the
 user.  This we do with an <code>xf:bind</code> element which
 identifies a node in an instance document and identifies its (XSD)
-datatype.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="2"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;xf:bind</span> <span class="na">nodeset=</span><span class="s">"instance('ui')/@clock24"</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>         <span class="na">type=</span><span class="s">"xsd:boolean"</span> <span class="nt">/&gt;</span></code></span></span>
+datatype.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="2"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code>&lt;xf:bind nodeset="instance('ui')/@clock24"</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>         type="xsd:boolean" /&gt;</code></span></span>
 </pre></div><p>The <code>xf:bind</code> element has other uses, some of which
 will be seen later.</p></section><section id="xf-injection" class="section"><header><h3><span class="number">4<span class="sep">.</span>2<span class="sep">&nbsp;</span></span>Injecting HTML into the host document</h3></header><p>Because XForms is designed to display and allow user interaction
 with nodes in the document instances of the model, and not to modify
@@ -710,20 +714,20 @@ specify that various pieces of information be injected into specific
 places in the conference program require a little adjustment in
 XForms.</p><p>The simplest example is perhaps the final item in the <a href="#requirements" class="link">requirements list</a>.  In the Javascript
 and Saxon-JS solutions, an HTML <code>p</code> element in the program
-is given HTML content.  The element originally looks like this:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="1"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;p</span> <span class="na">id=</span><span class="s">"schedlink"</span><span class="nt">&gt;&lt;/p&gt;</span></code></span></span>
+is given HTML content.  The element originally looks like this:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="1"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code>&lt;p id="schedlink"&gt;&lt;/p&gt;</code></span></span>
 </pre></div><p>In the browser, it is to be modified to take the following form,
-or an equivalent:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="4"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;p</span> <span class="na">id=</span><span class="s">"schedlink"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  <span class="ni">&amp;#x261E;</span> Interactive</code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"#schedule"</span><span class="nt">&gt;</span>schedule at a glance<span class="nt">&lt;/a&gt;</span>.</code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;/p&gt;</span></code></span></span>
+or an equivalent:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="4"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code>&lt;p id="schedlink"&gt;</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  &amp;#x261E; Interactive</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  &lt;a href="#schedule"&gt;schedule at a glance&lt;/a&gt;.</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>&lt;/p&gt;</code></span></span>
 </pre></div><p>This particular implementation tactic is not open to XForms, but
 we can do something conceptually similar.  In the XForms solution to
 the task, the conference program is modified so that the paragraph in
 question contains an <code>xf:output</code> element, which XForms uses
-to display data from an instance document.<sup id="xf-injection_para4_footnote1-fref" db-footnote="2" class="footnote-number"><a href="#xf-injection_para4_footnote1-fnote">2</a></sup></p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="4"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;p</span> <span class="na">id=</span><span class="s">"schedlink"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xf:output</span> <span class="na">mediatype=</span><span class="s">"text/html"</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>             <span class="na">ref=</span><span class="s">"instance('ui')/schedlink"</span><span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;/p&gt;</span></code></span></span>
+to display data from an instance document.<sup id="xf-injection_para4_footnote1-fref" db-footnote="2" class="footnote-number"><a href="#xf-injection_para4_footnote1-fnote">2</a></sup></p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="4"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code>&lt;p id="schedlink"&gt;</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  &lt;xf:output mediatype="text/html"</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>             ref="instance('ui')/schedlink"/&gt;</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>&lt;/p&gt;</code></span></span>
 </pre></div><p>The <code>mediatype</code> attribute on <code>xf:output</code>
 indicates the data format of the data to be displayed. (Operationally,
 it says “take this string and write it to the
@@ -733,63 +737,64 @@ particularly helpful for allowing the display of image data, but as
 can be seen here it can also be used to inject HTML elements into the
 display of the form.  The <code>ref</code> attribute links this output
 control to the <code>schedlink</code> element in the <code>ui</code>
-instance document.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="18"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="nt">&lt;xf:model</span> <span class="na">id=</span><span class="s">"m1"</span><span class="nt">&gt;</span></code></span></span>
+instance document.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="18"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code>&lt;xf:model id="m1"&gt;</code></span></span>
 <span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>    ...</code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;xf:instance</span> <span class="na">id=</span><span class="s">"ui"</span> <span class="na">xmlns=</span><span class="s">""</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>      <span class="nt">&lt;ui-info</span> <span class="na">clock24=</span><span class="s">"false"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>        <span class="nt">&lt;tz&gt;</span>-04:00<span class="nt">&lt;/tz&gt;</span></code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>    &lt;xf:instance id="ui" xmlns=""&gt;</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>      &lt;ui-info clock24="false"&gt;</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>        &lt;tz&gt;-04:00&lt;/tz&gt;</code></span></span>
 <span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>        ...</code></span></span>
-<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>        <span class="nt">&lt;schedlink&gt;</span></code></span></span>
-<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>          <span class="ni">&amp;#x261E;</span> Interactive</code></span></span>
-<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>          <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"#schedule"</span><span class="nt">&gt;</span>schedule at a glance<span class="nt">&lt;/a&gt;</span>.</code></span></span>
-<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>        <span class="nt">&lt;/schedlink&gt;</span></code></span></span>
-<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code>      <span class="nt">&lt;/ui&gt;</span></code></span></span>
-<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;/xf:instance&gt;</span></code></span></span>
+<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>        &lt;schedlink&gt;</code></span></span>
+<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>          &amp;#x261E; Interactive</code></span></span>
+<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>          &lt;a href="#schedule"&gt;schedule at a glance&lt;/a&gt;.</code></span></span>
+<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>        &lt;/schedlink&gt;</code></span></span>
+<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code>      &lt;/ui&gt;</code></span></span>
+<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code>    &lt;/xf:instance&gt;</code></span></span>
 <span class="line" db-line="13"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="14"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;xf:bind</span> <span class="na">nodeset=</span><span class="s">"instance('ui')/@clock24"</span></code></span></span>
-<span class="line" db-line="15"><span class="ln">15</span><span class="ld"><code>             <span class="na">type=</span><span class="s">"xsd:boolean"</span> <span class="nt">/&gt;</span></code></span></span>
+<span class="line" db-line="14"><span class="ln"></span><span class="ld"><code>    &lt;xf:bind nodeset="instance('ui')/@clock24"</code></span></span>
+<span class="line" db-line="15"><span class="ln">15</span><span class="ld"><code>             type="xsd:boolean" /&gt;</code></span></span>
 <span class="line" db-line="16"><span class="ln"></span><span class="ld"><code> </code></span></span>
 <span class="line" db-line="17"><span class="ln"></span><span class="ld"><code>    ...</code></span></span>
-<span class="line" db-line="18"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;/xf:model&gt;</span></code></span></span>
+<span class="line" db-line="18"><span class="ln"></span><span class="ld"><code>    &lt;/xf:model&gt;</code></span></span>
 </pre></div><p>The same pattern is used in the main part of the tabular
 display.  Since an XForm cannot change elements in its host document,
 we need to introduce <code>xf:output</code> elements to show where the
 titles and authors of talks need to be displayed.  So the
 <code>td</code> elements of the framework table are no longer empty.
 In the current workflow, for example, the first slot on Monday takes
-the following form.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="1"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;td</span> <span class="na">rowspan=</span><span class="s">"2"</span> <span class="na">data-slot=</span><span class="s">"Monday/10:00"</span><span class="nt">&gt;&lt;/td&gt;</span></code></span></span>
+the following form.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="1"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code>&lt;td rowspan="2" data-slot="Monday/10:00"&gt;&lt;/td&gt;</code></span></span>
 </pre></div><p>In the XForm, it contains XForms elements to specify what needs
-to be displayed there:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="19"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="nt">&lt;td</span> <span class="na">rowspan=</span><span class="s">"2"</span> <span class="na">data-slot=</span><span class="s">"Monday/10:00"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xf:group</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>      <span class="na">ref=</span><span class="s">"instance('program')//xhtml:div</span></code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code><span class="s">           [@class='ProgramEvent']</span></code></span></span>
-<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code><span class="s">	   [xhtml:span[@class='EventDateTime']</span></code></span></span>
-<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code><span class="s">           [xhtml:span[@class='Day'</span></code></span></span>
-<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code><span class="s">	               and string() = 'Monday']]</span></code></span></span>
-<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code><span class="s">           [xhtml:span[@class='timestart'</span></code></span></span>
-<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code><span class="s">		       and string() = '10:00']]</span></code></span></span>
-<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code><span class="s">           ]"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;xf:output</span> <span class="na">value=</span><span class="s">"xhtml:h2[@class='EventTitle']"</span><span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;span&gt;</span> <span class="ni">&amp;#x2014;</span> <span class="nt">&lt;/span&gt;</span></code></span></span>
-<span class="line" db-line="13"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;xf:repeat</span></code></span></span>
-<span class="line" db-line="14"><span class="ln"></span><span class="ld"><code>        <span class="na">nodeset=</span><span class="s">"xhtml:h2[@class='Speakers']/xhtml:a"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="15"><span class="ln">15</span><span class="ld"><code>      <span class="nt">&lt;xf:output</span> <span class="na">mediatype=</span><span class="s">"text/html"</span></code></span></span>
-<span class="line" db-line="16"><span class="ln"></span><span class="ld"><code>                 <span class="na">value=</span><span class="s">"serialize(.)"</span><span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="17"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;/xf:repeat&gt;</span></code></span></span>
-<span class="line" db-line="18"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;/xf:group&gt;</span></code></span></span>
-<span class="line" db-line="19"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;/td&gt;</span></code></span></span>
+to be displayed there:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="19"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code>&lt;td rowspan="2" data-slot="Monday/10:00"&gt;</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  &lt;xf:group</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>      ref="instance('program')//xhtml:div</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>           [@class='ProgramEvent']</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>	   [xhtml:span[@class='EventDateTime']</code></span></span>
+<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>           [xhtml:span[@class='Day'</code></span></span>
+<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>	               and string() = 'Monday']]</code></span></span>
+<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>           [xhtml:span[@class='timestart'</code></span></span>
+<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>		       and string() = '10:00']]</code></span></span>
+<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>           ]"&gt;</code></span></span>
+<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code>    &lt;xf:output value="xhtml:h2[@class='EventTitle']"/&gt;</code></span></span>
+<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code>    &lt;span&gt; &amp;#x2014; &lt;/span&gt;</code></span></span>
+<span class="line" db-line="13"><span class="ln"></span><span class="ld"><code>    &lt;xf:repeat</code></span></span>
+<span class="line" db-line="14"><span class="ln"></span><span class="ld"><code>        nodeset="xhtml:h2[@class='Speakers']/xhtml:a"&gt;</code></span></span>
+<span class="line" db-line="15"><span class="ln">15</span><span class="ld"><code>      &lt;xf:output mediatype="text/html"</code></span></span>
+<span class="line" db-line="16"><span class="ln"></span><span class="ld"><code>                 value="serialize(.)"/&gt;</code></span></span>
+<span class="line" db-line="17"><span class="ln"></span><span class="ld"><code>    &lt;/xf:repeat&gt;</code></span></span>
+<span class="line" db-line="18"><span class="ln"></span><span class="ld"><code>  &lt;/xf:group&gt;</code></span></span>
+<span class="line" db-line="19"><span class="ln"></span><span class="ld"><code>&lt;/td&gt;</code></span></span>
 </pre></div><p>As may be seen, this complicates the input significantly.  A
 simpler approach is to use the <code>transform()</code> function, an
 extension offered by XSLTforms, which allows an XSLT stylesheet to be
 invoked on a specified node in an instance document.  Using that
-approach, the same slot looks like this:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="8"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="nt">&lt;td</span> <span class="na">rowspan=</span><span class="s">"2"</span> <span class="na">data-slot=</span><span class="s">"Monday/10:00"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xf:output</span> <span class="na">mediatype=</span><span class="s">"text/html"</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>             <span class="na">value=</span><span class="s">"transform(instance('program'),</span></code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code><span class="s">                              'single-item.xsl',</span></code></span></span>
-<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code><span class="s">			      false,</span></code></span></span>
-<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code><span class="s">			      'slot',</span></code></span></span>
-<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code><span class="s">			      'Monday/10:00')"</span><span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;/td&gt;</span></code></span></span>
+approach, the same slot looks like this:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="9"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code> </code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>&lt;td rowspan="2" data-slot="Monday/10:00"&gt;</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  &lt;xf:output mediatype="text/html"</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>             value="transform(instance('program'),</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>                              'single-item.xsl',</code></span></span>
+<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>			      false,</code></span></span>
+<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>			      'slot',</code></span></span>
+<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>			      'Monday/10:00')"/&gt;</code></span></span>
+<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>&lt;/td&gt;</code></span></span>
 </pre></div><p>The <code>xf:output</code> element here essentially says that
 the value to be displayed (as HTML) is whatever is produced by
 invoking the XSLT 1.0 stylesheet <code>single-item.xsl</code> on the
@@ -802,7 +807,7 @@ that is the HTML document in which the form is embedded.  But an XForm
 cannot extract data from its host document any more than it can modify
 the host document.  To make the code just given work, therefore, it is
 necessary to make the host document available to the XForm <em class="ital">as an instance document</em>, which is done using an
-<code>xf:instance</code> element with the appropriate URI.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="1"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;xf:instance</span> <span class="na">id=</span><span class="s">"program"</span> <span class="na">src=</span><span class="s">"./Program.xhtml"</span><span class="nt">/&gt;</span></code></span></span>
+<code>xf:instance</code> element with the appropriate URI.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="1"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code>&lt;xf:instance id="program" src="./Program.xhtml"/&gt;</code></span></span>
 </pre></div><p>This is not quite as self-referential as it may look.  In
 practice, the browser loads two copies of the file:  one is the XHTML
 page actually displayed by the browser,<sup id="xf-injection_para11_footnote1-fref" db-footnote="4" class="footnote-number"><a href="#xf-injection_para11_footnote1-fnote">4</a></sup> and the other is an instance document accessible to the
@@ -844,20 +849,20 @@ timezone.  To do this, we:
 </p><p>In the XForm version of the program document, the table cells
 containing the time for each event take the following general
 form.  This is the same as the current structure, except for
-the addition of the <code>xf:output</code> element.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="6"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="nt">&lt;th</span> <span class="na">id=</span><span class="s">"r10"</span> <span class="na">class=</span><span class="s">"time"</span> <span class="na">scope=</span><span class="s">"row"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;time</span> <span class="na">datetime=</span><span class="s">"2020-07-27T10:00:00-04:00"</span><span class="nt">&gt;</span>10:00<span class="nt">&lt;/time&gt;</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xf:output</span></code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>      <span class="na">mediatype=</span><span class="s">"text/html"</span></code></span></span>
-<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>      <span class="na">value=</span><span class="s">"instance('ui')/slot-times/slot[@id='r10']"</span><span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;/th&gt;</span></code></span></span>
+the addition of the <code>xf:output</code> element.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="6"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code>&lt;th id="r10" class="time" scope="row"&gt;</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  &lt;time datetime="2020-07-27T10:00:00-04:00"&gt;10:00&lt;/time&gt;</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  &lt;xf:output</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>      mediatype="text/html"</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>      value="instance('ui')/slot-times/slot[@id='r10']"/&gt;</code></span></span>
+<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>&lt;/th&gt;</code></span></span>
 </pre></div><p>As can be seen, the slot elements in the <code>ui</code>
 document instance have the same IDs as the corresponding
 cells in the table, to simplify joining them up.</p><p>In the <code>ui</code> document instance, a slot element has the
-following form.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="5"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="nt">&lt;slot</span> <span class="na">id=</span><span class="s">"r10"</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>      <span class="na">datetime=</span><span class="s">"2020-07-27T10:00:00-04:00"</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>      <span class="na">user-datetime=</span><span class="s">"2020-07-27T10:00:00-04:00"</span></code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>      <span class="na">user-time=</span><span class="s">""</span> <span class="na">uh24=</span><span class="s">""</span> <span class="na">uh12=</span><span class="s">""</span> <span class="na">wrapped=</span><span class="s">""</span></code></span></span>
-<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>      <span class="na">default=</span><span class="s">"10:00"</span><span class="nt">&gt;</span>10:00<span class="nt">&lt;/slot&gt;</span></code></span></span>
+following form.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="5"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code>&lt;slot id="r10"</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>      datetime="2020-07-27T10:00:00-04:00"</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>      user-datetime="2020-07-27T10:00:00-04:00"</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>      user-time="" uh24="" uh12="" wrapped=""</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>      default="10:00"&gt;10:00&lt;/slot&gt;</code></span></span>
 </pre></div><p>The <code>id</code> and <code>datetime</code> attributes are
 copies of those on the table cell and the <code>time</code> element
 inside it.  The <code>default</code> attribute holds the original content
@@ -905,18 +910,18 @@ the number of hours and minutes in the timezone offset value.  To hold
 these, we add some blank attributes to the <code>tz</code>
 element: <code>&lt;tz h="" m="" sign="-" secs=""&gt;</code>.  The values
 to be assigned to those attributes are specified in the following bind
-elements.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="12"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="nt">&lt;xf:bind</span> <span class="na">nodeset=</span><span class="s">"instance('ui')/tz/@h"</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>         <span class="na">type=</span><span class="s">"xsd:integer"</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>         <span class="na">calculate=</span><span class="s">"substring(.., 2, 2)"</span><span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;xf:bind</span> <span class="na">nodeset=</span><span class="s">"instance('ui')/tz/@m"</span></code></span></span>
-<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>	 <span class="na">type=</span><span class="s">"xsd:integer"</span></code></span></span>
-<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>         <span class="na">calculate=</span><span class="s">"substring(.., 5, 2)"</span><span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;xf:bind</span> <span class="na">nodeset=</span><span class="s">"instance('ui')/tz/@sign"</span></code></span></span>
-<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>         <span class="na">calculate=</span><span class="s">"substring(.., 1, 1)"</span><span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;xf:bind</span> <span class="na">nodeset=</span><span class="s">"instance('ui')/tz/@secs"</span></code></span></span>
-<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>         <span class="na">calculate=</span><span class="s">"if(../@sign = '-',</span></code></span></span>
-<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code><span class="s">                    0 - (((../@h * 60) + ../@m) * 60),</span></code></span></span>
-<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code><span class="s">                    0 + (((../@h * 60) + ../@m) * 60))"</span><span class="nt">/&gt;</span></code></span></span>
+elements.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="12"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code>&lt;xf:bind nodeset="instance('ui')/tz/@h"</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>         type="xsd:integer"</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>         calculate="substring(.., 2, 2)"/&gt;</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>&lt;xf:bind nodeset="instance('ui')/tz/@m"</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>	 type="xsd:integer"</code></span></span>
+<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>         calculate="substring(.., 5, 2)"/&gt;</code></span></span>
+<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>&lt;xf:bind nodeset="instance('ui')/tz/@sign"</code></span></span>
+<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>         calculate="substring(.., 1, 1)"/&gt;</code></span></span>
+<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>&lt;xf:bind nodeset="instance('ui')/tz/@secs"</code></span></span>
+<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>         calculate="if(../@sign = '-',</code></span></span>
+<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code>                    0 - (((../@h * 60) + ../@m) * 60),</code></span></span>
+<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code>                    0 + (((../@h * 60) + ../@m) * 60))"/&gt;</code></span></span>
 </pre></div><p>It may need to be mentioned that the context item for
 interpretation of the <code>calculate</code> attribute is the node
 whose value is being calculated.  Thus the calculation of the
@@ -935,35 +940,35 @@ values in any dependency chain.  So no effort is needed on the part of
 the form author to specify that <code>h</code> and <code>m</code> and
 <code>sign</code> need to be calculated before <code>secs</code>.  The
 processor takes care of all that.</p><p>The <code>user-datetime</code> value on any slot is calculated
-as described above.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="9"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="nt">&lt;xf:bind</span> <span class="na">nodeset=</span><span class="s">"instance('ui')/slot-times</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code><span class="s">                  /slot/@user-datetime"</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>         <span class="na">type=</span><span class="s">"xsd:dateTime"</span></code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>         <span class="na">calculate=</span><span class="s">"seconds-to-dateTime(</span></code></span></span>
-<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code><span class="s">                    seconds-from-dateTime(../@datetime)</span></code></span></span>
-<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code><span class="s">                    +</span></code></span></span>
-<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code><span class="s">                    instance('ui')/tz/@secs</span></code></span></span>
-<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code><span class="s">                    )"</span></code></span></span>
-<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>         <span class="nt">/&gt;</span></code></span></span>
+as described above.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="9"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code>&lt;xf:bind nodeset="instance('ui')/slot-times</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>                  /slot/@user-datetime"</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>         type="xsd:dateTime"</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>         calculate="seconds-to-dateTime(</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>                    seconds-from-dateTime(../@datetime)</code></span></span>
+<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>                    +</code></span></span>
+<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>                    instance('ui')/tz/@secs</code></span></span>
+<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>                    )"</code></span></span>
+<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>         /&gt;</code></span></span>
 </pre></div><p>From the <code>user-datetime</code> value, we can extract
 several other useful values: the hours-and-minutes part of the
 dateTime expression (<code>user-time</code>), the hours part of the
 expression on a 24-hour clock (<code>uh24</code>), the hours part on a
 12-hour clock (<code>uh12</code>), and finally a Boolean flag to show
 whether the clock has moved to the next day or not
-(<code>wrapped</code>).</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="14"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="nt">&lt;xf:bind</span> <span class="na">nodeset=</span><span class="s">"instance('ui')/slot-times</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code><span class="s">                  /slot/@user-time"</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>         <span class="na">type=</span><span class="s">"xsd:string"</span></code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>         <span class="na">calculate=</span><span class="s">"substring(../@user-datetime, 12, 5)"</span> <span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code><span class="nt">&lt;xf:bind</span> <span class="na">nodeset=</span><span class="s">"instance('ui')/slot-times/slot/@uh24"</span></code></span></span>
-<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>         <span class="na">type=</span><span class="s">"xsd:string"</span></code></span></span>
-<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>         <span class="na">calculate=</span><span class="s">"substring(../@user-time, 1, 2)"</span> <span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;xf:bind</span> <span class="na">nodeset=</span><span class="s">"instance('ui')/slot-times/slot/@uh12"</span></code></span></span>
-<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>         <span class="na">type=</span><span class="s">"xsd:string"</span></code></span></span>
-<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>         <span class="na">calculate=</span><span class="s">"((../@uh24 + 11) mod 12) + 1"</span> <span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;xf:bind</span> <span class="na">nodeset=</span><span class="s">"instance('ui')/slot-times/slot/@wrapped"</span></code></span></span>
-<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code>         <span class="na">type=</span><span class="s">"xsd:boolean"</span></code></span></span>
-<span class="line" db-line="13"><span class="ln"></span><span class="ld"><code>         <span class="na">calculate=</span><span class="s">"substring(../@user-datetime, 9, 2)</span></code></span></span>
-<span class="line" db-line="14"><span class="ln"></span><span class="ld"><code><span class="s">                    &gt; substring(../@datetime, 9, 2)"</span> <span class="nt">/&gt;</span></code></span></span>
+(<code>wrapped</code>).</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="14"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code>&lt;xf:bind nodeset="instance('ui')/slot-times</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>                  /slot/@user-time"</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>         type="xsd:string"</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>         calculate="substring(../@user-datetime, 12, 5)" /&gt;</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>&lt;xf:bind nodeset="instance('ui')/slot-times/slot/@uh24"</code></span></span>
+<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>         type="xsd:string"</code></span></span>
+<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>         calculate="substring(../@user-time, 1, 2)" /&gt;</code></span></span>
+<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>&lt;xf:bind nodeset="instance('ui')/slot-times/slot/@uh12"</code></span></span>
+<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>         type="xsd:string"</code></span></span>
+<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>         calculate="((../@uh24 + 11) mod 12) + 1" /&gt;</code></span></span>
+<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code>&lt;xf:bind nodeset="instance('ui')/slot-times/slot/@wrapped"</code></span></span>
+<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code>         type="xsd:boolean"</code></span></span>
+<span class="line" db-line="13"><span class="ln"></span><span class="ld"><code>         calculate="substring(../@user-datetime, 9, 2)</code></span></span>
+<span class="line" db-line="14"><span class="ln"></span><span class="ld"><code>                    &gt; substring(../@datetime, 9, 2)" /&gt;</code></span></span>
 </pre></div><p>The final calculation of the string to be displayed to the user
 is complex enough to be worth explaining in more detail.  The core
 calculation is: if the <code>clock24</code> flag is set to
@@ -1006,34 +1011,34 @@ past-midnight case.</p><div class="pre-wrap" db-startinglinenumber="1" db-number
 (a) the time should be displayed as “midnight”, and (b) the phrase
 “(the next day)” should not be used, since it would raise more
 questions than it answers.  The full expression of the final step in
-the calculation is thus as follows.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="28"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="nt">&lt;xf:bind</span> <span class="na">nodeset=</span><span class="s">"instance('ui')/slot-times/slot"</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>         <span class="na">type=</span><span class="s">"xsd:string"</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>         <span class="na">calculate=</span><span class="s">"if(@user-time = '00:00',</span></code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code><span class="s">                    'midnight',</span></code></span></span>
+the calculation is thus as follows.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="28"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code>&lt;xf:bind nodeset="instance('ui')/slot-times/slot"</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>         type="xsd:string"</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>         calculate="if(@user-time = '00:00',</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>                    'midnight',</code></span></span>
 <span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code><span class="s">                    concat(</span></code></span></span>
-<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code><span class="s">                    if(@user-time = '12:00',</span></code></span></span>
-<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code><span class="s">                    if(instance('ui')/@clock24 = 0</span></code></span></span>
-<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code><span class="s">		       or instance('ui')/@clock24 = 'false',</span></code></span></span>
-<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code><span class="s">                    'noon',</span></code></span></span>
-<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code><span class="s">                    'midday'),</span></code></span></span>
+<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>                    concat(</code></span></span>
+<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>                    if(@user-time = '12:00',</code></span></span>
+<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>                    if(instance('ui')/@clock24 = 0</code></span></span>
+<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>		       or instance('ui')/@clock24 = 'false',</code></span></span>
+<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>                    'noon',</code></span></span>
+<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code>                    'midday'),</code></span></span>
 <span class="line" db-line="12"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="13"><span class="ln"></span><span class="ld"><code><span class="s">                    if(instance('ui')/@clock24 = 0</span></code></span></span>
-<span class="line" db-line="14"><span class="ln"></span><span class="ld"><code><span class="s">		       or instance('ui')/@clock24 = 'false',</span></code></span></span>
-<span class="line" db-line="15"><span class="ln">15</span><span class="ld"><code><span class="s">                    concat(@uh12,</span></code></span></span>
-<span class="line" db-line="16"><span class="ln"></span><span class="ld"><code><span class="s">                    ':', substring(@user-time, 4, 2),</span></code></span></span>
-<span class="line" db-line="17"><span class="ln"></span><span class="ld"><code><span class="s">                    if(@uh24 &gt; 11, 'pm', 'am')</span></code></span></span>
-<span class="line" db-line="18"><span class="ln"></span><span class="ld"><code><span class="s">                    ),</span></code></span></span>
+<span class="line" db-line="13"><span class="ln"></span><span class="ld"><code>                    if(instance('ui')/@clock24 = 0</code></span></span>
+<span class="line" db-line="14"><span class="ln"></span><span class="ld"><code>		       or instance('ui')/@clock24 = 'false',</code></span></span>
+<span class="line" db-line="15"><span class="ln">15</span><span class="ld"><code>                    concat(@uh12,</code></span></span>
+<span class="line" db-line="16"><span class="ln"></span><span class="ld"><code>                    ':', substring(@user-time, 4, 2),</code></span></span>
+<span class="line" db-line="17"><span class="ln"></span><span class="ld"><code>                    if(@uh24 &gt; 11, 'pm', 'am')</code></span></span>
+<span class="line" db-line="18"><span class="ln"></span><span class="ld"><code>                    ),</code></span></span>
 <span class="line" db-line="19"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="20"><span class="ln">20</span><span class="ld"><code><span class="s">                    substring(./@user-datetime, 12, 5)</span></code></span></span>
-<span class="line" db-line="21"><span class="ln"></span><span class="ld"><code><span class="s">                    )),</span></code></span></span>
+<span class="line" db-line="20"><span class="ln">20</span><span class="ld"><code>                    substring(./@user-datetime, 12, 5)</code></span></span>
+<span class="line" db-line="21"><span class="ln"></span><span class="ld"><code>                    )),</code></span></span>
 <span class="line" db-line="22"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="23"><span class="ln"></span><span class="ld"><code><span class="s">                    if(@wrapped = 'true' or @wrapped = 1,</span></code></span></span>
-<span class="line" db-line="24"><span class="ln"></span><span class="ld"><code><span class="s">                    ' &amp;lt;br /&gt;(the next day)',</span></code></span></span>
-<span class="line" db-line="25"><span class="ln">25</span><span class="ld"><code><span class="s">                    '')</span></code></span></span>
-<span class="line" db-line="26"><span class="ln"></span><span class="ld"><code><span class="s">                    ))</span></code></span></span>
+<span class="line" db-line="23"><span class="ln"></span><span class="ld"><code>                    if(@wrapped = 'true' or @wrapped = 1,</code></span></span>
+<span class="line" db-line="24"><span class="ln"></span><span class="ld"><code>                    ' &amp;lt;br /&gt;(the next day)',</code></span></span>
+<span class="line" db-line="25"><span class="ln">25</span><span class="ld"><code>                    '')</code></span></span>
+<span class="line" db-line="26"><span class="ln"></span><span class="ld"><code>                    ))</code></span></span>
 <span class="line" db-line="27"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="28"><span class="ln"></span><span class="ld"><code><span class="s">                    "</span> <span class="nt">/&gt;</span></code></span></span>
+<span class="line" db-line="28"><span class="ln"></span><span class="ld"><code>                    " /&gt;</code></span></span>
 </pre></div><p>With the help of the <code>xf:bind</code> element, the core
 interactivity of the document can be implemented in a purely
 declarative way.  As can be seen from the first steps in the sequence,
@@ -1061,9 +1066,9 @@ response to a change to the <code>tz</code> element, and to handle the
 event by setting the value of the <code>clock24</code> attribute
 appropriately.  To do this, it suffices to add two
 <code>xf:setvalue</code> elements to the <code>xf:select1</code>
-element bound to the <code>tz</code> element, thus:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="3"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;xf:setvalue</span> <span class="na">ev:event=</span><span class="s">"xforms-value-changed"</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>             <span class="na">ref=</span><span class="s">"instance('ui')/@clock24"</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>             <span class="na">value=</span><span class="s">"if(../tz/@sign = '-', 'true', 'false')"</span><span class="nt">/&gt;</span></code></span></span>
+element bound to the <code>tz</code> element, thus:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="3"><pre class="language-xml numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln"></span><span class="ld"><code>&lt;xf:setvalue ev:event="xforms-value-changed"</code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>             ref="instance('ui')/@clock24"</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>             value="if(../tz/@sign = '-', 'true', 'false')"/&gt;</code></span></span>
 </pre></div><p>Here, the <code>ev:event</code> attribute, in the XML Events
 namespace, gives the name of the event for which the
 <code>xf:setvalue</code> element is listening.  (It does not need to
@@ -1094,13 +1099,14 @@ user-defined event, whose handler will (possibly among other things)
 update the <code>clock24</code> flag.</p><p>So instead of adding one <code>xf:setvalue</code> element as a
 child of <code>xf:select1</code>, we add one <code>xf:dispatch</code>
 element to each item in the select control.  The item for Central
-Daylight Time (Chicago), for example, looks like this:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="7"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="nt">&lt;xf:item&gt;</span></code></span></span>
-<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xf:label&gt;</span>CDT  Chicago, IL, USA (UTC-05:00)<span class="nt">&lt;/xf:label&gt;</span></code></span></span>
-<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xf:value&gt;</span>-05:00<span class="nt">&lt;/xf:value&gt;</span></code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xf:dispatch</span> <span class="na">ev:event=</span><span class="s">"xforms-select"</span></code></span></span>
-<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>               <span class="na">targetid=</span><span class="s">"m1"</span></code></span></span>
-<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>               <span class="na">name=</span><span class="s">"bmt:set-12h-clock"</span><span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;/xf:item&gt;</span></code></span></span>
+Daylight Time (Chicago), for example, looks like this:</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="8"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code> </code></span></span>
+<span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>&lt;xf:item&gt;</code></span></span>
+<span class="line" db-line="3"><span class="ln"></span><span class="ld"><code>  &lt;xf:label&gt;CDT  Chicago, IL, USA (UTC-05:00)&lt;/xf:label&gt;</code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>  &lt;xf:value&gt;-05:00&lt;/xf:value&gt;</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>  &lt;xf:dispatch ev:event="xforms-select"</code></span></span>
+<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>               targetid="m1"</code></span></span>
+<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>               name="bmt:set-12h-clock"/&gt;</code></span></span>
+<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>&lt;/xf:item&gt;</code></span></span>
 </pre></div><p>As before, the <code>ev:event</code> attribute specifies which
 events this handler listens for.  The <code>name</code> attribute give
 the name of the event to be <em class="ital">dispatched</em> by the handler, and the
@@ -1121,32 +1127,32 @@ If we believe this claim, we can make the selection of Australian or
 New Zealand time set the flag to a 12-hour clock, even though they
 have a positive timezone offset.</p><p>The user-defined events are dispatched to the model, and the
 handlers for those events are given as children of the
-<code>xf:model</code> element.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="26"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code><span class="nt">&lt;xf:model</span> <span class="na">id=</span><span class="s">"m1"</span><span class="nt">&gt;</span></code></span></span>
+<code>xf:model</code> element.</p><div class="pre-wrap highlight" db-startinglinenumber="1" db-numberoflines="26"><pre class="language-xml long numbered programlisting verbatim verblines"><span class="line" db-line="1"><span class="ln">1</span><span class="ld"><code>&lt;xf:model id="m1"&gt;</code></span></span>
 <span class="line" db-line="2"><span class="ln"></span><span class="ld"><code>  ...</code></span></span>
 <span class="line" db-line="3"><span class="ln"></span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xf:action</span> <span class="na">ev:event=</span><span class="s">"bmt:set-12h-clock"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>    <span class="nt">&lt;xf:message</span> <span class="na">if=</span><span class="s">"instance('ui')/@debugging = 'true'"</span></code></span></span>
-<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>                <span class="na">level=</span><span class="s">"modal"</span></code></span></span>
-<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>                <span class="nt">&gt;</span>Clock should change to 12h.<span class="nt">&lt;/xf:message&gt;</span></code></span></span>
-<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;xf:setvalue</span> <span class="na">ref=</span><span class="s">"instance('ui')/@clock24"</span></code></span></span>
-<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>                 <span class="na">value=</span><span class="s">"'false'"</span> <span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>    <span class="nt">&lt;xf:message</span> <span class="na">if=</span><span class="s">"instance('ui')/@debugging = 'true'"</span></code></span></span>
-<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code>                <span class="na">level=</span><span class="s">"modal"</span></code></span></span>
-<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code>                <span class="nt">&gt;</span>Check it out!  The 24h clock switch <span class="c">&lt;!--</span></code></span></span>
-<span class="line" db-line="13"><span class="ln"></span><span class="ld"><code><span class="c">		--&gt;</span>should have changed!<span class="nt">&lt;/xf:message&gt;</span></code></span></span>
-<span class="line" db-line="14"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;/xf:action&gt;</span></code></span></span>
+<span class="line" db-line="4"><span class="ln"></span><span class="ld"><code>  &lt;xf:action ev:event="bmt:set-12h-clock"&gt;</code></span></span>
+<span class="line" db-line="5"><span class="ln">5</span><span class="ld"><code>    &lt;xf:message if="instance('ui')/@debugging = 'true'"</code></span></span>
+<span class="line" db-line="6"><span class="ln"></span><span class="ld"><code>                level="modal"</code></span></span>
+<span class="line" db-line="7"><span class="ln"></span><span class="ld"><code>                &gt;Clock should change to 12h.&lt;/xf:message&gt;</code></span></span>
+<span class="line" db-line="8"><span class="ln"></span><span class="ld"><code>    &lt;xf:setvalue ref="instance('ui')/@clock24"</code></span></span>
+<span class="line" db-line="9"><span class="ln"></span><span class="ld"><code>                 value="'false'" /&gt;</code></span></span>
+<span class="line" db-line="10"><span class="ln">10</span><span class="ld"><code>    &lt;xf:message if="instance('ui')/@debugging = 'true'"</code></span></span>
+<span class="line" db-line="11"><span class="ln"></span><span class="ld"><code>                level="modal"</code></span></span>
+<span class="line" db-line="12"><span class="ln"></span><span class="ld"><code>                &gt;Check it out!  The 24h clock switch &lt;!--</code></span></span>
+<span class="line" db-line="13"><span class="ln"></span><span class="ld"><code>		--&gt;should have changed!&lt;/xf:message&gt;</code></span></span>
+<span class="line" db-line="14"><span class="ln"></span><span class="ld"><code>  &lt;/xf:action&gt;</code></span></span>
 <span class="line" db-line="15"><span class="ln">15</span><span class="ld"><code> </code></span></span>
-<span class="line" db-line="16"><span class="ln"></span><span class="ld"><code>  <span class="nt">&lt;xf:action</span> <span class="na">ev:event=</span><span class="s">"bmt:set-24h-clock"</span><span class="nt">&gt;</span></code></span></span>
-<span class="line" db-line="17"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;xf:message</span> <span class="na">if=</span><span class="s">"instance('ui')/@debugging = 'true'"</span></code></span></span>
-<span class="line" db-line="18"><span class="ln"></span><span class="ld"><code>                <span class="na">level=</span><span class="s">"modal"</span></code></span></span>
-<span class="line" db-line="19"><span class="ln"></span><span class="ld"><code>                <span class="nt">&gt;</span>Clock should change to 24h.<span class="nt">&lt;/xf:message&gt;</span></code></span></span>
-<span class="line" db-line="20"><span class="ln">20</span><span class="ld"><code>    <span class="nt">&lt;xf:setvalue</span> <span class="na">ref=</span><span class="s">"instance('ui')/@clock24"</span></code></span></span>
-<span class="line" db-line="21"><span class="ln"></span><span class="ld"><code>                 <span class="na">value=</span><span class="s">"'true'"</span> <span class="nt">/&gt;</span></code></span></span>
-<span class="line" db-line="22"><span class="ln"></span><span class="ld"><code>    <span class="nt">&lt;xf:message</span> <span class="na">if=</span><span class="s">"instance('ui')/@debugging = 'true'"</span></code></span></span>
-<span class="line" db-line="23"><span class="ln"></span><span class="ld"><code>                <span class="na">level=</span><span class="s">"modal"</span></code></span></span>
-<span class="line" db-line="24"><span class="ln"></span><span class="ld"><code>                <span class="nt">&gt;</span>Did the 24h clock switch?<span class="nt">&lt;/xf:message&gt;</span></code></span></span>
-<span class="line" db-line="25"><span class="ln">25</span><span class="ld"><code>  <span class="nt">&lt;/xf:action&gt;</span></code></span></span>
-<span class="line" db-line="26"><span class="ln"></span><span class="ld"><code><span class="nt">&lt;/xf:model&gt;</span></code></span></span>
+<span class="line" db-line="16"><span class="ln"></span><span class="ld"><code>  &lt;xf:action ev:event="bmt:set-24h-clock"&gt;</code></span></span>
+<span class="line" db-line="17"><span class="ln"></span><span class="ld"><code>    &lt;xf:message if="instance('ui')/@debugging = 'true'"</code></span></span>
+<span class="line" db-line="18"><span class="ln"></span><span class="ld"><code>                level="modal"</code></span></span>
+<span class="line" db-line="19"><span class="ln"></span><span class="ld"><code>                &gt;Clock should change to 24h.&lt;/xf:message&gt;</code></span></span>
+<span class="line" db-line="20"><span class="ln">20</span><span class="ld"><code>    &lt;xf:setvalue ref="instance('ui')/@clock24"</code></span></span>
+<span class="line" db-line="21"><span class="ln"></span><span class="ld"><code>                 value="'true'" /&gt;</code></span></span>
+<span class="line" db-line="22"><span class="ln"></span><span class="ld"><code>    &lt;xf:message if="instance('ui')/@debugging = 'true'"</code></span></span>
+<span class="line" db-line="23"><span class="ln"></span><span class="ld"><code>                level="modal"</code></span></span>
+<span class="line" db-line="24"><span class="ln"></span><span class="ld"><code>                &gt;Did the 24h clock switch?&lt;/xf:message&gt;</code></span></span>
+<span class="line" db-line="25"><span class="ln">25</span><span class="ld"><code>  &lt;/xf:action&gt;</code></span></span>
+<span class="line" db-line="26"><span class="ln"></span><span class="ld"><code>&lt;/xf:model&gt;</code></span></span>
 </pre></div><p>The <code>xf:action</code> element is a wrapper for other XForms
 actions.  It executes them one at a time in turn.  The practical
 effect is that the <code>ev:event</code> attribute can be specified
