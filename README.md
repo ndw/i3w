@@ -44,3 +44,9 @@ You will also have to point a web server at the build directory
 point to the files with `file:///` URIs, but beware that some browsers
 on some platforms may impose security constraints that prevent the
 scripting parts from working correctly.)
+
+### Building on Windows
+
+Windows builds are broken at the moment. There are unresolved issues
+with the way local filenames are represented as URIs. I’m going to try to
+fix it, but it’s not my highest priority. Pull requests most welcome.
