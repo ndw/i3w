@@ -14,7 +14,7 @@ git config --global user.name $GIT_USER
 git clone --quiet --branch=gh-pages "$REPO" gh-pages
 cd gh-pages
 
-rsync -ar --delete --exclude README --exclude .git --exclude .circleci $BUILD/website/i3w/ ./
+rsync -ar --delete --exclude README.md --exclude .git --exclude .circleci $BUILD/website/i3w/ ./
 
 git add --all .
 git commit -m "CircleCI build: $CIRCLE_BUILD_URL"
