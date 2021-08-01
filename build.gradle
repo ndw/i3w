@@ -58,6 +58,45 @@ defaultTasks "website"
 
 // ======================================================================
 
+import static groovy.io.FileType.DIRECTORIES
+def pygmentize = findPygmentize()
+def findPygmentize() {
+  def path = System.getenv()["PATH"]
+  def script = null
+  path.split(":+").each { segment ->
+    if (segment.endsWith("/.pyenv/shims")) {
+      // Ok, we found pyenv, now can we find pygmentize?
+      def pyenv = new File("${segment.substring(0, segment.length() - 6)}/versions")
+      def versions = []
+      pyenv.traverse(type: DIRECTORIES, maxDepth: 0) { dir ->
+        def testfile = new File("${dir}/bin/pygmentize")
+        if (testfile.exists() && testfile.canExecute()) {
+          script = testfile.toString()
+        }
+      }
+    }
+  }
+
+  if (script == null) {
+    println("Could not find pygmentize")
+    script = "" // nevermind
+  }
+
+  return script
+}
+
+System.setProperty("org.docbook.extensions.pygmentize", pygmentize)
+
+task configureEnvironment() {
+  def envVars = [:]
+  envVars['PYGMENTIZE'] = pygmentize
+  tasks.withType(Exec) {
+    environment << envVars
+  }
+}
+
+// ======================================================================
+
 docker_container.configure {
   workingDir = "docker"
 }
