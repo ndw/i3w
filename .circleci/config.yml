@@ -17,6 +17,8 @@ jobs:
           fingerprints:
             - "ea:90:93:d8:34:4c:c0:bb:d2:0b:6d:1c:b7:8e:53:11"
 
+      - run: python3 -m pip install pygments==2.6.1
+
       - checkout
 
       - restore_cache:
