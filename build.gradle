@@ -85,7 +85,7 @@ def findPygmentize() {
   return script
 }
 
-System.setProperty("org.docbook.extensions.pygmentize", pygmentize)
+System.setProperty("org.docbook.xsltng.extensions.pygmentize", pygmentize)
 
 task configureEnvironment() {
   def envVars = [:]
